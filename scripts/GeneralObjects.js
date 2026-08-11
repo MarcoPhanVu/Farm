@@ -22,6 +22,7 @@ class GameObject {
     }
 
     render(painter) {
+        console.log(painter)
         painter.fillStyle = this.color;
         painter.fillRect(
             this.position.x,
@@ -31,8 +32,8 @@ class GameObject {
         );
 
         if (this.selected) {
-            painter.lineWidth = 3;
-            painter.strokeStyle = "black";
+            painter.lineWidth = 4;
+            painter.strokeStyle = "#fff";
             painter.strokeRect(
                 this.position.x,
                 this.position.y,
@@ -44,5 +45,31 @@ class GameObject {
 
     getBottomY() {
         return this.position.y + this.size.height;
+    }
+
+    announcePosition() {
+        console.log(`Position: X[${this.position.x}] - Y[${this.position.y}]`);
+    }
+
+    announceSize() {
+        console.log(`Size: X[${this.size.width}] - Y[${this.size.height}]`);
+    }
+
+    announceVelocity() {
+        console.log(`Velocity: X[${this.velocity.moveX}] - Y[${this.velocity.moveY}]`);
+    }
+
+    announceSelf() {
+        console.log(`ID: ${this.id}`)
+        console.log(`Name: ${this.name}`);
+        console.log(`Type: ${this.type}`);
+        console.log(`State: ${this.state}`);
+        this.announcePosition()
+        this.announceSize()
+        this.announceVelocity()
+        console.log(`Color: ${this.color}`);
+        console.log(`Layer: ${this.layer}`);
+        console.log(`Hovered: ${this.hovered}`);
+        console.log(`Selected: ${this.selected}`);
     }
 }
