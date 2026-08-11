@@ -32,7 +32,7 @@ body {
 
 #actionPanel {
     grid-area: actionPanel;
-    background-color: rgb(180, 200, 240);
+    background-color: rgb(240, 202, 180);
 
     display: flex;
     gap: 8px;
@@ -41,7 +41,7 @@ body {
 
 #toolPanel {
     grid-area: toolPanel;
-    background-color: rgb(160, 172, 160);
+    background-color: rgb(172, 161, 160);
 
     display: flex;
     padding: 12px;
@@ -51,7 +51,7 @@ body {
 
 #canvasPanel {
     grid-area: canvas;
-    background-color: rgb(200, 180, 160);
+    background-color: rgb(170, 107, 97);
 
     display: flex;
     justify-content: center;
@@ -61,7 +61,7 @@ body {
 }
 
 #gameCanvas {
-    background-color: rgb(200, 220, 240);
+    background-color: rgb(238, 215, 207);
     display: block;
 
     overflow: auto;

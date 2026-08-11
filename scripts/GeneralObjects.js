@@ -22,7 +22,7 @@ class GameObject {
     }
 
     render(painter) {
-        console.log(painter)
+        console.log(painter);
         painter.fillStyle = this.color;
         painter.fillRect(
             this.position.x,
@@ -56,17 +56,19 @@ class GameObject {
     }
 
     announceVelocity() {
-        console.log(`Velocity: X[${this.velocity.moveX}] - Y[${this.velocity.moveY}]`);
+        console.log(
+            `Velocity: X[${this.velocity.moveX}] - Y[${this.velocity.moveY}]`,
+        );
     }
 
     announceSelf() {
-        console.log(`ID: ${this.id}`)
+        console.log(`ID: ${this.id}`);
         console.log(`Name: ${this.name}`);
         console.log(`Type: ${this.type}`);
         console.log(`State: ${this.state}`);
-        this.announcePosition()
-        this.announceSize()
-        this.announceVelocity()
+        this.announcePosition();
+        this.announceSize();
+        this.announceVelocity();
         console.log(`Color: ${this.color}`);
         console.log(`Layer: ${this.layer}`);
         console.log(`Hovered: ${this.hovered}`);

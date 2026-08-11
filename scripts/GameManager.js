@@ -1,8 +1,5 @@
 const gameCanvas = document.getElementById("gameCanvas");
 const painter = gameCanvas.getContext("2d");
-console.log(`CanvasSize: ${gameCanvas.width}`)
-console.log(`CanvasSize: ${gameCanvas.Height}`)
-
 
 const actionPanel = document.getElementById("actionPanel");
 const toolPanel = document.getElementById("toolPanel");
@@ -45,40 +42,41 @@ const gameObjects = [
         "cat 1",
         "animal",
         "idle",
-        {x: 100, y: 100},
-        {width: 40, height: 60},
-        {moveX: 12, moveY: 12},
-        colorTemplate['cuteGayColor'][1],
-        1
+        { x: 100, y: 100 },
+        { width: 40, height: 60 },
+        { moveX: 12, moveY: 12 },
+        colorTemplate["cuteGayColor"][1],
+        1,
     ),
     new GameObject(
         2,
         "cat 2",
         "animal",
         "moving",
-        {x: 240, y: 240},
-        {width: 40, height: 60},
-        {moveX: 0, moveY: 0},
-        colorTemplate['cuteGayColor'][3],
-        1
+        { x: 240, y: 240 },
+        { width: 40, height: 60 },
+        { moveX: 0, moveY: 0 },
+        colorTemplate["cuteGayColor"][3],
+        1,
     ),
     new GameObject(
         3,
         "Tree",
         "object",
         "idle",
-        {x: 160, y: 160},
-        {width: 40, height: 60},
-        {moveX: 0, moveY: 0},
+        { x: 160, y: 160 },
+        { width: 40, height: 60 },
+        { moveX: 0, moveY: 0 },
         "darkgreen",
-        0
-    )
-]
+        0,
+    ),
+];
 
 function resizeCanvas() {
     gameCanvas.width = canvasPanel.clientWidth;
     gameCanvas.height = canvasPanel.clientHeight;
-
+    console.log(`CanvasSize: ${gameCanvas.width}`);
+    console.log(`CanvasSize: ${gameCanvas.height}`);
     render();
 }
 window.addEventListener("resize", resizeCanvas);
@@ -101,12 +99,12 @@ function gameLoop(currentTime) {
 
     render();
 
-    requestAnimationFrame(gameLoop); 
+    requestAnimationFrame(gameLoop);
 }
 
 function update(deltaTime) {
     for (let object of gameObjects) {
-        object.announceSelf();
+        // object.announceSelf();
         object.update(deltaTime);
     }
 }
@@ -121,17 +119,25 @@ function render() {
         }
 
         return a.getBottomY() - b.getBottomY();
-    })
+    });
+
+    for (let object of gameObjects) {
+        object.render(painter);
+    }
 }
 
 requestAnimationFrame(gameLoop);
 
+// const testArr = [40, 100, 10, 20, 11, 1, 25, 4];
 
-const testArr = [40, 100, 10, 20, 11, 1, 25, 4];
+// console.log(
+//     testArr.sort((a, b) => {
+//         return a - b;
+//     }),
+// );
 
-console.log(testArr.sort((a, b) => {
-    return a - b;
-}))
-
-
-console.log(testArr.sort(function(a, b){return a + b}));
+// console.log(
+//     testArr.sort(function (a, b) {
+//         return a + b;
+//     }),
+// );
