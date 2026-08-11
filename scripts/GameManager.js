@@ -7,6 +7,11 @@ const canvasPanel = document.getElementById("canvasPanel");
 const propertiesPanel = document.getElementById("propertiesPanel");
 const bottomPanel = document.getElementById("bottomPanel");
 
+// bottomPanel
+const spawnAnimalBtn = document.getElementById("spawnAnimalBtn");
+
+const animalPool = ["chimken", "duck", "car", "dawg"];
+
 const colorTemplate = {
     BrightAss: [
         "#EE6055",
@@ -37,40 +42,19 @@ const colorTemplate = {
 };
 
 const gameObjects = [
-    new Animal(
-        1,
-        "cat 1",
-        "animal",
-        "idle",
-        { x: 100, y: 100 },
-        { width: 40, height: 60 },
-        { moveX: 120, moveY: 60 },
-        colorTemplate["cuteGayColor"][1],
-        1,
-    ),
-    new Animal(
-        2,
-        "cat 2",
-        "animal",
-        "moving",
-        { x: 240, y: 240 },
-        { width: 40, height: 60 },
-        { moveX: -80, moveY: -20 },
-        colorTemplate["cuteGayColor"][3],
-        1,
-    ),
     new GameObject(
-        3,
+        1,
         "Tree",
         "object",
         "idle",
-        { x: 160, y: 160 },
-        { width: 40, height: 60 },
+        { x: 160, y: 100 },
+        { width: 150, height: 200 },
         { moveX: 0, moveY: 0 },
         "darkgreen",
-        0,
+        1,
     ),
 ];
+let nextAnimalID = 2;
 
 function resizeCanvas() {
     gameCanvas.width = canvasPanel.clientWidth;
@@ -124,13 +108,58 @@ function render() {
         return a.getBottomY() - b.getBottomY();
     });
 
-    for (let object of gameObjects) {
+    for (let object of sortedObjects) {
         object.render(painter);
     }
 }
 
 requestAnimationFrame(gameLoop);
 
+function spawnRandomAnimal() {
+    // let animal = "chimken";
+    let animal = {
+        size: { width: 40, height: 60 },
+    };
+    let currentID = nextAnimalID++;
+    let position = {
+        x: RandomFromMinToMax(80, gameCanvas.width - animal.size.width),
+        y: RandomFromMinToMax(80, gameCanvas.height - animal.size.height),
+    };
+    let velocity = {
+        moveX: RandomFromMinToMax(40, 100) * PosOrNeg(),
+        moveY: RandomFromMinToMax(40, 100) * PosOrNeg(),
+    };
+    let size = { width: 40, height: 60 };
+
+    console.log(currentID);
+    gameObjects.push(
+        new Animal(
+            currentID + 1,
+            `car ${currentID + 1}`,
+            "animal",
+            "moving",
+            position,
+            size,
+            velocity,
+            colorTemplate["cuteGayColor"][
+                RandomFromMinToMax(0, colorTemplate["cuteGayColor"].length - 2)
+            ],
+            1,
+        ),
+    );
+
+    console.log("spawned");
+}
+
+spawnAnimalBtn.addEventListener("click", spawnRandomAnimal);
+spawnRandomAnimal();
+spawnRandomAnimal();
+spawnRandomAnimal();
+spawnRandomAnimal();
+spawnRandomAnimal();
+spawnRandomAnimal();
+spawnRandomAnimal();
+spawnRandomAnimal();
 // const testArr = [40, 100, 10, 20, 11, 1, 25, 4];
 
 // console.log(
