@@ -43,7 +43,7 @@ class GameObject {
         }
 
         if (this.selected) {
-            painter.lineWidth = 4;
+            painter.lineWidth = 8;
             painter.strokeStyle = "#00ff88";
             painter.strokeRect(
                 this.position.x,

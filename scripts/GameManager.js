@@ -78,7 +78,6 @@ function gameLoop(currentTime) {
     let elapsedTime = currentTime - lastTime;
     let deltaTime = elapsedTime / 800;
     lastTime = currentTime;
-    // console.log(`E time: ${elapsedTime}`);
     // Prevent huge jumps if tab was inactive(like spawning balls in physic engine)
     deltaTime = Math.min(deltaTime, 0.05);
 
@@ -86,8 +85,8 @@ function gameLoop(currentTime) {
         update(deltaTime, elapsedTime);
     }
 
+    // updatePropertiesPanel();
     render();
-
     requestAnimationFrame(gameLoop);
 }
 
@@ -117,6 +116,7 @@ function render() {
 requestAnimationFrame(gameLoop);
 // Hover Over Object
 let hoveredObject = null;
+let selectedObject = null;
 
 function getMousePosition(event) {
     const rect = gameCanvas.getBoundingClientRect(); // Dist from gameCanvas to client's windows
@@ -141,8 +141,8 @@ function getObjectsFromFrontToBack() {
 
 gameCanvas.addEventListener("mousemove", function (event) {
     const mouse = getMousePosition(event);
-    mouseXText.innerHTML = `mouseX: ${mouse.x}`;
-    mouseYText.innerHTML = `mouseY: ${mouse.y}`;
+    // mouseXText.innerHTML = `mouseX: ${mouse.x}`;
+    // mouseYText.innerHTML = `mouseY: ${mouse.y}`;
     const objsList = getObjectsFromFrontToBack();
     hoveredObject = null;
 
@@ -158,6 +158,65 @@ gameCanvas.addEventListener("mousemove", function (event) {
         obj.hovered = obj === hoveredObject;
     }
 });
+
+gameCanvas.addEventListener("click", function (event) {
+    const mouse = getMousePosition(event);
+    mouseXText.innerHTML = `Last mouseX clicked: ${mouse.x}`;
+    mouseYText.innerHTML = `Last mouseY clicked: ${mouse.y}`;
+    const objsList = getObjectsFromFrontToBack();
+
+    selectedObject = null;
+
+    for (let obj of objsList) {
+        if (obj.containsPoints(mouse.x, mouse.y)) {
+            selectedObject = obj;
+            break;
+        }
+    }
+
+    for (let obj of gameObjects) {
+        obj.selected = obj === selectedObject;
+    }
+
+    updatePropertiesPanel();
+});
+
+function updatePropertiesPanel() {
+    const header = "<h3>Properties</h3>";
+    const footer = '<button id="deleteSelectedBtn">Delete</button>';
+    if (selectedObject === null) {
+        console.log("Reached null selected");
+        propertiesPanel.innerHTML = header + `Nothing selected for now`;
+        return;
+    }
+
+    console.log("Reached");
+
+    propertiesPanel.innerHTML =
+        header +
+        `
+        <p><strong>ID: ${selectedObject.id}</strong></p>
+        <p><strong>Name: ${selectedObject.name}</strong></p>
+        <p><strong>Type: ${selectedObject.type}</strong></p>
+        <p><strong>State: ${selectedObject.state}</strong></p>
+        <p><strong>Position: X[${selectedObject.position.x}] - Y[${selectedObject.position.y}</strong>]</p>
+        <p><strong>Size: X[${selectedObject.size.width}] - Y[${selectedObject.size.height}</strong>]</p>
+        <p><strong>Velocity: X[${selectedObject.velocity.moveX}] - Y[${selectedObject.velocity.moveY}</strong>]</p>
+        <p><strong>Color: ${selectedObject.color}</strong></p>
+        <p><strong>Layer: ${selectedObject.layer}</strong></p>
+        <p><strong>Hovered: ${selectedObject.hovered}</strong></p>
+        <p><strong>Selected: ${selectedObject.selected}</strong></p>
+    ` +
+        footer;
+
+    document
+        .getElementById("deleteSelectedBtn")
+        .addEventListener("click", () => {
+            console.log("Will work on deleting stuffs later");
+        });
+
+    return;
+}
 
 function spawnRandomAnimal() {
     // let animal = "chimken";
