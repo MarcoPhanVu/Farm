@@ -37,25 +37,25 @@ const colorTemplate = {
 };
 
 const gameObjects = [
-    new GameObject(
+    new Animal(
         1,
         "cat 1",
         "animal",
         "idle",
         { x: 100, y: 100 },
         { width: 40, height: 60 },
-        { moveX: 12, moveY: 12 },
+        { moveX: 120, moveY: 60 },
         colorTemplate["cuteGayColor"][1],
         1,
     ),
-    new GameObject(
+    new Animal(
         2,
         "cat 2",
         "animal",
         "moving",
         { x: 240, y: 240 },
         { width: 40, height: 60 },
-        { moveX: 0, moveY: 0 },
+        { moveX: -80, moveY: -20 },
         colorTemplate["cuteGayColor"][3],
         1,
     ),
@@ -75,6 +75,8 @@ const gameObjects = [
 function resizeCanvas() {
     gameCanvas.width = canvasPanel.clientWidth;
     gameCanvas.height = canvasPanel.clientHeight;
+    gameCanvas.width = 800;
+    gameCanvas.height = 400;
     console.log(`CanvasSize: ${gameCanvas.width}`);
     console.log(`CanvasSize: ${gameCanvas.height}`);
     render();
@@ -87,14 +89,15 @@ let gameState = "playing";
 /*playing, pausing,... */
 
 function gameLoop(currentTime) {
-    let deltaTime = (currentTime - lastTime) / 1000;
+    let elapsedTime = currentTime - lastTime;
+    let deltaTime = elapsedTime / 800;
     lastTime = currentTime;
-
+    // console.log(`E time: ${elapsedTime}`);
     // Prevent huge jumps if tab was inactive(like spawning balls in physic engine)
     deltaTime = Math.min(deltaTime, 0.05);
 
     if (gameState === "playing") {
-        update(deltaTime);
+        update(deltaTime, elapsedTime);
     }
 
     render();
@@ -102,7 +105,7 @@ function gameLoop(currentTime) {
     requestAnimationFrame(gameLoop);
 }
 
-function update(deltaTime) {
+function update(deltaTime, elapsedTime) {
     for (let object of gameObjects) {
         // object.announceSelf();
         object.update(deltaTime);
