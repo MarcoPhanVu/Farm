@@ -31,9 +31,9 @@ class GameObject {
             this.size.height,
         );
 
-        if (this.selected) {
-            painter.lineWidth = 4;
-            painter.strokeStyle = "#fff";
+        if (this.hovered) {
+            painter.lineWidth = 2;
+            painter.strokeStyle = "#ff0000";
             painter.strokeRect(
                 this.position.x,
                 this.position.y,
@@ -41,38 +41,70 @@ class GameObject {
                 this.size.height,
             );
         }
+
+        if (this.selected) {
+            painter.lineWidth = 4;
+            painter.strokeStyle = "#00ff88";
+            painter.strokeRect(
+                this.position.x,
+                this.position.y,
+                this.size.width,
+                this.size.height,
+            );
+        }
+
+        painter.lineWidth = 1; // reset stroke width
     }
 
     getBottomY() {
         return this.position.y + this.size.height;
     }
 
-    announcePosition() {
-        console.log(`Position: X[${this.position.x}] - Y[${this.position.y}]`);
+    log(target) {
+        if (!target) {
+            console.log(`No valid option for [${target}]`);
+        }
+
+        if (target === "pos" || target === "position") {
+            console.log(
+                `Position: X[${this.position.x}] - Y[${this.position.y}]`,
+            );
+        }
+
+        if (target === "size") {
+            console.log(`Size: X[${this.size.width}] - Y[${this.size.height}]`);
+        }
+
+        if (target === "velo" || target === "velocity") {
+            console.log(
+                `Velocity: X[${this.velocity.moveX}] - Y[${this.velocity.moveY}]`,
+            );
+        }
+
+        if (target === "self") {
+            console.log(`ID: ${this.id}`);
+            console.log(`Name: ${this.name}`);
+            console.log(`Type: ${this.type}`);
+            console.log(`State: ${this.state}`);
+            this.log("position");
+            this.log("size");
+            this.log("velocity");
+            console.log(`Color: ${this.color}`);
+            console.log(`Layer: ${this.layer}`);
+            console.log(`Hovered: ${this.hovered}`);
+            console.log(`Selected: ${this.selected}`);
+        }
+
+        console.log(`No valid option for [${target}]`);
     }
 
-    announceSize() {
-        console.log(`Size: X[${this.size.width}] - Y[${this.size.height}]`);
-    }
-
-    announceVelocity() {
-        console.log(
-            `Velocity: X[${this.velocity.moveX}] - Y[${this.velocity.moveY}]`,
+    containsPoints(mouseX, mouseY) {
+        return (
+            mouseX >= this.position.x &&
+            mouseX <= this.position.x + this.size.width &&
+            mouseY >= this.position.y &&
+            mouseY <= this.position.y + this.size.height
         );
-    }
-
-    announceSelf() {
-        console.log(`ID: ${this.id}`);
-        console.log(`Name: ${this.name}`);
-        console.log(`Type: ${this.type}`);
-        console.log(`State: ${this.state}`);
-        this.announcePosition();
-        this.announceSize();
-        this.announceVelocity();
-        console.log(`Color: ${this.color}`);
-        console.log(`Layer: ${this.layer}`);
-        console.log(`Hovered: ${this.hovered}`);
-        console.log(`Selected: ${this.selected}`);
     }
 }
 
@@ -81,6 +113,7 @@ class Animal extends GameObject {
         super(id, name, type, state, position, size, velocity, color, layer);
 
         this.isChangingDirection = false;
+        this.selfElapsedTime = 0;
     }
 
     update(deltaTime) {
@@ -88,6 +121,12 @@ class Animal extends GameObject {
         this.position.y += this.velocity.moveY * deltaTime;
 
         let hitBound = null;
+
+        this.selfElapsedTime += deltaTime;
+        if (this.selfElapsedTime >= 10) {
+            // console.log("7.5 sec passed");
+            hitBound = "none";
+        }
 
         // Top Bound
         if (this.position.y <= 0) {
@@ -127,8 +166,8 @@ class Animal extends GameObject {
         this.velocity.moveY = 0;
         this.boundTouched = false;
         setTimeout(() => {
-            let veloX = RandomFromMinToMax(40, 100);
-            let veloY = RandomFromMinToMax(40, 100);
+            let veloX = RandomFromMinToMax(10, 80);
+            let veloY = RandomFromMinToMax(0, 50);
 
             if (hitBound === "top") {
                 this.velocity.moveX = veloX * PosOrNeg();
@@ -144,6 +183,10 @@ class Animal extends GameObject {
             }
             if (hitBound === "right") {
                 this.velocity.moveX = -veloX;
+                this.velocity.moveY = veloY * PosOrNeg();
+            }
+            if (hitBound === "none") {
+                this.velocity.moveX = veloX * PosOrNeg();
                 this.velocity.moveY = veloY * PosOrNeg();
             }
 
