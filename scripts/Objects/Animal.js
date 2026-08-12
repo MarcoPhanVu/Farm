@@ -1,4 +1,6 @@
+import { RandomFromMinToMax, PosOrNeg } from "../utils/random.js";
 import { GameObject } from "./GameObjects.js";
+import { colorTemplate } from "../config/colors.js";
 
 export class Animal extends GameObject {
     constructor(id, name, type, state, position, size, velocity, color, layer) {
@@ -27,8 +29,8 @@ export class Animal extends GameObject {
             hitBound = "top";
         }
         // Bottom Bound
-        if (this.position.y + this.size.height >= wordlBounds.height) {
-            this.position.y = wordlBounds.height - this.size.height;
+        if (this.position.y + this.size.height >= worldBounds.height) {
+            this.position.y = worldBounds.height - this.size.height;
             hitBound = "bottom";
         }
 
@@ -38,8 +40,8 @@ export class Animal extends GameObject {
             hitBound = "left";
         }
         // Right Bound
-        if (this.position.x + this.size.width >= wordlBounds.width) {
-            this.position.x = wordlBounds.width - this.size.width;
+        if (this.position.x + this.size.width >= worldBounds.width) {
+            this.position.x = worldBounds.width - this.size.width;
             hitBound = "right";
         }
 
