@@ -113,7 +113,7 @@ class Animal extends GameObject {
         super(id, name, type, state, position, size, velocity, color, layer);
 
         this.isChangingDirection = false;
-        this.selfElapsedTime = 0;
+        this.selfElapsedTime = RandomFromMinToMax(0, 10);
     }
 
     update(deltaTime) {
@@ -126,6 +126,7 @@ class Animal extends GameObject {
         if (this.selfElapsedTime >= 10) {
             // console.log("7.5 sec passed");
             hitBound = "none";
+            this.selfElapsedTime = 0;
         }
 
         // Top Bound
@@ -167,7 +168,7 @@ class Animal extends GameObject {
         this.boundTouched = false;
         setTimeout(() => {
             let veloX = RandomFromMinToMax(10, 80);
-            let veloY = RandomFromMinToMax(0, 50);
+            let veloY = RandomFromMinToMax(0, 40);
 
             if (hitBound === "top") {
                 this.velocity.moveX = veloX * PosOrNeg();

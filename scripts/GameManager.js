@@ -257,3 +257,11 @@ function spawnRandomAnimal() {
 spawnAnimalBtn.addEventListener("click", spawnRandomAnimal);
 spawnRandomAnimal();
 spawnRandomAnimal();
+spawnRandomAnimal();
+spawnRandomAnimal();
+spawnRandomAnimal();
+spawnRandomAnimal();
+spawnRandomAnimal();
+spawnRandomAnimal();
+spawnRandomAnimal();
+spawnRandomAnimal();
