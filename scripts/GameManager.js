@@ -7,7 +7,11 @@ const canvasPanel = document.getElementById("canvasPanel");
 const propertiesPanel = document.getElementById("propertiesPanel");
 const bottomPanel = document.getElementById("bottomPanel");
 
-// bottomPanel
+// Properties Panel
+const mouseXText = document.getElementById("mouseX");
+const mouseYText = document.getElementById("mouseY");
+
+// Bottom Panel
 const spawnAnimalBtn = document.getElementById("spawnAnimalBtn");
 
 const animalPool = ["chimken", "duck", "car", "dawg"];
@@ -31,7 +35,7 @@ const colorTemplate = {
         "https://coolors.co/0fa3b1-b5e2fa-f9f7f3-eddea4-f7a072",
     ],
 
-    cuteGayColor: [
+    CuteGayColor: [
         "#3a405a",
         "#aec5eb",
         "#f9dec9",
@@ -59,10 +63,8 @@ let nextAnimalID = 2;
 function resizeCanvas() {
     gameCanvas.width = canvasPanel.clientWidth;
     gameCanvas.height = canvasPanel.clientHeight;
-    gameCanvas.width = 800;
-    gameCanvas.height = 400;
-    console.log(`CanvasSize: ${gameCanvas.width}`);
-    console.log(`CanvasSize: ${gameCanvas.height}`);
+    // console.log(`CanvasSize: ${gameCanvas.width}`);
+    // console.log(`CanvasSize: ${gameCanvas.height}`);
     render();
 }
 window.addEventListener("resize", resizeCanvas);
@@ -76,7 +78,6 @@ function gameLoop(currentTime) {
     let elapsedTime = currentTime - lastTime;
     let deltaTime = elapsedTime / 800;
     lastTime = currentTime;
-    // console.log(`E time: ${elapsedTime}`);
     // Prevent huge jumps if tab was inactive(like spawning balls in physic engine)
     deltaTime = Math.min(deltaTime, 0.05);
 
@@ -84,21 +85,20 @@ function gameLoop(currentTime) {
         update(deltaTime, elapsedTime);
     }
 
+    // updatePropertiesPanel();
     render();
-
     requestAnimationFrame(gameLoop);
 }
 
 function update(deltaTime, elapsedTime) {
     for (let object of gameObjects) {
-        // object.announceSelf();
+        // object.log("self");
         object.update(deltaTime);
     }
 }
 
 function render() {
-    // console.log("Render from GameManager")
-
+    // From back to front
     painter.clearRect(0, 0, gameCanvas.width, gameCanvas.height);
     const sortedObjects = [...gameObjects].sort((a, b) => {
         if (a.layer !== b.layer) {
@@ -114,6 +114,109 @@ function render() {
 }
 
 requestAnimationFrame(gameLoop);
+// Hover Over Object
+let hoveredObject = null;
+let selectedObject = null;
+
+function getMousePosition(event) {
+    const rect = gameCanvas.getBoundingClientRect(); // Dist from gameCanvas to client's windows
+
+    return {
+        x: event.clientX - rect.left,
+        y: event.clientY - rect.top,
+    };
+}
+
+function getObjectsFromFrontToBack() {
+    const sortedObjects = [...gameObjects].sort((a, b) => {
+        if (a.layer !== b.layer) {
+            return b.layer - a.layer;
+        }
+
+        return b.getBottomY() - a.getBottomY();
+    });
+
+    return sortedObjects;
+}
+
+gameCanvas.addEventListener("mousemove", function (event) {
+    const mouse = getMousePosition(event);
+    // mouseXText.innerHTML = `mouseX: ${mouse.x}`;
+    // mouseYText.innerHTML = `mouseY: ${mouse.y}`;
+    const objsList = getObjectsFromFrontToBack();
+    hoveredObject = null;
+
+    for (let obj of objsList) {
+        if (obj.containsPoints(mouse.x, mouse.y)) {
+            hoveredObject = obj;
+            break;
+        }
+    }
+
+    for (let obj of gameObjects) {
+        // determine the hovered state of hovered object.
+        obj.hovered = obj === hoveredObject;
+    }
+});
+
+gameCanvas.addEventListener("click", function (event) {
+    const mouse = getMousePosition(event);
+    mouseXText.innerHTML = `Last mouseX clicked: ${mouse.x}`;
+    mouseYText.innerHTML = `Last mouseY clicked: ${mouse.y}`;
+    const objsList = getObjectsFromFrontToBack();
+
+    selectedObject = null;
+
+    for (let obj of objsList) {
+        if (obj.containsPoints(mouse.x, mouse.y)) {
+            selectedObject = obj;
+            break;
+        }
+    }
+
+    for (let obj of gameObjects) {
+        obj.selected = obj === selectedObject;
+    }
+
+    updatePropertiesPanel();
+});
+
+function updatePropertiesPanel() {
+    const header = "<h3>Properties</h3>";
+    const footer = '<button id="deleteSelectedBtn">Delete</button>';
+    if (selectedObject === null) {
+        console.log("Reached null selected");
+        propertiesPanel.innerHTML = header + `Nothing selected for now`;
+        return;
+    }
+
+    console.log("Reached");
+
+    propertiesPanel.innerHTML =
+        header +
+        `
+        <p><strong>ID: ${selectedObject.id}</strong></p>
+        <p><strong>Name: ${selectedObject.name}</strong></p>
+        <p><strong>Type: ${selectedObject.type}</strong></p>
+        <p><strong>State: ${selectedObject.state}</strong></p>
+        <p><strong>Position: X[${selectedObject.position.x}] - Y[${selectedObject.position.y}</strong>]</p>
+        <p><strong>Size: X[${selectedObject.size.width}] - Y[${selectedObject.size.height}</strong>]</p>
+        <p><strong>Velocity: X[${selectedObject.velocity.moveX}] - Y[${selectedObject.velocity.moveY}</strong>]</p>
+        <p><strong>Color: ${selectedObject.color}</strong></p>
+        <p><strong>Layer: ${selectedObject.layer}</strong></p>
+        <p><strong>Hovered: ${selectedObject.hovered}</strong></p>
+        <p><strong>Selected: ${selectedObject.selected}</strong></p>
+    ` +
+        footer;
+
+    document
+        .getElementById("deleteSelectedBtn")
+        .addEventListener("click", () => {
+            console.log("Will work on deleting stuffs later");
+        });
+
+    return;
+}
 
 function spawnRandomAnimal() {
     // let animal = "chimken";
@@ -141,8 +244,8 @@ function spawnRandomAnimal() {
             position,
             size,
             velocity,
-            colorTemplate["cuteGayColor"][
-                RandomFromMinToMax(0, colorTemplate["cuteGayColor"].length - 2)
+            colorTemplate["BrightAss"][
+                RandomFromMinToMax(0, colorTemplate["BrightAss"].length - 2)
             ],
             1,
         ),
@@ -160,16 +263,5 @@ spawnRandomAnimal();
 spawnRandomAnimal();
 spawnRandomAnimal();
 spawnRandomAnimal();
-// const testArr = [40, 100, 10, 20, 11, 1, 25, 4];
-
-// console.log(
-//     testArr.sort((a, b) => {
-//         return a - b;
-//     }),
-// );
-
-// console.log(
-//     testArr.sort(function (a, b) {
-//         return a + b;
-//     }),
-// );
+spawnRandomAnimal();
+spawnRandomAnimal();

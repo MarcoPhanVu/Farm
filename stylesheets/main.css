@@ -51,7 +51,7 @@ body {
 
 #canvasPanel {
     grid-area: canvas;
-    background-color: rgb(170, 107, 97);
+    background-color: rgb(97, 104, 170);
 
     display: flex;
     justify-content: center;
