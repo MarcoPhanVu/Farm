@@ -1,7 +1,7 @@
 import { GameManager } from "./GameManager.js";
 
 const gameASDASD = new GameManager();
-console.log("Passed");
-console.log(gameASDASD);
+
+window.gameASDASD = gameASDASD;
 
 gameASDASD.start();

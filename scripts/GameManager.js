@@ -56,13 +56,10 @@ export class GameManager {
         const header = "<h3>Properties</h3>";
         const footer = '<button id="deleteSelectedBtn">Delete</button>';
         if (this.selectedObject === null) {
-            console.log("Reached null selected");
             this.propertiesPanel.innerHTML =
                 header + `Nothing selected for now`;
             return;
         }
-
-        console.log("Reached");
 
         this.propertiesPanel.innerHTML =
             header +
@@ -162,10 +159,11 @@ export class GameManager {
     }
 
     spawnRandomAnimal() {
-        // let animal = "chimken";
-        let animal = {
+        let animal = "chimken";
+        animal = {
             size: { width: 40, height: 60 },
         };
+
         let currentID = this.nextAnimalID++;
         let position = {
             x: RandomFromMinToMax(
@@ -188,22 +186,22 @@ export class GameManager {
                 RandomFromMinToMax(0, colorTemplate["BrightAss"].colors.length)
             ];
 
-        console.log(`color: ${color}`);
-
-        console.log(currentID);
-        this.gameObjects.push(
-            new Animal(
-                currentID + 1,
-                `car ${currentID + 1}`,
-                "animal",
-                "moving",
-                position,
-                size,
-                velocity,
-                color,
-                1,
-            ),
+        // console.log(`color: ${color}`);
+        let animalObj = new Animal(
+            currentID + 1,
+            `car ${currentID + 1}`,
+            "animal",
+            "moving",
+            position,
+            size,
+            velocity,
+            color,
+            1,
         );
+        // console.log(currentID);
+        console.log("Keys: ", animalObj);
+        // getOwnPropertyNames()
+        this.gameObjects.push(animalObj);
 
         console.log("spawned");
     }
@@ -252,6 +250,16 @@ export class GameManager {
 
             this.updatePropertiesPanel();
         });
+
+        const chickImg = new Image();
+        chickImg.src = new URL(
+            "../assets/chick-anim.png",
+            import.meta.url,
+        ).href;
+
+        chickImg.onload = () => {
+            console.log("Chicken sprite loaded");
+        };
 
         requestAnimationFrame(this.gameLoop);
 
