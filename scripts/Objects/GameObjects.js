@@ -14,6 +14,8 @@ export class GameObject {
         this.color = color;
         this.layer = layer;
 
+        this.image = null;
+
         this.hovered = false;
         this.selected = false;
     }
@@ -23,20 +25,30 @@ export class GameObject {
         this.position.y += this.velocity.moveY * deltaTime;
     }
 
-    render(painter) {
-        // console.log(painter);
-        painter.fillStyle = this.color;
-        painter.fillRect(
-            this.position.x,
-            this.position.y,
-            this.size.width,
-            this.size.height,
-        );
+    render(context) {
+        if (this.img) {
+            // use image if exist
+            context.drawImage(
+                this.img,
+                this.position.x,
+                this.position.y,
+                this.size.width,
+                this.size.height,
+            );
+        } else {
+            context.fillStyle = this.color;
+            context.fillRect(
+                this.position.x,
+                this.position.y,
+                this.size.width,
+                this.size.height,
+            );
+        }
 
         if (this.hovered) {
-            painter.lineWidth = 2;
-            painter.strokeStyle = "#ff0000";
-            painter.strokeRect(
+            context.lineWidth = 4;
+            context.strokeStyle = "#fff";
+            context.strokeRect(
                 this.position.x,
                 this.position.y,
                 this.size.width,
@@ -45,9 +57,9 @@ export class GameObject {
         }
 
         if (this.selected) {
-            painter.lineWidth = 8;
-            painter.strokeStyle = "#00ff88";
-            painter.strokeRect(
+            context.lineWidth = 6;
+            context.strokeStyle = "#000";
+            context.strokeRect(
                 this.position.x,
                 this.position.y,
                 this.size.width,
@@ -55,7 +67,7 @@ export class GameObject {
             );
         }
 
-        painter.lineWidth = 1; // reset stroke width
+        context.lineWidth = 1; // reset stroke width
     }
 
     getBottomY() {
@@ -107,5 +119,9 @@ export class GameObject {
             mouseY >= this.position.y &&
             mouseY <= this.position.y + this.size.height
         );
+    }
+
+    setImage(img) {
+        this.img = img;
     }
 }
