@@ -86,3 +86,7 @@ body {
 
     padding: 12px;
 }
+
+p.property-value {
+    display: inline;
+}

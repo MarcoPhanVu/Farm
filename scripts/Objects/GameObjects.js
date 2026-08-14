@@ -14,10 +14,12 @@ export class GameObject {
         this.color = color;
         this.layer = layer;
 
-        this.image = null;
+        this.image = "none";
 
         this.hovered = false;
         this.selected = false;
+
+        this.selfElapsedTime = 0;
     }
 
     update(deltaTime) {
@@ -30,6 +32,12 @@ export class GameObject {
             // use image if exist
             context.drawImage(
                 this.img,
+
+                0,
+                0,
+                8,
+                8,
+
                 this.position.x,
                 this.position.y,
                 this.size.width,
@@ -72,44 +80,6 @@ export class GameObject {
 
     getBottomY() {
         return this.position.y + this.size.height;
-    }
-
-    log(target) {
-        if (!target) {
-            console.log(`No valid option for [${target}]`);
-        }
-
-        if (target === "pos" || target === "position") {
-            console.log(
-                `Position: X[${this.position.x}] - Y[${this.position.y}]`,
-            );
-        }
-
-        if (target === "size") {
-            console.log(`Size: X[${this.size.width}] - Y[${this.size.height}]`);
-        }
-
-        if (target === "velo" || target === "velocity") {
-            console.log(
-                `Velocity: X[${this.velocity.moveX}] - Y[${this.velocity.moveY}]`,
-            );
-        }
-
-        if (target === "self") {
-            console.log(`ID: ${this.id}`);
-            console.log(`Name: ${this.name}`);
-            console.log(`Type: ${this.type}`);
-            console.log(`State: ${this.state}`);
-            this.log("position");
-            this.log("size");
-            this.log("velocity");
-            console.log(`Color: ${this.color}`);
-            console.log(`Layer: ${this.layer}`);
-            console.log(`Hovered: ${this.hovered}`);
-            console.log(`Selected: ${this.selected}`);
-        }
-
-        console.log(`No valid option for [${target}]`);
     }
 
     containsPoints(mouseX, mouseY) {
