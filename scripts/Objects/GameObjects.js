@@ -14,7 +14,7 @@ export class GameObject {
         this.color = color;
         this.layer = layer;
 
-        this.image = null;
+        this.image = "none";
 
         this.hovered = false;
         this.selected = false;
@@ -32,6 +32,12 @@ export class GameObject {
             // use image if exist
             context.drawImage(
                 this.img,
+
+                0,
+                0,
+                8,
+                8,
+
                 this.position.x,
                 this.position.y,
                 this.size.width,

@@ -89,7 +89,7 @@ export class GameManager {
 
             for (let obj of this.gameObjects) {
                 obj.selected = obj === this.selectedObject;
-                console.log(this.selectedObject);
+                // console.log(this.selectedObject);
             }
 
             this.buildPropertiesPanel();
@@ -99,7 +99,7 @@ export class GameManager {
     buildPropertiesPanel() {
         const header = "<h3>Properties</h3>";
         const footer = '<button id="deleteSelectedBtn">Delete</button>';
-        if (this.selectedObject === null) {
+        if (this.selectedObject == null) {
             this.propertiesPanel.innerHTML =
                 header + `Nothing selected for now`;
             return;
@@ -118,11 +118,6 @@ export class GameManager {
                 keyName.slice(1) +
                 ": ";
 
-            // console.log(
-            //     `Key ${keyName}: ${this.selectedObject[keyName]}`,
-            //     Object.keys(this.selectedObject[keyName]),
-            // );
-
             if (this.selectedObject[keyName].constructor == Object) {
                 // Expand if a dictionary
                 for (let key of Object.keys(this.selectedObject[keyName])) {
@@ -130,16 +125,21 @@ export class GameManager {
                         // '<p class="property-value">' +
                         `[${key}: ${this.selectedObject[keyName][key]}] `;
                 }
-            } else if (this.selectedObject[keyName].constructor == Number) {
-                console.log(typeof this.selectedObject[keyName]);
-                propertiesHTML += Math.floor(this.selectedObject[keyName]);
-            } else {
-                propertiesHTML +=
-                    // '<p class="property-value">' +
-                    this.selectedObject[keyName];
             }
 
-            propertiesHTML += "</p></p>\n";
+            try {
+                if (this.selectedObject[keyName].constructor == Number) {
+                    propertiesHTML += Math.floor(this.selectedObject[keyName]);
+                } else {
+                    propertiesHTML +=
+                        // '<p class="property-value">' +
+                        this.selectedObject[keyName];
+                }
+            } catch (error) {
+                console.log(error);
+            } finally {
+                propertiesHTML += "</p></p>\n";
+            }
         }
 
         this.propertiesPanel.innerHTML = propertiesHTML + footer;
@@ -163,7 +163,6 @@ export class GameManager {
         this.selectedObjectDOM.selfElapsedTime = document.getElementById(
             "selected-selfElapsedTime",
         );
-        // console.log(this.selectedObjectDOM.selfElapsedTime);
 
         return;
     }
@@ -178,8 +177,6 @@ export class GameManager {
             return;
         }
 
-        // console.log(this.selectedObjectDOM.position);
-        // console.log("NULL FOR DOM");
         this.selectedObjectDOM.position.innerHTML = `[x: ${Math.floor(this.selectedObject.position.x)}] [y: ${Math.floor(this.selectedObject.position.y)}]`;
         this.selectedObjectDOM.velocity.innerHTML = `[moveX: ${this.selectedObject.velocity.moveX}] [moveY: ${this.selectedObject.velocity.moveY}]`;
         this.selectedObjectDOM.selfElapsedTime.innerHTML = `elapsedTime: ${this.selectedObject.selfElapsedTime.toPrecision(2)}`;
@@ -223,6 +220,9 @@ export class GameManager {
             this.gameCanvas.width,
             this.gameCanvas.height,
         );
+
+        this.painter.imageSmoothingEnabled = false;
+
         const sortedObjects = [...this.gameObjects].sort((a, b) => {
             if (a.layer !== b.layer) {
                 return a.layer - b.layer; // if pos -> b b4 a, if neg -> a b4 b
@@ -260,7 +260,7 @@ export class GameManager {
     spawnRandomAnimal() {
         let animal = "chimken";
         animal = {
-            size: { width: 40, height: 60 },
+            size: { width: 120, height: 120 },
         };
 
         let currentID = this.nextAnimalID++;
@@ -278,7 +278,7 @@ export class GameManager {
             moveX: RandomFromMinToMax(40, 100) * PosOrNeg(),
             moveY: RandomFromMinToMax(40, 100) * PosOrNeg(),
         };
-        let size = { width: 40, height: 60 };
+        let size = { width: 80, height: 80 };
 
         let color =
             colorTemplate["BrightAss"].colors[
@@ -287,7 +287,7 @@ export class GameManager {
 
         // console.log(`color: ${color}`);
         let animalObj = new Animal(
-            currentID + 1,
+            currentID,
             `car ${currentID + 1}`,
             "animal",
             "moving",
@@ -298,11 +298,14 @@ export class GameManager {
             1,
         );
 
-        // this.selectedObject = animalObj;
-        // animalObj.selected = true;
-        // console.log(Object.keys(animalObj));
-        // console.log(Object.entries(animalObj));
-        // console.log(JSON.stringify(animalObj, 2, null));
+        let chickImage = new Image();
+        chickImage.src = new URL(
+            "../assets/chick-anim.png",
+            import.meta.url,
+        ).href;
+
+        animalObj.setImage(chickImage);
+
         this.gameObjects.push(animalObj);
     }
 
@@ -310,20 +313,22 @@ export class GameManager {
         window.addEventListener("resize", this.resizeCanvas);
         this.resizeCanvas();
 
-        const chickImg = new Image();
-        chickImg.src = new URL(
+        let chickImage = new Image();
+        chickImage.src = new URL(
             "../assets/chick-anim.png",
             import.meta.url,
         ).href;
 
-        chickImg.onload = () => {
+        chickImage.onload = () => {
             console.log("Chicken sprite loaded");
         };
 
         requestAnimationFrame(this.gameLoop);
 
         this.spawnRandomAnimal();
-        // this.buildPropertiesPanel();
+
+        // console.log(gameASDASD.gameObjects[1]);
+        // console.log(gameASDASD.gameObjects[1].setImage(chickImage));
         for (let i = 0; i < 8; i++) {
             this.spawnRandomAnimal();
         }
