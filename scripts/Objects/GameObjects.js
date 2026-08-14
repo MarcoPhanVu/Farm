@@ -16,6 +16,8 @@ export class GameObject {
 
         this.hovered = false;
         this.selected = false;
+
+        this.selfElapsedTime = 0;
     }
 
     update(deltaTime) {

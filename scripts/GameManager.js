@@ -37,6 +37,7 @@ export class GameManager {
 
         this.hoveredObject = null;
         this.selectedObject = null;
+        this.selectedObjectDOM = null;
 
         this.nextAnimalID = 2;
         this.animalPool = ["chimken", "duck", "car", "dawg"];
@@ -72,7 +73,7 @@ export class GameManager {
             }
         });
 
-        // Seledct Objects
+        // Select Objects
         this.gameCanvas.addEventListener("click", (event) => {
             const mouse = this.getMousePosition(event);
             const objsList = this.getObjectsFromFrontToBack();
@@ -88,6 +89,7 @@ export class GameManager {
 
             for (let obj of this.gameObjects) {
                 obj.selected = obj === this.selectedObject;
+                console.log(this.selectedObject);
             }
 
             this.buildPropertiesPanel();
@@ -128,6 +130,9 @@ export class GameManager {
                         // '<p class="property-value">' +
                         `[${key}: ${this.selectedObject[keyName][key]}] `;
                 }
+            } else if (this.selectedObject[keyName].constructor == Number) {
+                console.log(typeof this.selectedObject[keyName]);
+                propertiesHTML += Math.floor(this.selectedObject[keyName]);
             } else {
                 propertiesHTML +=
                     // '<p class="property-value">' +
@@ -164,9 +169,20 @@ export class GameManager {
     }
 
     updatePropertiesPanel() {
-        this.selectedObjectDOM.position.innerHTML = `[x: ${this.selectedObject.position.x}] [y: ${this.selectedObject.position.y}]`;
+        if (
+            this.selectedObject == null ||
+            !this.selectedObject ||
+            !this.selectedObject.position ||
+            !this.selectedObject.velocity
+        ) {
+            return;
+        }
+
+        // console.log(this.selectedObjectDOM.position);
+        // console.log("NULL FOR DOM");
+        this.selectedObjectDOM.position.innerHTML = `[x: ${Math.floor(this.selectedObject.position.x)}] [y: ${Math.floor(this.selectedObject.position.y)}]`;
         this.selectedObjectDOM.velocity.innerHTML = `[moveX: ${this.selectedObject.velocity.moveX}] [moveY: ${this.selectedObject.velocity.moveY}]`;
-        this.selectedObjectDOM.selfElapsedTime.innerHTML = `elapsedTime: ${this.selectedObject.selfElapsedTime}`;
+        this.selectedObjectDOM.selfElapsedTime.innerHTML = `elapsedTime: ${this.selectedObject.selfElapsedTime.toPrecision(2)}`;
     }
 
     resizeCanvas() {
@@ -282,8 +298,8 @@ export class GameManager {
             1,
         );
 
-        this.selectedObject = animalObj;
-        animalObj.selected = true;
+        // this.selectedObject = animalObj;
+        // animalObj.selected = true;
         // console.log(Object.keys(animalObj));
         // console.log(Object.entries(animalObj));
         // console.log(JSON.stringify(animalObj, 2, null));
@@ -307,9 +323,9 @@ export class GameManager {
         requestAnimationFrame(this.gameLoop);
 
         this.spawnRandomAnimal();
-        this.buildPropertiesPanel();
-        // for (let i = 0; i < 8; i++) {
-        //     this.spawnRandomAnimal();
-        // }
+        // this.buildPropertiesPanel();
+        for (let i = 0; i < 8; i++) {
+            this.spawnRandomAnimal();
+        }
     }
 }
