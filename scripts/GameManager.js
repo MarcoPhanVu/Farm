@@ -14,13 +14,10 @@ export class GameManager {
         this.propertiesPanel = document.getElementById("propertiesPanel");
         this.bottomPanel = document.getElementById("bottomPanel");
 
-        // Properties Panel
-        // this.mouseXText = document.getElementById("mouseX");
-        // this.mouseYText = document.getElementById("mouseY");
-
         // Bottom Panel
         this.spawnAnimalBtn = document.getElementById("spawnAnimalBtn");
 
+        // Initial objects
         this.gameObjects = [
             new GameObject(
                 1,
@@ -44,42 +41,103 @@ export class GameManager {
         this.nextAnimalID = 2;
         this.animalPool = ["chimken", "duck", "car", "dawg"];
 
-        // Entirely depends on chatGPT for this part, gotta learn about bindings in the future.
+        // Entirely depended on chatGPT for this part, gotta learn about bindings in the future.
         this.resizeCanvas = this.resizeCanvas.bind(this);
         this.gameLoop = this.gameLoop.bind(this);
         this.spawnRandomAnimal = this.spawnRandomAnimal.bind(this);
         this.update = this.update.bind(this);
         this.render = this.render.bind(this);
+
+        // EventListeners
+        // Have to bind functions first
+        this.spawnAnimalBtn.addEventListener("click", this.spawnRandomAnimal);
+
+        // Hover Over Object
+        this.gameCanvas.addEventListener("mousemove", (event) => {
+            const mouse = this.getMousePosition(event);
+            const objsList = this.getObjectsFromFrontToBack();
+            this.hoveredObject = null; // ensure null
+
+            for (let obj of objsList) {
+                // need to find a more optimal way to deal with
+                if (obj.containsPoints(mouse.x, mouse.y)) {
+                    this.hoveredObject = obj;
+                    break;
+                }
+            }
+
+            for (let obj of this.gameObjects) {
+                // determine the hovered state of hovered object.
+                obj.hovered = obj === this.hoveredObject;
+            }
+        });
+
+        // Seledct Objects
+        this.gameCanvas.addEventListener("click", (event) => {
+            const mouse = this.getMousePosition(event);
+            const objsList = this.getObjectsFromFrontToBack();
+
+            this.selectedObject = null;
+
+            for (let obj of objsList) {
+                if (obj.containsPoints(mouse.x, mouse.y)) {
+                    this.selectedObject = obj;
+                    break;
+                }
+            }
+
+            for (let obj of this.gameObjects) {
+                obj.selected = obj === this.selectedObject;
+            }
+
+            this.buildPropertiesPanel();
+        });
     }
 
-    updatePropertiesPanel() {
+    buildPropertiesPanel() {
         const header = "<h3>Properties</h3>";
         const footer = '<button id="deleteSelectedBtn">Delete</button>';
         if (this.selectedObject === null) {
-            console.log("Reached null selected");
             this.propertiesPanel.innerHTML =
                 header + `Nothing selected for now`;
             return;
         }
 
-        console.log("Reached");
+        // console.log(JSON.stringify(this.selectedObject));
+        // console.log(Object.keys(this.selectedObject));
+        // console.log(Object.entries(this.selectedObject));
+        // console.log(JSON.stringify(this.selectedObject, 2, null));
 
-        this.propertiesPanel.innerHTML =
-            header +
-            `
-				<p><strong>ID: ${this.selectedObject.id}</strong></p>
-				<p><strong>Name: ${this.selectedObject.name}</strong></p>
-				<p><strong>Type: ${this.selectedObject.type}</strong></p>
-				<p><strong>State: ${this.selectedObject.state}</strong></p>
-				<p><strong>Position: X[${this.selectedObject.position.x}] - Y[${this.selectedObject.position.y}</strong>]</p>
-				<p><strong>Size: X[${this.selectedObject.size.width}] - Y[${this.selectedObject.size.height}</strong>]</p>
-				<p><strong>Velocity: X[${this.selectedObject.velocity.moveX}] - Y[${this.selectedObject.velocity.moveY}</strong>]</p>
-				<p><strong>Color: ${this.selectedObject.color}</strong></p>
-				<p><strong>Layer: ${this.selectedObject.layer}</strong></p>
-				<p><strong>Hovered: ${this.selectedObject.hovered}</strong></p>
-				<p><strong>Selected: ${this.selectedObject.selected}</strong></p>
-			` +
-            footer;
+        let propertiesHTML = header;
+        for (let keyName of Object.keys(this.selectedObject)) {
+            propertiesHTML +=
+                `<p class="property-name" id="selected-${keyName}">` +
+                keyName.charAt(0).toUpperCase() +
+                keyName.slice(1) +
+                ": ";
+
+            // console.log(
+            //     `Key ${keyName}: ${this.selectedObject[keyName]}`,
+            //     Object.keys(this.selectedObject[keyName]),
+            // );
+
+            if (this.selectedObject[keyName].constructor == Object) {
+                // Expand if a dictionary
+                for (let key of Object.keys(this.selectedObject[keyName])) {
+                    propertiesHTML +=
+                        // '<p class="property-value">' +
+                        `[${key}: ${this.selectedObject[keyName][key]}] `;
+                }
+            } else {
+                propertiesHTML +=
+                    // '<p class="property-value">' +
+                    this.selectedObject[keyName];
+            }
+
+            propertiesHTML += "</p></p>\n";
+        }
+
+        this.propertiesPanel.innerHTML = propertiesHTML + footer;
 
         document
             .getElementById("deleteSelectedBtn")
@@ -87,7 +145,28 @@ export class GameManager {
                 console.log("Will work on deleting stuffs later");
             });
 
+        this.selectedObjectDOM = new Object();
+
+        this.selectedObjectDOM.position =
+            document.getElementById("selected-position");
+        // console.log(this.selectedObjectDOM.position);
+
+        this.selectedObjectDOM.velocity =
+            document.getElementById("selected-velocity");
+        // console.log(this.selectedObjectDOM.velocity);
+
+        this.selectedObjectDOM.selfElapsedTime = document.getElementById(
+            "selected-selfElapsedTime",
+        );
+        // console.log(this.selectedObjectDOM.selfElapsedTime);
+
         return;
+    }
+
+    updatePropertiesPanel() {
+        this.selectedObjectDOM.position.innerHTML = `[x: ${this.selectedObject.position.x}] [y: ${this.selectedObject.position.y}]`;
+        this.selectedObjectDOM.velocity.innerHTML = `[moveX: ${this.selectedObject.velocity.moveX}] [moveY: ${this.selectedObject.velocity.moveY}]`;
+        this.selectedObjectDOM.selfElapsedTime.innerHTML = `elapsedTime: ${this.selectedObject.selfElapsedTime}`;
     }
 
     resizeCanvas() {
@@ -114,9 +193,10 @@ export class GameManager {
 
     update(deltaTime, elapsedTime) {
         for (let object of this.gameObjects) {
-            // object.log("self");
             object.update(deltaTime, this.gameCanvas);
         }
+
+        this.updatePropertiesPanel();
     }
 
     render() {
@@ -162,10 +242,11 @@ export class GameManager {
     }
 
     spawnRandomAnimal() {
-        // let animal = "chimken";
-        let animal = {
+        let animal = "chimken";
+        animal = {
             size: { width: 40, height: 60 },
         };
+
         let currentID = this.nextAnimalID++;
         let position = {
             x: RandomFromMinToMax(
@@ -188,82 +269,47 @@ export class GameManager {
                 RandomFromMinToMax(0, colorTemplate["BrightAss"].colors.length)
             ];
 
-        console.log(`color: ${color}`);
-
-        console.log(currentID);
-        this.gameObjects.push(
-            new Animal(
-                currentID + 1,
-                `car ${currentID + 1}`,
-                "animal",
-                "moving",
-                position,
-                size,
-                velocity,
-                color,
-                1,
-            ),
+        // console.log(`color: ${color}`);
+        let animalObj = new Animal(
+            currentID + 1,
+            `car ${currentID + 1}`,
+            "animal",
+            "moving",
+            position,
+            size,
+            velocity,
+            color,
+            1,
         );
 
-        console.log("spawned");
+        this.selectedObject = animalObj;
+        animalObj.selected = true;
+        // console.log(Object.keys(animalObj));
+        // console.log(Object.entries(animalObj));
+        // console.log(JSON.stringify(animalObj, 2, null));
+        this.gameObjects.push(animalObj);
     }
 
     start() {
         window.addEventListener("resize", this.resizeCanvas);
         this.resizeCanvas();
 
-        this.spawnAnimalBtn.addEventListener("click", this.spawnRandomAnimal);
+        const chickImg = new Image();
+        chickImg.src = new URL(
+            "../assets/chick-anim.png",
+            import.meta.url,
+        ).href;
 
-        // Hover Over Object
-        this.gameCanvas.addEventListener("mousemove", (event) => {
-            const mouse = this.getMousePosition(event);
-            const objsList = this.getObjectsFromFrontToBack();
-            this.hoveredObject = null;
-
-            for (let obj of objsList) {
-                if (obj.containsPoints(mouse.x, mouse.y)) {
-                    this.hoveredObject = obj;
-                    break;
-                }
-            }
-
-            for (let obj of this.gameObjects) {
-                // determine the hovered state of hovered object.
-                obj.hovered = obj === this.hoveredObject;
-            }
-        });
-
-        this.gameCanvas.addEventListener("click", (event) => {
-            const mouse = this.getMousePosition(event);
-            const objsList = this.getObjectsFromFrontToBack();
-
-            this.selectedObject = null;
-
-            for (let obj of objsList) {
-                if (obj.containsPoints(mouse.x, mouse.y)) {
-                    this.selectedObject = obj;
-                    break;
-                }
-            }
-
-            for (let obj of this.gameObjects) {
-                obj.selected = obj === this.selectedObject;
-            }
-
-            this.updatePropertiesPanel();
-        });
+        chickImg.onload = () => {
+            console.log("Chicken sprite loaded");
+        };
 
         requestAnimationFrame(this.gameLoop);
 
         this.spawnRandomAnimal();
-        this.spawnRandomAnimal();
-        this.spawnRandomAnimal();
-        this.spawnRandomAnimal();
-        this.spawnRandomAnimal();
-        this.spawnRandomAnimal();
-        this.spawnRandomAnimal();
-        this.spawnRandomAnimal();
-        this.spawnRandomAnimal();
-        this.spawnRandomAnimal();
+        this.buildPropertiesPanel();
+        // for (let i = 0; i < 8; i++) {
+        //     this.spawnRandomAnimal();
+        // }
     }
 }
