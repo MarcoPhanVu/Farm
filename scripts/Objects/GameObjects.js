@@ -14,7 +14,8 @@ export class GameObject {
         this.color = color;
         this.layer = layer;
 
-        this.image = "none";
+        this.image = null;
+        this.animation = null;
 
         this.hovered = false;
         this.selected = false;
@@ -25,13 +26,31 @@ export class GameObject {
     update(deltaTime) {
         this.position.x += this.velocity.moveX * deltaTime;
         this.position.y += this.velocity.moveY * deltaTime;
+
+        // console.log(this.animation);
+
+        if (this.animation) {
+            // console.log(this);
+            // console.log("check");
+            // console.log(gameASDASD.gameObjects[1]);
+            this.animation.update(deltaTime);
+        }
     }
 
     render(context) {
-        if (this.img) {
+        if (this.animation) {
+            this.animation.render(
+                context,
+                this.position.x,
+                this.position.y,
+                this.size.width,
+                this.size.height,
+            );
+            // console.log("reached animation");
+        } else if (this.image) {
             // use image if exist
             context.drawImage(
-                this.img,
+                this.image,
 
                 0,
                 0,
@@ -43,6 +62,7 @@ export class GameObject {
                 this.size.width,
                 this.size.height,
             );
+            // console.log("reached image");
         } else {
             context.fillStyle = this.color;
             context.fillRect(
@@ -53,6 +73,25 @@ export class GameObject {
             );
         }
 
+        this.renderDebugOutline(context);
+
+        context.lineWidth = 1; // reset stroke width
+    }
+
+    getBottomY() {
+        return this.position.y + this.size.height;
+    }
+
+    containsPoints(mouseX, mouseY) {
+        return (
+            mouseX >= this.position.x &&
+            mouseX <= this.position.x + this.size.width &&
+            mouseY >= this.position.y &&
+            mouseY <= this.position.y + this.size.height
+        );
+    }
+
+    renderDebugOutline(context) {
         if (this.hovered) {
             context.lineWidth = 4;
             context.strokeStyle = "#fff";
@@ -74,24 +113,16 @@ export class GameObject {
                 this.size.height,
             );
         }
-
-        context.lineWidth = 1; // reset stroke width
-    }
-
-    getBottomY() {
-        return this.position.y + this.size.height;
-    }
-
-    containsPoints(mouseX, mouseY) {
-        return (
-            mouseX >= this.position.x &&
-            mouseX <= this.position.x + this.size.width &&
-            mouseY >= this.position.y &&
-            mouseY <= this.position.y + this.size.height
-        );
     }
 
     setImage(img) {
-        this.img = img;
+        this.image = img;
+    }
+
+    setAnimation(animation) {
+        this.animation = animation;
+        // this.animation = "animation";
+        // console.log(animation);
+        // console.log("animation sett");
     }
 }
