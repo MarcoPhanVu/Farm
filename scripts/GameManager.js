@@ -2,6 +2,7 @@ import { Animal } from "./Objects/Animal.js";
 import { GameObject } from "./Objects/GameObjects.js";
 import { RandomFromMinToMax, PosOrNeg } from "./utils/random.js";
 import { colorTemplate } from "./config/colors.js";
+import { SpriteAnimation } from "./Objects/SpriteAnimation.js";
 
 export class GameManager {
     constructor() {
@@ -40,7 +41,12 @@ export class GameManager {
         this.selectedObjectDOM = null;
 
         this.nextAnimalID = 2;
-        this.animalPool = ["chimken", "duck", "car", "dawg"];
+        this.animalPool = {
+            chimken: { size: { width: 80, height: 80 } },
+            duck: { size: { width: 80, height: 80 } },
+            car: { size: { width: 80, height: 80 } },
+            dawg: { size: { width: 80, height: 80 } },
+        };
 
         // Entirely depended on chatGPT for this part, gotta learn about bindings in the future.
         this.resizeCanvas = this.resizeCanvas.bind(this);
@@ -118,16 +124,22 @@ export class GameManager {
                 keyName.slice(1) +
                 ": ";
 
-            if (this.selectedObject[keyName].constructor == Object) {
-                // Expand if a dictionary
-                for (let key of Object.keys(this.selectedObject[keyName])) {
-                    propertiesHTML +=
-                        // '<p class="property-value">' +
-                        `[${key}: ${this.selectedObject[keyName][key]}] `;
-                }
-            }
-
             try {
+                if (this.selectedObject[keyName] === null) {
+                    // Img and Animation will be Null in default
+                    // console.log("It's null");
+                    continue;
+                }
+
+                if (this.selectedObject[keyName].constructor == Object) {
+                    // Expand if a dictionary
+                    for (let key of Object.keys(this.selectedObject[keyName])) {
+                        propertiesHTML +=
+                            // '<p class="property-value">' +
+                            `[${key}: ${this.selectedObject[keyName][key]}] `;
+                    }
+                }
+
                 if (this.selectedObject[keyName].constructor == Number) {
                     propertiesHTML += Math.floor(this.selectedObject[keyName]);
                 } else {
@@ -136,6 +148,7 @@ export class GameManager {
                         this.selectedObject[keyName];
                 }
             } catch (error) {
+                console.log(this.selectedObject[keyName]);
                 console.log(error);
             } finally {
                 propertiesHTML += "</p></p>\n";
@@ -259,9 +272,7 @@ export class GameManager {
 
     spawnRandomAnimal() {
         let animal = "chimken";
-        animal = {
-            size: { width: 120, height: 120 },
-        };
+        animal = this.animalPool[animal];
 
         let currentID = this.nextAnimalID++;
         let position = {
@@ -306,6 +317,16 @@ export class GameManager {
 
         animalObj.setImage(chickImage);
 
+        const chickenAnimation = new SpriteAnimation(
+            chickImage,
+            8,
+            8,
+            4,
+            2,
+            0.15,
+        );
+        animalObj.setAnimation(chickenAnimation);
+
         this.gameObjects.push(animalObj);
     }
 
@@ -327,8 +348,6 @@ export class GameManager {
 
         this.spawnRandomAnimal();
 
-        // console.log(gameASDASD.gameObjects[1]);
-        // console.log(gameASDASD.gameObjects[1].setImage(chickImage));
         for (let i = 0; i < 8; i++) {
             this.spawnRandomAnimal();
         }

@@ -48,6 +48,10 @@ export class Animal extends GameObject {
         if (hitBound !== null) {
             this.changeDirection(hitBound);
         }
+
+        if (this.animation) {
+            this.animation.update(deltaTime);
+        }
     }
 
     changeDirection(hitBound) {
