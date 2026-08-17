@@ -54,8 +54,8 @@ export class GameObject {
 
                 0,
                 0,
-                8,
-                8,
+                this.spriteSize,
+                this.spriteSize,
 
                 this.position.x,
                 this.position.y,
@@ -115,8 +115,10 @@ export class GameObject {
         }
     }
 
-    setImage(img) {
+    setImage(img, spriteSize) {
         this.image = img;
+        this.spriteSize = spriteSize;
+        // console.log(img);
     }
 
     setAnimation(animation) {

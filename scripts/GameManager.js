@@ -1,7 +1,12 @@
 import { Animal } from "./Objects/Animal.js";
 import { GameObject } from "./Objects/GameObjects.js";
-import { RandomFromMinToMax, PosOrNeg } from "./utils/random.js";
+import {
+    RandomFromMinToMax,
+    PosOrNeg,
+    RandomObjectFromObjectList,
+} from "./utils/random.js";
 import { colorTemplate } from "./config/colors.js";
+import { animalPool } from "./config/animals.js";
 import { SpriteAnimation } from "./Objects/SpriteAnimation.js";
 
 export class GameManager {
@@ -41,12 +46,7 @@ export class GameManager {
         this.selectedObjectDOM = null;
 
         this.nextAnimalID = 2;
-        this.animalPool = {
-            chimken: { size: { width: 80, height: 80 } },
-            duck: { size: { width: 80, height: 80 } },
-            car: { size: { width: 80, height: 80 } },
-            dawg: { size: { width: 80, height: 80 } },
-        };
+        this.animalPool = animalPool;
 
         // Entirely depended on chatGPT for this part, gotta learn about bindings in the future.
         this.resizeCanvas = this.resizeCanvas.bind(this);
@@ -127,7 +127,6 @@ export class GameManager {
             try {
                 if (this.selectedObject[keyName] === null) {
                     // Img and Animation will be Null in default
-                    // console.log("It's null");
                     continue;
                 }
 
@@ -271,8 +270,9 @@ export class GameManager {
     }
 
     spawnRandomAnimal() {
-        let animal = "chimken";
-        animal = this.animalPool[animal];
+        console.log(RandomObjectFromObjectList(this.animalPool));
+
+        let animal = RandomObjectFromObjectList(this.animalPool);
 
         let currentID = this.nextAnimalID++;
         let position = {
@@ -312,7 +312,6 @@ export class GameManager {
         let chickImage = new Image();
         chickImage.src = new URL(
             "../assets/chick-walking-anim-4-2-8x8.png",
-            // "../assets/chick-anim.png,
             import.meta.url,
         ).href;
 
@@ -331,26 +330,81 @@ export class GameManager {
         this.gameObjects.push(animalObj);
     }
 
+    spawnAnimal(species) {
+        let animal = this.animalPool[species];
+
+        let currentID = this.nextAnimalID++;
+        let name = `${species} ${currentID}`;
+        let type = "animal";
+        let state = "moving";
+        let position = {
+            x: RandomFromMinToMax(
+                80,
+                this.gameCanvas.width - animal.size.width,
+            ),
+            y: RandomFromMinToMax(
+                80,
+                this.gameCanvas.height - animal.size.height,
+            ),
+        };
+        let velocity = {
+            moveX: RandomFromMinToMax(40, 100) * PosOrNeg(),
+            moveY: RandomFromMinToMax(40, 100) * PosOrNeg(),
+        };
+        let size = animal["size"];
+        let color =
+            colorTemplate["BrightAss"].colors[
+                RandomFromMinToMax(0, colorTemplate["BrightAss"].colors.length)
+            ];
+
+        let animalObj = new Animal(
+            currentID,
+            name,
+            type,
+            state,
+            position,
+            size,
+            velocity,
+            color,
+            1, // Animal will be in layer 1
+        );
+
+        if (animal.sprite.img == "none") {
+            console.log("none");
+            console.log("none");
+        }
+
+        // Process url
+        console.log(animal.sprite.img);
+        console.log(animal.sprite.img.split());
+
+        let spriteImage = new Image();
+        spriteImage.src = new URL(animal.sprite.img, import.meta.url).href;
+
+        animalObj.setImage(spriteImage, 16);
+
+        this.gameObjects.push(animalObj);
+
+        try {
+            console.log("thow error");
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     start() {
         window.addEventListener("resize", this.resizeCanvas);
         this.resizeCanvas();
 
-        let chickImage = new Image();
-        chickImage.src = new URL(
-            "../assets/chick-anim.png",
-            import.meta.url,
-        ).href;
-
-        chickImage.onload = () => {
-            console.log("Chicken sprite loaded");
-        };
-
         requestAnimationFrame(this.gameLoop);
 
-        this.spawnRandomAnimal();
+        this.spawnAnimal("chimken");
 
-        for (let i = 0; i < 8; i++) {
-            this.spawnRandomAnimal();
+        for (let i = 0; i < 4; i++) {
+            // this.spawnRandomAnimal();
+            this.spawnAnimal("chimken");
+            this.spawnAnimal("dack");
+            this.spawnAnimal("dawg");
         }
     }
 }
