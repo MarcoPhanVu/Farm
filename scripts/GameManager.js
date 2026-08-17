@@ -311,7 +311,8 @@ export class GameManager {
 
         let chickImage = new Image();
         chickImage.src = new URL(
-            "../assets/chick-anim.png",
+            "../assets/chick-walking-anim-4-2-8x8.png",
+            // "../assets/chick-anim.png,
             import.meta.url,
         ).href;
 
