@@ -6,27 +6,46 @@ const gameASDASD = new GameManager();
 // Global scope
 const assetsLoader = {};
 
-for (let animalType of Object.keys(animalPool)) {
-    let animal = animalPool[animalType];
+for (let animalSpecies of Object.keys(animalPool)) {
+    let animal = animalPool[animalSpecies];
 
     // Sample URL: walking: "../assets/duck-walking-anim-2-3-16x16.png"
 
-    if (!assetsLoader[animalType]) {
+    if (!assetsLoader[animalSpecies]) {
         // animal has not been initiated yet
-        assetsLoader[animalType] = {};
+        assetsLoader[animalSpecies] = {};
     }
     for (let spriteType of Object.keys(animal.sprite)) {
         if (animal.sprite[spriteType] != null) {
-            let spriteImg = new Image();
-            spriteImg.src = new URL(
+            let spriteImage = new Image();
+            spriteImage.src = new URL(
                 animal.sprite[spriteType],
                 import.meta.url,
             ).href;
 
-            assetsLoader[animalType][spriteType] = spriteImg;
+            let spritePropeties = animal.sprite[spriteType]
+                .split("-")
+                .splice(1);
 
-            spriteImg.onload = () => {
-                console.log(`${animalType}[${spriteType}]: sprite loaded`);
+            // let spriteSize = spritePropeties.at(-1).split("x")[0];
+            let spriteSize = spritePropeties.pop().split("x")[0];
+
+            assetsLoader[animalSpecies][spriteType] = {
+                spriteImage: spriteImage,
+                spriteSize: Number(spriteSize),
+            };
+
+            if (spritePropeties[0] == "walking") {
+                let spriteSheet = {
+                    col: Number(spritePropeties[1]),
+                    row: Number(spritePropeties[2]),
+                };
+                assetsLoader[animalSpecies][spriteType]["spriteSheet"] =
+                    spriteSheet;
+            }
+
+            spriteImage.onload = () => {
+                // console.log(`${animalSpecies}[${spriteType}]: sprite loaded`);
             };
         }
     }
@@ -34,26 +53,15 @@ for (let animalType of Object.keys(animalPool)) {
     // Cleaner version from chatGPT
     // for (let [spriteType, spritePath] of Object.entries(animal.sprite)) {
     //     if (spritePath !== null) {
-    //         const spriteImg = new Image();
+    //         const spriteImage = new Image();
 
-    //         spriteImg.src = new URL(spritePath, import.meta.url).href;
+    //         spriteImage.src = new URL(spritePath, import.meta.url).href;
 
-    //         assetsLoader[animalType][spriteType] = spriteImg;
+    //         assetsLoader[animalSpecies][spriteType] = spriteImage;
     //     }
     // }
 }
 console.log("Assets Loader:", assetsLoader);
-
-// animalObj.setImage(chickImage);
-// const chickenAnimation = new SpriteAnimation(
-//     chickImage,
-//     8,
-//     8,
-//     4,
-//     2,
-//     0.15,
-// );
-// animalObj.setAnimation(chickenAnimation);
 
 window.gameASDASD = gameASDASD;
 window.assetsLoader = assetsLoader;

@@ -270,10 +270,7 @@ export class GameManager {
     }
 
     spawnRandomAnimal() {
-        console.log(getRandomValueFromObject(this.animalPool));
-
         let animal = getRandomValueFromObject(this.animalPool);
-
         let currentID = this.nextAnimalID++;
         let position = {
             x: RandomFromMinToMax(
@@ -296,7 +293,6 @@ export class GameManager {
                 RandomFromMinToMax(0, colorTemplate["BrightAss"].colors.length)
             ];
 
-        // console.log(`color: ${color}`);
         let animalObj = new Animal(
             currentID,
             `car ${currentID + 1}`,
@@ -330,7 +326,7 @@ export class GameManager {
         this.gameObjects.push(animalObj);
     }
 
-    spawnAnimal(species) {
+    spawnAnimal(species, assetsLoader) {
         let animal = this.animalPool[species];
 
         let currentID = this.nextAnimalID++;
@@ -369,22 +365,18 @@ export class GameManager {
             1, // Animal will be in layer 1
         );
 
-        if (animal.sprite.img == "none") {
-            console.log("none existing img");
-        }
+        let animalSprite = assetsLoader[species];
+        animalObj.setImage(animalSprite["img"]);
 
-        let spriteImage = new Image();
-        spriteImage.src = new URL(animal.sprite.img, import.meta.url).href;
+        let spriteAnimationContainer = new SpriteAnimation(
+            animalSprite["walking"],
+            0.15,
+        );
+        console.log("sprite animation:", spriteAnimationContainer);
 
-        animalObj.setImage(spriteImage, 16);
+        animalObj.setAnimation(spriteAnimationContainer);
 
         this.gameObjects.push(animalObj);
-
-        try {
-            // console.log("thow error");
-        } catch (error) {
-            console.log(error);
-        }
     }
 
     start() {
@@ -394,11 +386,9 @@ export class GameManager {
         requestAnimationFrame(this.gameLoop);
 
         for (let i = 0; i < 4; i++) {
-            this.spawnAnimal("chicken");
-            this.spawnAnimal("dack");
-            this.spawnAnimal("dawg");
+            this.spawnAnimal("chicken", assetsLoader);
+            this.spawnAnimal("dack", assetsLoader);
+            this.spawnAnimal("dawg", assetsLoader);
         }
-        this.spawnRandomAnimal();
-        this.spawnRandomAnimal();
     }
 }

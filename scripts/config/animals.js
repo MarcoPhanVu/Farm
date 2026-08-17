@@ -28,7 +28,7 @@ export const animalPool = {
         sprite: {
             img: "../assets/dog-idle-32x32.png",
             idle: null,
-            walking: "../assets/dog-walking-4-2-32x32-Ben-simplified.png",
+            walking: "../assets/dog-walking-4-2-32x32.png",
         },
     },
     tri: {
@@ -36,7 +36,7 @@ export const animalPool = {
         sprite: {
             img: "../assets/tri-idle-256x256.png",
             idle: null,
-            walking: "../assets/dog-walking-4-2-32x32-Ben-simplified.png",
+            walking: "../assets/dog-walking-4-2-32x32.png",
         },
     },
 };

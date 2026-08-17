@@ -14,7 +14,7 @@ export class GameObject {
         this.color = color;
         this.layer = layer;
 
-        this.image = null;
+        this.idleImage = null;
         this.animation = null;
 
         this.hovered = false;
@@ -46,11 +46,11 @@ export class GameObject {
                 this.size.width,
                 this.size.height,
             );
-            // console.log("reached animation");
-        } else if (this.image) {
+            console.log("reached animation");
+        } else if (this.idleImage) {
             // use image if exist
             context.drawImage(
-                this.image,
+                this.idleImage,
 
                 0,
                 0,
@@ -115,14 +115,13 @@ export class GameObject {
         }
     }
 
-    setImage(img, spriteSize) {
-        this.image = img;
-        this.spriteSize = spriteSize;
+    setImage(img) {
+        this.idleImage = img.spriteImage;
+        this.spriteSize = img.spriteSize;
         // console.log(img);
     }
 
     setAnimation(animation) {
         this.animation = animation;
-        // console.log("animation sett");
     }
 }
