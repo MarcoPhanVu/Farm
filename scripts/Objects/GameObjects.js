@@ -123,8 +123,6 @@ export class GameObject {
 
     setAnimation(animation) {
         this.animation = animation;
-        // this.animation = "animation";
-        // console.log(animation);
         // console.log("animation sett");
     }
 }

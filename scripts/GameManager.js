@@ -3,7 +3,7 @@ import { GameObject } from "./Objects/GameObjects.js";
 import {
     RandomFromMinToMax,
     PosOrNeg,
-    RandomObjectFromObjectList,
+    getRandomValueFromObject,
 } from "./utils/random.js";
 import { colorTemplate } from "./config/colors.js";
 import { animalPool } from "./config/animals.js";
@@ -270,9 +270,9 @@ export class GameManager {
     }
 
     spawnRandomAnimal() {
-        console.log(RandomObjectFromObjectList(this.animalPool));
+        console.log(getRandomValueFromObject(this.animalPool));
 
-        let animal = RandomObjectFromObjectList(this.animalPool);
+        let animal = getRandomValueFromObject(this.animalPool);
 
         let currentID = this.nextAnimalID++;
         let position = {
@@ -311,7 +311,7 @@ export class GameManager {
 
         let chickImage = new Image();
         chickImage.src = new URL(
-            "../assets/chick-walking-anim-4-2-8x8.png",
+            "../assets/chick-walking-4-2-8x8.png",
             import.meta.url,
         ).href;
 
@@ -370,13 +370,8 @@ export class GameManager {
         );
 
         if (animal.sprite.img == "none") {
-            console.log("none");
-            console.log("none");
+            console.log("none existing img");
         }
-
-        // Process url
-        console.log(animal.sprite.img);
-        console.log(animal.sprite.img.split());
 
         let spriteImage = new Image();
         spriteImage.src = new URL(animal.sprite.img, import.meta.url).href;
@@ -386,7 +381,7 @@ export class GameManager {
         this.gameObjects.push(animalObj);
 
         try {
-            console.log("thow error");
+            // console.log("thow error");
         } catch (error) {
             console.log(error);
         }
@@ -398,13 +393,12 @@ export class GameManager {
 
         requestAnimationFrame(this.gameLoop);
 
-        this.spawnAnimal("chimken");
-
         for (let i = 0; i < 4; i++) {
-            // this.spawnRandomAnimal();
-            this.spawnAnimal("chimken");
+            this.spawnAnimal("chicken");
             this.spawnAnimal("dack");
             this.spawnAnimal("dawg");
         }
+        this.spawnRandomAnimal();
+        this.spawnRandomAnimal();
     }
 }
