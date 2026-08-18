@@ -46,7 +46,7 @@ export class GameObject {
                 this.size.width,
                 this.size.height,
             );
-            console.log("reached animation");
+            // console.log("reached animation");
         } else if (this.idleImage) {
             // use image if exist
             context.drawImage(

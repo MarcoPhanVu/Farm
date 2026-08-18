@@ -30,7 +30,7 @@ export class SpriteAnimation {
         }
     }
 
-    render(ctx, x, y, width, height) {
+    render(ctx, posX, posY, objWidth, objHeight) {
         let column = this.currentFrame % this.spriteSheetColumn;
         let row = Math.floor(this.currentFrame / this.spriteSheetColumn);
 
@@ -45,10 +45,10 @@ export class SpriteAnimation {
             this.spriteWidth,
             this.spriteHeight,
 
-            x,
-            y,
-            width,
-            height,
+            posX,
+            posY,
+            objWidth,
+            objHeight,
         );
     }
 }

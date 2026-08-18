@@ -22,6 +22,7 @@ export class GameManager {
 
         // Bottom Panel
         this.spawnAnimalBtn = document.getElementById("spawnAnimalBtn");
+        this.toggleGameStateBtn = document.getElementById("toggleGameStateBtn");
 
         // Initial objects
         this.gameObjects = [
@@ -51,13 +52,19 @@ export class GameManager {
         // Entirely depended on chatGPT for this part, gotta learn about bindings in the future.
         this.resizeCanvas = this.resizeCanvas.bind(this);
         this.gameLoop = this.gameLoop.bind(this);
-        this.spawnRandomAnimal = this.spawnRandomAnimal.bind(this);
+        this.spawnAnimal = this.spawnAnimal.bind(this);
         this.update = this.update.bind(this);
         this.render = this.render.bind(this);
+        this.togglePlaying = this.togglePlaying.bind(this);
 
         // EventListeners
         // Have to bind functions first
-        this.spawnAnimalBtn.addEventListener("click", this.spawnRandomAnimal);
+        // this.spawnAnimalBtn.addEventListener(
+        //     "click",
+        //     this.spawnAnimal("dawg", assetsLoader),
+        // );
+
+        this.toggleGameStateBtn.addEventListener("click", this.togglePlaying);
 
         // Hover Over Object
         this.gameCanvas.addEventListener("mousemove", (event) => {
@@ -210,6 +217,7 @@ export class GameManager {
 
         if (this.gameState === "playing") {
             this.update(deltaTime, elapsedTime);
+            // console.log("inloop: ", this.gameState);
         }
 
         this.render();
@@ -269,61 +277,9 @@ export class GameManager {
         return sortedObjects;
     }
 
-    spawnRandomAnimal() {
-        let animal = getRandomValueFromObject(this.animalPool);
-        let currentID = this.nextAnimalID++;
-        let position = {
-            x: RandomFromMinToMax(
-                80,
-                this.gameCanvas.width - animal.size.width,
-            ),
-            y: RandomFromMinToMax(
-                80,
-                this.gameCanvas.height - animal.size.height,
-            ),
-        };
-        let velocity = {
-            moveX: RandomFromMinToMax(40, 100) * PosOrNeg(),
-            moveY: RandomFromMinToMax(40, 100) * PosOrNeg(),
-        };
-        let size = { width: 80, height: 80 };
-
-        let color =
-            colorTemplate["BrightAss"].colors[
-                RandomFromMinToMax(0, colorTemplate["BrightAss"].colors.length)
-            ];
-
-        let animalObj = new Animal(
-            currentID,
-            `car ${currentID + 1}`,
-            "animal",
-            "moving",
-            position,
-            size,
-            velocity,
-            color,
-            1,
-        );
-
-        let chickImage = new Image();
-        chickImage.src = new URL(
-            "../assets/chick-walking-4-2-8x8.png",
-            import.meta.url,
-        ).href;
-
-        animalObj.setImage(chickImage);
-
-        const chickenAnimation = new SpriteAnimation(
-            chickImage,
-            8,
-            8,
-            4,
-            2,
-            0.15,
-        );
-        animalObj.setAnimation(chickenAnimation);
-
-        this.gameObjects.push(animalObj);
+    togglePlaying() {
+        this.gameState = this.gameState == "playing" ? "paused" : "playing";
+        // console.log(this.gameState);
     }
 
     spawnAnimal(species, assetsLoader) {
@@ -370,7 +326,7 @@ export class GameManager {
 
         let spriteAnimationContainer = new SpriteAnimation(
             animalSprite["walking"],
-            0.15,
+            1,
         );
         console.log("sprite animation:", spriteAnimationContainer);
 
@@ -385,7 +341,7 @@ export class GameManager {
 
         requestAnimationFrame(this.gameLoop);
 
-        for (let i = 0; i < 4; i++) {
+        for (let i = 0; i < 2; i++) {
             this.spawnAnimal("chicken", assetsLoader);
             this.spawnAnimal("dack", assetsLoader);
             this.spawnAnimal("dawg", assetsLoader);
