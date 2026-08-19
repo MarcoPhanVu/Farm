@@ -1,11 +1,16 @@
 import { Animal } from "./Objects/Animal.js";
 import { GameObject } from "./Objects/GameObjects.js";
-import { RandomFromMinToMax, PosOrNeg } from "./utils/random.js";
+import {
+    RandomFromMinToMax,
+    PosOrNeg,
+    getRandomValueFromObject,
+} from "./utils/random.js";
 import { colorTemplate } from "./config/colors.js";
+import { animalPool } from "./config/animals.js";
 import { SpriteAnimation } from "./Objects/SpriteAnimation.js";
 
 export class GameManager {
-    constructor() {
+    constructor(assetsLoader) {
         this.gameCanvas = document.getElementById("gameCanvas");
         this.painter = this.gameCanvas.getContext("2d");
 
@@ -17,8 +22,11 @@ export class GameManager {
 
         // Bottom Panel
         this.spawnAnimalBtn = document.getElementById("spawnAnimalBtn");
+        this.toggleGameStateBtn = document.getElementById("toggleGameStateBtn");
 
         // Initial objects
+        this.assetsLoader = assetsLoader;
+
         this.gameObjects = [
             new GameObject(
                 1,
@@ -28,7 +36,26 @@ export class GameManager {
                 { x: 160, y: 100 },
                 { width: 150, height: 200 },
                 { moveX: 0, moveY: 0 },
-                "darkgreen",
+                // "cornsilk",
+                // "honeydew",
+                // "ivory",
+                // "floralwhite",
+                // "forestgreen",
+                // "darkseagreen",
+                // "darksalmon",
+                // "darkolivegreen",
+                // "darkmagenta",
+                // "coral",
+                // "burlywood",
+                // "azure",
+                // "beige",
+                // "bisque",
+                // "lightcyan",
+                "lightgreen",
+                // "lightslategrey",
+                // "palevioletred",
+                // "powderblue",
+                // "tomato",
                 1,
             ),
         ];
@@ -41,23 +68,24 @@ export class GameManager {
         this.selectedObjectDOM = null;
 
         this.nextAnimalID = 2;
-        this.animalPool = {
-            chimken: { size: { width: 80, height: 80 } },
-            duck: { size: { width: 80, height: 80 } },
-            car: { size: { width: 80, height: 80 } },
-            dawg: { size: { width: 80, height: 80 } },
-        };
+        this.animalPool = animalPool;
 
         // Entirely depended on chatGPT for this part, gotta learn about bindings in the future.
         this.resizeCanvas = this.resizeCanvas.bind(this);
         this.gameLoop = this.gameLoop.bind(this);
-        this.spawnRandomAnimal = this.spawnRandomAnimal.bind(this);
+        this.spawnAnimal = this.spawnAnimal.bind(this);
         this.update = this.update.bind(this);
         this.render = this.render.bind(this);
+        this.togglePlaying = this.togglePlaying.bind(this);
 
         // EventListeners
         // Have to bind functions first
-        this.spawnAnimalBtn.addEventListener("click", this.spawnRandomAnimal);
+        // this.spawnAnimalBtn.addEventListener(
+        //     "click",
+        //     this.spawnAnimal("dawg", assetsLoader),
+        // );
+
+        this.toggleGameStateBtn.addEventListener("click", this.togglePlaying);
 
         // Hover Over Object
         this.gameCanvas.addEventListener("mousemove", (event) => {
@@ -111,9 +139,9 @@ export class GameManager {
             return;
         }
 
-        // console.log(JSON.stringify(this.selectedObject));
+        console.log(JSON.stringify(this.selectedObject.animation));
         // console.log(Object.keys(this.selectedObject));
-        // console.log(Object.entries(this.selectedObject));
+        // console.log(Object.entries(this.selectedObject.animation));
         // console.log(JSON.stringify(this.selectedObject, 2, null));
 
         let propertiesHTML = header;
@@ -127,7 +155,6 @@ export class GameManager {
             try {
                 if (this.selectedObject[keyName] === null) {
                     // Img and Animation will be Null in default
-                    // console.log("It's null");
                     continue;
                 }
 
@@ -270,11 +297,18 @@ export class GameManager {
         return sortedObjects;
     }
 
-    spawnRandomAnimal() {
-        let animal = "chimken";
-        animal = this.animalPool[animal];
+    togglePlaying() {
+        this.gameState = this.gameState == "playing" ? "paused" : "playing";
+        // console.log(this.gameState);
+    }
+
+    spawnAnimal(species) {
+        let animal = this.animalPool[species];
 
         let currentID = this.nextAnimalID++;
+        let name = `${species} ${currentID}`;
+        let type = "animal";
+        let state = "moving";
         let position = {
             x: RandomFromMinToMax(
                 80,
@@ -289,43 +323,42 @@ export class GameManager {
             moveX: RandomFromMinToMax(40, 100) * PosOrNeg(),
             moveY: RandomFromMinToMax(40, 100) * PosOrNeg(),
         };
-        let size = { width: 80, height: 80 };
-
+        let size = animal["size"];
         let color =
             colorTemplate["BrightAss"].colors[
                 RandomFromMinToMax(0, colorTemplate["BrightAss"].colors.length)
             ];
 
-        // console.log(`color: ${color}`);
         let animalObj = new Animal(
             currentID,
-            `car ${currentID + 1}`,
-            "animal",
-            "moving",
+            name,
+            type,
+            state,
             position,
             size,
             velocity,
             color,
-            1,
+            1, // Animal will be in layer 1
         );
 
-        let chickImage = new Image();
-        chickImage.src = new URL(
-            "../assets/chick-anim.png",
-            import.meta.url,
-        ).href;
+        console.log("animal", animalObj);
+        console.log("species: ", species);
+        console.log("assetLoader", this.assetsLoader.assetsList);
+        console.log("chicken", this.assetsLoader.assetsList["chicken"]);
 
-        animalObj.setImage(chickImage);
+        let animalSpriteMyAss = this.assetsLoader.assetsList[species];
 
-        const chickenAnimation = new SpriteAnimation(
-            chickImage,
-            8,
-            8,
-            4,
-            2,
-            0.15,
+        console.log("check species:", animalSpriteMyAss);
+
+        animalObj.setImage(animalSpriteMyAss["img"]);
+
+        let spriteAnimationContainer = new SpriteAnimation(
+            animalSpriteMyAss["walking"],
+            0.32,
         );
-        animalObj.setAnimation(chickenAnimation);
+        console.log("sprite animation:", spriteAnimationContainer);
+
+        animalObj.setAnimation(spriteAnimationContainer);
 
         this.gameObjects.push(animalObj);
     }
@@ -334,22 +367,15 @@ export class GameManager {
         window.addEventListener("resize", this.resizeCanvas);
         this.resizeCanvas();
 
-        let chickImage = new Image();
-        chickImage.src = new URL(
-            "../assets/chick-anim.png",
-            import.meta.url,
-        ).href;
-
-        chickImage.onload = () => {
-            console.log("Chicken sprite loaded");
-        };
-
         requestAnimationFrame(this.gameLoop);
 
-        this.spawnRandomAnimal();
-
-        for (let i = 0; i < 8; i++) {
-            this.spawnRandomAnimal();
+        for (let i = 0; i < 3; i++) {
+            this.spawnAnimal("chicken");
+            this.spawnAnimal("dack");
+            this.spawnAnimal("dawg");
+            this.spawnAnimal("number");
         }
+
+        // this.gameState = "pause";
     }
 }

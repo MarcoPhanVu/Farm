@@ -1,18 +1,19 @@
 export class SpriteAnimation {
-    constructor(image, frameWidth, frameHeight, columns, rows, frameDuration) {
-        this.image = image;
+    constructor(animation, frameDuration) {
+        this.spriteImage = animation.spriteImage;
 
-        this.frameWidth = frameWidth;
-        this.frameHeight = frameHeight;
+        this.spriteWidth = animation.spriteSize;
+        this.spriteHeight = animation.spriteSize;
 
-        this.columns = columns;
-        this.rows = rows;
+        this.spriteSheetColumn = animation.spriteSheet.col;
+        this.spriteSheetRow = animation.spriteSheet.row;
 
         this.frameDuration = frameDuration;
         this.timer = 0;
 
         this.currentFrame = 0;
-        this.totalFrames = columns * rows;
+        this.totalFrames =
+            animation.spriteSheet.col * animation.spriteSheet.row;
     }
 
     update(deltaTime) {
@@ -29,25 +30,25 @@ export class SpriteAnimation {
         }
     }
 
-    render(ctx, x, y, width, height) {
-        let column = this.currentFrame % this.columns;
-        let row = Math.floor(this.currentFrame / this.columns);
+    render(ctx, posX, posY, objWidth, objHeight) {
+        let column = this.currentFrame % this.spriteSheetColumn;
+        let row = Math.floor(this.currentFrame / this.spriteSheetColumn);
 
-        let sourceX = column * this.frameWidth;
-        let sourceY = row * this.frameHeight;
+        let sourceX = column * this.spriteWidth;
+        let sourceY = row * this.spriteHeight;
 
         ctx.drawImage(
-            this.image,
+            this.spriteImage,
 
             sourceX,
             sourceY,
-            this.frameWidth,
-            this.frameHeight,
+            this.spriteWidth,
+            this.spriteHeight,
 
-            x,
-            y,
-            width,
-            height,
+            posX,
+            posY,
+            objWidth,
+            objHeight,
         );
     }
 }
