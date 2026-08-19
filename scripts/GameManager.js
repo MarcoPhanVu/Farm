@@ -27,38 +27,45 @@ export class GameManager {
         // Initial objects
         this.assetsLoader = assetsLoader;
 
-        this.gameObjects = [
-            new GameObject(
-                1,
-                "Tree",
-                "object",
-                "idle",
-                { x: 160, y: 100 },
-                { width: 150, height: 200 },
-                { moveX: 0, moveY: 0 },
-                // "cornsilk",
-                // "honeydew",
-                // "ivory",
-                // "floralwhite",
-                // "forestgreen",
-                // "darkseagreen",
-                // "darksalmon",
-                // "darkolivegreen",
-                // "darkmagenta",
-                // "coral",
-                // "burlywood",
-                // "azure",
-                // "beige",
-                // "bisque",
-                // "lightcyan",
-                "lightgreen",
-                // "lightslategrey",
-                // "palevioletred",
-                // "powderblue",
-                // "tomato",
-                1,
-            ),
-        ];
+        this.gameObjects = [];
+
+        console.log("TRIE:", this.assetsLoader.assetsList["tri"]);
+        const initTree = new GameObject(
+            1,
+            "Tree",
+            "object",
+            "idle",
+            { x: 160, y: 100 },
+            { width: 320, height: 320 },
+            { moveX: 0, moveY: 0 },
+            // "cornsilk",
+            // "honeydew",
+            // "ivory",
+            // "floralwhite",
+            // "forestgreen",
+            // "darkseagreen",
+            // "darksalmon",
+            // "darkolivegreen",
+            // "darkmagenta",
+            // "coral",
+            // "burlywood",
+            // "azure",
+            // "beige",
+            // "bisque",
+            // "lightcyan",
+            "lightgreen",
+            // "lightslategrey",
+            // "palevioletred",
+            // "powderblue",
+            // "tomato",
+            1,
+        );
+        initTree.setImage(this.assetsLoader.assetsList["tri"]);
+        console.log("tri", this.assetsLoader.assetsList["tri"]);
+        initTree.setAnimation(
+            new SpriteAnimation(this.assetsLoader.assetsList.tri.walking, 0.5),
+        );
+        this.gameObjects.push(initTree);
 
         this.lastTime = 0;
         this.gameState = "playing";
@@ -74,16 +81,14 @@ export class GameManager {
         this.resizeCanvas = this.resizeCanvas.bind(this);
         this.gameLoop = this.gameLoop.bind(this);
         this.spawnAnimal = this.spawnAnimal.bind(this);
+        this.spawnRandomAnimal = this.spawnRandomAnimal.bind(this);
         this.update = this.update.bind(this);
         this.render = this.render.bind(this);
         this.togglePlaying = this.togglePlaying.bind(this);
 
         // EventListeners
         // Have to bind functions first
-        // this.spawnAnimalBtn.addEventListener(
-        //     "click",
-        //     this.spawnAnimal("dawg", assetsLoader),
-        // );
+        this.spawnAnimalBtn.addEventListener("click", this.spawnRandomAnimal);
 
         this.toggleGameStateBtn.addEventListener("click", this.togglePlaying);
 
@@ -304,6 +309,7 @@ export class GameManager {
 
     spawnAnimal(species) {
         let animal = this.animalPool[species];
+        // console.log("species:", species);
 
         let currentID = this.nextAnimalID++;
         let name = `${species} ${currentID}`;
@@ -341,14 +347,14 @@ export class GameManager {
             1, // Animal will be in layer 1
         );
 
-        console.log("animal", animalObj);
-        console.log("species: ", species);
-        console.log("assetLoader", this.assetsLoader.assetsList);
-        console.log("chicken", this.assetsLoader.assetsList["chicken"]);
+        // console.log("animal", animalObj);
+        // console.log("species: ", species);
+        // console.log("assetLoader", this.assetsLoader.assetsList);
+        // console.log("chimken", this.assetsLoader.assetsList["chimken"]);
 
         let animalSpriteMyAss = this.assetsLoader.assetsList[species];
 
-        console.log("check species:", animalSpriteMyAss);
+        // console.log("check species:", animalSpriteMyAss);
 
         animalObj.setImage(animalSpriteMyAss["img"]);
 
@@ -356,11 +362,19 @@ export class GameManager {
             animalSpriteMyAss["walking"],
             0.32,
         );
-        console.log("sprite animation:", spriteAnimationContainer);
+        // console.log("sprite animation:", spriteAnimationContainer);
 
         animalObj.setAnimation(spriteAnimationContainer);
 
         this.gameObjects.push(animalObj);
+    }
+
+    spawnRandomAnimal() {
+        // console.log(
+        //     "RandAnimal:",
+        //     getRandomValueFromObject(animalPool).trueName,
+        // );
+        this.spawnAnimal(getRandomValueFromObject(animalPool).trueName);
     }
 
     start() {
@@ -370,7 +384,7 @@ export class GameManager {
         requestAnimationFrame(this.gameLoop);
 
         for (let i = 0; i < 3; i++) {
-            this.spawnAnimal("chicken");
+            this.spawnAnimal("chimken");
             this.spawnAnimal("dack");
             this.spawnAnimal("dawg");
             this.spawnAnimal("number");
