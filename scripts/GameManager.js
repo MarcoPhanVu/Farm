@@ -10,7 +10,7 @@ import { animalPool } from "./config/animals.js";
 import { SpriteAnimation } from "./Objects/SpriteAnimation.js";
 
 export class GameManager {
-    constructor() {
+    constructor(assetsLoader) {
         this.gameCanvas = document.getElementById("gameCanvas");
         this.painter = this.gameCanvas.getContext("2d");
 
@@ -25,6 +25,8 @@ export class GameManager {
         this.toggleGameStateBtn = document.getElementById("toggleGameStateBtn");
 
         // Initial objects
+        this.assetsLoader = assetsLoader;
+
         this.gameObjects = [
             new GameObject(
                 1,
@@ -34,7 +36,26 @@ export class GameManager {
                 { x: 160, y: 100 },
                 { width: 150, height: 200 },
                 { moveX: 0, moveY: 0 },
-                "darkgreen",
+                // "cornsilk",
+                // "honeydew",
+                // "ivory",
+                // "floralwhite",
+                // "forestgreen",
+                // "darkseagreen",
+                // "darksalmon",
+                // "darkolivegreen",
+                // "darkmagenta",
+                // "coral",
+                // "burlywood",
+                // "azure",
+                // "beige",
+                // "bisque",
+                // "lightcyan",
+                "lightgreen",
+                // "lightslategrey",
+                // "palevioletred",
+                // "powderblue",
+                // "tomato",
                 1,
             ),
         ];
@@ -118,9 +139,9 @@ export class GameManager {
             return;
         }
 
-        // console.log(JSON.stringify(this.selectedObject));
+        console.log(JSON.stringify(this.selectedObject.animation));
         // console.log(Object.keys(this.selectedObject));
-        // console.log(Object.entries(this.selectedObject));
+        // console.log(Object.entries(this.selectedObject.animation));
         // console.log(JSON.stringify(this.selectedObject, 2, null));
 
         let propertiesHTML = header;
@@ -217,7 +238,6 @@ export class GameManager {
 
         if (this.gameState === "playing") {
             this.update(deltaTime, elapsedTime);
-            // console.log("inloop: ", this.gameState);
         }
 
         this.render();
@@ -282,7 +302,7 @@ export class GameManager {
         // console.log(this.gameState);
     }
 
-    spawnAnimal(species, assetsLoader) {
+    spawnAnimal(species) {
         let animal = this.animalPool[species];
 
         let currentID = this.nextAnimalID++;
@@ -321,12 +341,20 @@ export class GameManager {
             1, // Animal will be in layer 1
         );
 
-        let animalSprite = assetsLoader[species];
-        animalObj.setImage(animalSprite["img"]);
+        console.log("animal", animalObj);
+        console.log("species: ", species);
+        console.log("assetLoader", this.assetsLoader.assetsList);
+        console.log("chicken", this.assetsLoader.assetsList["chicken"]);
+
+        let animalSpriteMyAss = this.assetsLoader.assetsList[species];
+
+        console.log("check species:", animalSpriteMyAss);
+
+        animalObj.setImage(animalSpriteMyAss["img"]);
 
         let spriteAnimationContainer = new SpriteAnimation(
-            animalSprite["walking"],
-            1,
+            animalSpriteMyAss["walking"],
+            0.32,
         );
         console.log("sprite animation:", spriteAnimationContainer);
 
@@ -341,10 +369,13 @@ export class GameManager {
 
         requestAnimationFrame(this.gameLoop);
 
-        for (let i = 0; i < 2; i++) {
-            this.spawnAnimal("chicken", assetsLoader);
-            this.spawnAnimal("dack", assetsLoader);
-            this.spawnAnimal("dawg", assetsLoader);
+        for (let i = 0; i < 3; i++) {
+            this.spawnAnimal("chicken");
+            this.spawnAnimal("dack");
+            this.spawnAnimal("dawg");
+            this.spawnAnimal("number");
         }
+
+        // this.gameState = "pause";
     }
 }
