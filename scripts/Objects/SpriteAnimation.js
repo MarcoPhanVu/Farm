@@ -25,7 +25,6 @@ export class SpriteAnimation {
 
             if (this.currentFrame >= this.totalFrames) {
                 this.currentFrame = 0;
-                // console.log("reset frames");
             }
         }
     }

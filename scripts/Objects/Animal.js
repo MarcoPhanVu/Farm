@@ -3,8 +3,28 @@ import { GameObject } from "./GameObjects.js";
 import { colorTemplate } from "../config/colors.js";
 
 export class Animal extends GameObject {
-    constructor(id, name, type, state, position, size, velocity, color, layer) {
-        super(id, name, type, state, position, size, velocity, color, layer);
+    constructor(
+        id,
+        name,
+        type,
+        position,
+        size,
+        velocity,
+        debugColor,
+        sellValue,
+        layer,
+    ) {
+        super(
+            id,
+            name,
+            type,
+            position,
+            size,
+            velocity,
+            debugColor,
+            sellValue,
+            layer,
+        );
 
         this.isChangingDirection = false;
         this.selfElapsedTime = RandomFromMinToMax(0, 10);
