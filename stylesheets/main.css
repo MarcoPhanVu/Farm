@@ -23,20 +23,48 @@ body {
     grid-template-rows: 60px 1fr 80px;
 
     grid-template-areas:
-        "actionPanel actionPanel actionPanel"
+        "topPanel topPanel topPanel"
         "toolPanel canvas propertiesPanel"
         "bottomPanel bottomPanel bottomPanel";
 
     /* background-color: bisque; */
 }
 
-#actionPanel {
-    grid-area: actionPanel;
+.simpleBtn {
+    min-width: 80px;
+    padding: 12px 8px;
+    background-color: azure;
+    /* transition: 100ms; */
+    cursor: pointer;
+    border: 2px solid gray;
+    margin-right: 12px;
+}
+
+.simpleBtn:hover {
+    background-color: rgb(215, 215, 215);
+}
+
+#topPanel {
+    grid-area: topPanel;
     background-color: rgb(240, 202, 180);
 
     display: flex;
     gap: 8px;
     padding: 0 12px;
+}
+
+.resourceBar {
+    display: flex;
+    flex-direction: row;
+    gap: 12px;
+}
+
+.resourceAmount {
+    padding: 8px;
+    background-color: white;
+    border: 2px solid lightgray;
+    text-align: center;
+    user-select: none;
 }
 
 #toolPanel {

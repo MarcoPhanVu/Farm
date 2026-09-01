@@ -14,14 +14,22 @@ export class GameManager {
         this.gameCanvas = document.getElementById("gameCanvas");
         this.painter = this.gameCanvas.getContext("2d");
 
-        this.actionPanel = document.getElementById("actionPanel");
+        this.topPanel = document.getElementById("topPanel");
         this.toolPanel = document.getElementById("toolPanel");
         this.canvasPanel = document.getElementById("canvasPanel");
         this.propertiesPanel = document.getElementById("propertiesPanel");
         this.bottomPanel = document.getElementById("bottomPanel");
 
+        // Top Panel
+        this.moneyDisplay = document.getElementById("currentMoneyDisplay");
+        this.eggDisplay = document.getElementById("currentEggDisplay");
+        this.stickDisplay = document.getElementById("currentStickDisplay");
+
         // Bottom Panel
         this.spawnAnimalBtn = document.getElementById("spawnAnimalBtn");
+        this.spawn10RandomAnimalsBtn = document.getElementById(
+            "spawn10RandomAnimalsBtn",
+        );
         this.toggleGameStateBtn = document.getElementById("toggleGameStateBtn");
 
         // Initial objects
@@ -29,14 +37,12 @@ export class GameManager {
 
         this.gameObjects = [];
 
-        console.log("TRIE:", this.assetsLoader.assetsList["tri"]);
         const initTree = new GameObject(
             1,
             "Tree",
             "object",
-            "idle",
             { x: 160, y: 100 },
-            { width: 320, height: 320 },
+            { width: 240, height: 240 },
             { moveX: 0, moveY: 0 },
             // "cornsilk",
             // "honeydew",
@@ -58,14 +64,18 @@ export class GameManager {
             // "palevioletred",
             // "powderblue",
             // "tomato",
+            150,
             1,
         );
-        initTree.setImage(this.assetsLoader.assetsList["tri"]);
-        console.log("tri", this.assetsLoader.assetsList["tri"]);
+        initTree.setImage(this.assetsLoader.assetsList["tree"]);
         initTree.setAnimation(
-            new SpriteAnimation(this.assetsLoader.assetsList.tri.walking, 0.5),
+            new SpriteAnimation(this.assetsLoader.assetsList.tree.walking, 0.5),
         );
         this.gameObjects.push(initTree);
+
+        this.currentMoney = 40;
+        this.currentEgg = 70;
+        this.currentStick = 90;
 
         this.lastTime = 0;
         this.gameState = "playing";
@@ -82,13 +92,23 @@ export class GameManager {
         this.gameLoop = this.gameLoop.bind(this);
         this.spawnAnimal = this.spawnAnimal.bind(this);
         this.spawnRandomAnimal = this.spawnRandomAnimal.bind(this);
+        this.spawn10RandomAnimals = this.spawn10RandomAnimals.bind(this);
         this.update = this.update.bind(this);
         this.render = this.render.bind(this);
         this.togglePlaying = this.togglePlaying.bind(this);
 
         // EventListeners
         // Have to bind functions first
-        this.spawnAnimalBtn.addEventListener("click", this.spawnRandomAnimal);
+        // this.spawnAnimalBtn.addEventListener("click", this.spawnRandomAnimal);
+        this.spawnAnimalBtn.addEventListener("click", () => {
+            this.spawnRandomAnimal();
+            this.currentMoney -= 30;
+        });
+
+        this.spawn10RandomAnimalsBtn.addEventListener("click", () => {
+            this.spawn10RandomAnimals();
+            this.currentMoney -= 300;
+        });
 
         this.toggleGameStateBtn.addEventListener("click", this.togglePlaying);
 
@@ -128,7 +148,6 @@ export class GameManager {
 
             for (let obj of this.gameObjects) {
                 obj.selected = obj === this.selectedObject;
-                // console.log(this.selectedObject);
             }
 
             this.buildPropertiesPanel();
@@ -137,17 +156,17 @@ export class GameManager {
 
     buildPropertiesPanel() {
         const header = "<h3>Properties</h3>";
-        const footer = '<button id="deleteSelectedBtn">Delete</button>';
         if (this.selectedObject == null) {
             this.propertiesPanel.innerHTML =
                 header + `Nothing selected for now`;
             return;
         }
 
-        console.log(JSON.stringify(this.selectedObject.animation));
-        // console.log(Object.keys(this.selectedObject));
-        // console.log(Object.entries(this.selectedObject.animation));
-        // console.log(JSON.stringify(this.selectedObject, 2, null));
+        const footer =
+            '<button id="deleteSelectedBtn" class="simpleBtn">Delete</button>' +
+            `<button id="sellSelectedBtn" class="simpleBtn">Sell for ${this.selectedObject.sellValue} </button>`;
+
+        // console.log(JSON.stringify(this.selectedObject.animation));
 
         let propertiesHTML = header;
         for (let keyName of Object.keys(this.selectedObject)) {
@@ -158,7 +177,7 @@ export class GameManager {
                 ": ";
 
             try {
-                if (this.selectedObject[keyName] === null) {
+                if (this.selectedObject[keyName] == null) {
                     // Img and Animation will be Null in default
                     continue;
                 }
@@ -180,10 +199,11 @@ export class GameManager {
                         this.selectedObject[keyName];
                 }
             } catch (error) {
+                console.log(this.selectedObject);
                 console.log(this.selectedObject[keyName]);
                 console.log(error);
             } finally {
-                propertiesHTML += "</p></p>\n";
+                propertiesHTML += "</p>\n";
             }
         }
 
@@ -192,18 +212,22 @@ export class GameManager {
         document
             .getElementById("deleteSelectedBtn")
             .addEventListener("click", () => {
-                console.log("Will work on deleting stuffs later");
+                this.deleteSelectedObject();
+            });
+
+        document
+            .getElementById("sellSelectedBtn")
+            .addEventListener("click", () => {
+                this.sellSelectedObject();
             });
 
         this.selectedObjectDOM = new Object();
 
         this.selectedObjectDOM.position =
             document.getElementById("selected-position");
-        // console.log(this.selectedObjectDOM.position);
 
         this.selectedObjectDOM.velocity =
             document.getElementById("selected-velocity");
-        // console.log(this.selectedObjectDOM.velocity);
 
         this.selectedObjectDOM.selfElapsedTime = document.getElementById(
             "selected-selfElapsedTime",
@@ -215,9 +239,9 @@ export class GameManager {
     updatePropertiesPanel() {
         if (
             this.selectedObject == null ||
-            !this.selectedObject ||
-            !this.selectedObject.position ||
-            !this.selectedObject.velocity
+            this.selectedObject == null ||
+            this.selectedObject.position == null ||
+            this.selectedObject.velocity == null
         ) {
             return;
         }
@@ -255,6 +279,7 @@ export class GameManager {
         }
 
         this.updatePropertiesPanel();
+        this.updateResourcesBar();
     }
 
     render() {
@@ -302,19 +327,22 @@ export class GameManager {
         return sortedObjects;
     }
 
+    updateResourcesBar() {
+        this.moneyDisplay.innerText = this.currentMoney;
+        this.eggDisplay.innerText = this.currentEgg;
+        this.stickDisplay.innerText = this.currentStick;
+    }
+
     togglePlaying() {
         this.gameState = this.gameState == "playing" ? "paused" : "playing";
-        // console.log(this.gameState);
     }
 
     spawnAnimal(species) {
         let animal = this.animalPool[species];
-        // console.log("species:", species);
 
         let currentID = this.nextAnimalID++;
         let name = `${species} ${currentID}`;
         let type = "animal";
-        let state = "moving";
         let position = {
             x: RandomFromMinToMax(
                 80,
@@ -326,43 +354,38 @@ export class GameManager {
             ),
         };
         let velocity = {
-            moveX: RandomFromMinToMax(40, 100) * PosOrNeg(),
-            moveY: RandomFromMinToMax(40, 100) * PosOrNeg(),
+            moveX: RandomFromMinToMax(20, 60) * PosOrNeg(),
+            moveY: RandomFromMinToMax(20, 60) * PosOrNeg(),
         };
-        let size = animal["size"];
-        let color =
+        // let size = animal["size"];
+        let debugColor =
             colorTemplate["BrightAss"].colors[
-                RandomFromMinToMax(0, colorTemplate["BrightAss"].colors.length)
+                RandomFromMinToMax(
+                    0,
+                    colorTemplate["BrightAss"].colors.length - 1,
+                )
             ];
 
         let animalObj = new Animal(
             currentID,
             name,
             type,
-            state,
             position,
-            size,
+            animal["size"],
             velocity,
-            color,
+            debugColor,
+            animal["sellValue"],
             1, // Animal will be in layer 1
         );
 
-        // console.log("animal", animalObj);
-        // console.log("species: ", species);
-        // console.log("assetLoader", this.assetsLoader.assetsList);
-        // console.log("chimken", this.assetsLoader.assetsList["chimken"]);
-
         let animalSpriteMyAss = this.assetsLoader.assetsList[species];
-
-        // console.log("check species:", animalSpriteMyAss);
 
         animalObj.setImage(animalSpriteMyAss["img"]);
 
         let spriteAnimationContainer = new SpriteAnimation(
             animalSpriteMyAss["walking"],
-            0.32,
+            0.2,
         );
-        // console.log("sprite animation:", spriteAnimationContainer);
 
         animalObj.setAnimation(spriteAnimationContainer);
 
@@ -370,11 +393,45 @@ export class GameManager {
     }
 
     spawnRandomAnimal() {
-        // console.log(
-        //     "RandAnimal:",
-        //     getRandomValueFromObject(animalPool).trueName,
-        // );
         this.spawnAnimal(getRandomValueFromObject(animalPool).trueName);
+    }
+
+    spawn10RandomAnimals() {
+        this.spawnRandomAnimal();
+        this.spawnRandomAnimal();
+        this.spawnRandomAnimal();
+        this.spawnRandomAnimal();
+        this.spawnRandomAnimal();
+
+        this.spawnRandomAnimal();
+        this.spawnRandomAnimal();
+        this.spawnRandomAnimal();
+        this.spawnRandomAnimal();
+        this.spawnRandomAnimal();
+    }
+
+    deleteSelectedObject() {
+        if (this.selectedObject == null) {
+            return;
+        }
+
+        let index = this.gameObjects.indexOf(this.selectedObject);
+
+        if (index !== -1) {
+            // object exist
+            this.gameObjects.splice(index, 1); // take 1 ele out of that index.
+        }
+
+        this.selectedObject = null;
+        this.selectedObjectDOM = null;
+        this.hoveredObject = null;
+
+        this.buildPropertiesPanel();
+    }
+
+    sellSelectedObject() {
+        this.currentMoney += this.selectedObject.sellValue;
+        this.deleteSelectedObject();
     }
 
     start() {
@@ -384,9 +441,9 @@ export class GameManager {
         requestAnimationFrame(this.gameLoop);
 
         for (let i = 0; i < 3; i++) {
-            this.spawnAnimal("chimken");
-            this.spawnAnimal("dack");
-            this.spawnAnimal("dawg");
+            this.spawnAnimal("chicken");
+            this.spawnAnimal("duck");
+            this.spawnAnimal("dog");
             this.spawnAnimal("number");
         }
 

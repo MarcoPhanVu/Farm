@@ -8,7 +8,28 @@
     </head>
     <body>
         <div id="app">
-            <header id="actionPanel"></header>
+            <header id="topPanel">
+                <div class="resourceBar">
+                    <div class="resourceItem">
+                        <label for="currentMoneyDisplay">Current Money</label>
+                        <div id="currentMoneyDisplay" class="resourceAmount">
+                            100
+                        </div>
+                    </div>
+                    <div class="resourceItem">
+                        <label for="currentEggDisplay">Current Eggs</label>
+                        <div id="currentEggDisplay" class="resourceAmount">
+                            16
+                        </div>
+                    </div>
+                    <div class="resourceItem">
+                        <label for="currentStickDisplay">Current Sticks</label>
+                        <div id="currentStickDisplay" class="resourceAmount">
+                            20
+                        </div>
+                    </div>
+                </div>
+            </header>
             <aside id="toolPanel"></aside>
             <main id="canvasPanel">
                 <canvas id="gameCanvas"></canvas>
@@ -18,8 +39,17 @@
                 <p id="mouseY">mouseY:</p>
             </aside>
             <footer id="bottomPanel">
-                <button id="spawnAnimalBtn">Spawn Random Animal</button>
-                <button id="toggleGameStateBtn">Toggle Game State</button>
+                <button id="spawnAnimalBtn" class="simpleBtn">
+                    Spawn Random Animal
+                    <p>(Cost 30)</p>
+                </button>
+                <button id="spawn10RandomAnimalsBtn" class="simpleBtn">
+                    Spawn 10 Random Animals
+                    <p>(Cost 300)</p>
+                </button>
+                <button id="toggleGameStateBtn" class="simpleBtn">
+                    Toggle Game State
+                </button>
             </footer>
         </div>
     </body>
