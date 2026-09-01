@@ -6,7 +6,6 @@ import { animalPool, stationaryObjectPool } from "./config/generalObjects.js";
 const assetsLoader = new AssetsLoaderProto();
 assetsLoader.loadAnimals(animalPool);
 assetsLoader.loadObjects(stationaryObjectPool);
-// console.log("Assets Loader:", assetsLoader);
 
 const gameASDASD = new GameManager(assetsLoader);
 
