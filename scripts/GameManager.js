@@ -169,11 +169,38 @@ export class GameManager {
         // console.log(JSON.stringify(this.selectedObject.animation));
 
         let propertiesHTML = header;
+        const unneededProperties = [
+            "id",
+            "name",
+            "type",
+            // "position",
+            "size",
+            // "velocity",
+            "debugColor",
+            "layer",
+            // "sellValue",
+            // "state",
+            "buyValue",
+            "idleImage",
+            "animation",
+            "hovered",
+            "selected",
+            // "selfElapsedTime",
+            "isChangingDirection",
+            // "spriteSize",
+            "boundTouched",
+        ];
+
         for (let keyName of Object.keys(this.selectedObject)) {
+            console.log(keyName);
+            if (unneededProperties.includes(keyName)) {
+                continue;
+            }
             propertiesHTML +=
                 `<p class="property-name" id="selected-${keyName}">` +
-                keyName.charAt(0).toUpperCase() +
-                keyName.slice(1) +
+                // keyName.charAt(0).toUpperCase() +
+                // keyName.slice(1) +
+                keyName +
                 ": ";
 
             try {

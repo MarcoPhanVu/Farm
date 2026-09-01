@@ -38,24 +38,17 @@ export class GameObject {
     }
 
     update(deltaTime) {
-        // console.log(this.type);
-        // console.log("problem", this.position);
-        // console.log(this.velocity);
-        // console.log(this.debugColor);
         this.position.x += this.velocity.moveX * deltaTime;
         this.position.y += this.velocity.moveY * deltaTime;
 
-        // console.log(this.animation);
-
         if (this.animation) {
-            // console.log(this);
-            // console.log("check");
-            // console.log(gameASDASD.gameObjects[1]);
             this.animation.update(deltaTime);
         }
     }
 
     render(context) {
+        this.renderDebugOutline(context);
+
         if (this.animation) {
             this.animation.render(
                 context,
@@ -64,7 +57,6 @@ export class GameObject {
                 this.size.width,
                 this.size.height,
             );
-            // console.log("reached animation");
         } else if (this.idleImage) {
             // use image if exist
             context.drawImage(
@@ -80,7 +72,6 @@ export class GameObject {
                 this.size.width,
                 this.size.height,
             );
-            // console.log("reached image");
         } else {
             context.fillStyle = this.debugColor;
             context.fillRect(
@@ -90,8 +81,6 @@ export class GameObject {
                 this.size.height,
             );
         }
-
-        this.renderDebugOutline(context);
 
         context.lineWidth = 1; // reset stroke width
     }
@@ -130,13 +119,24 @@ export class GameObject {
                 this.size.width,
                 this.size.height,
             );
+
+            context.beginPath();
+            context.arc(
+                this.position.x + this.size.width / 2,
+                this.position.y + this.size.height / 2,
+                80,
+                0,
+                Math.PI * 2,
+            );
+            context.fillStyle = this.debugColor + "80";
+            context.fill();
+            context.closePath();
         }
     }
 
     setImage(img) {
         this.idleImage = img.spriteImage;
         this.spriteSize = img.spriteSize;
-        // console.log(img);
     }
 
     setAnimation(animation) {

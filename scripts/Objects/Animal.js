@@ -37,8 +37,7 @@ export class Animal extends GameObject {
         let hitBound = null;
 
         this.selfElapsedTime += deltaTime;
-        if (this.selfElapsedTime >= 10) {
-            // console.log("7.5 sec passed");
+        if (this.selfElapsedTime >= RandomFromMinToMax(4, 8)) {
             hitBound = "none";
             this.selfElapsedTime = 0;
         }
@@ -53,7 +52,6 @@ export class Animal extends GameObject {
             this.position.y = worldBounds.height - this.size.height;
             hitBound = "bottom";
         }
-
         // Left Bound
         if (this.position.x <= 0) {
             this.position.x = 0;
@@ -111,5 +109,11 @@ export class Animal extends GameObject {
 
             this.isChangingDirection = false;
         }, 1000);
+    }
+
+    seeAround(objectList) {
+        console.log(this.position);
+        for (let object in objectList) {
+        }
     }
 }
