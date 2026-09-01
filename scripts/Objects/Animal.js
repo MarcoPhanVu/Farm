@@ -30,7 +30,7 @@ export class Animal extends GameObject {
         this.selfElapsedTime = RandomFromMinToMax(0, 10);
     }
 
-    update(deltaTime, worldBounds) {
+    update(deltaTime, worldBounds, objectList) {
         this.position.x += this.velocity.moveX * deltaTime;
         this.position.y += this.velocity.moveY * deltaTime;
 
@@ -70,6 +70,8 @@ export class Animal extends GameObject {
         if (this.animation) {
             this.animation.update(deltaTime);
         }
+
+        this.seeAround(objectList);
     }
 
     changeDirection(hitBound) {
@@ -111,9 +113,63 @@ export class Animal extends GameObject {
         }, 1000);
     }
 
-    seeAround(objectList) {
-        console.log(this.position);
-        for (let object in objectList) {
+    renderDebugOutline(context) {
+        if (this.hovered) {
+            context.lineWidth = 2;
+            context.strokeStyle = "#fff";
+            context.strokeRect(
+                this.position.x,
+                this.position.y,
+                this.size.width,
+                this.size.height,
+            );
         }
+
+        if (this.selected) {
+            context.lineWidth = 2;
+            context.strokeStyle = "#000";
+            context.strokeRect(
+                this.position.x,
+                this.position.y,
+                this.size.width,
+                this.size.height,
+            );
+        }
+
+        if (this.name.includes("dog")) {
+            context.beginPath();
+            context.arc(
+                this.position.x + this.size.width / 2,
+                this.position.y + this.size.height / 2,
+                180,
+                0,
+                Math.PI * 2,
+            );
+            context.fillStyle = this.debugColor + "40";
+            context.fill();
+            context.closePath();
+        }
+    }
+
+    seeAround(objectList) {
+        for (let object of objectList) {
+            if (object.name.includes("chicken") && this.name.includes("dog")) {
+                this.glideTowards(object);
+                // this.goTowards(object);
+                // console.log("CHIEKEN!!!");
+            }
+        }
+    }
+
+    goTowards(object) {
+        let dest = object.position;
+        this.velocity.moveX = dest.x - this.position.x;
+        this.velocity.moveY = dest.y - this.position.y;
+    }
+
+    glideTowards(object) {
+        let dest = object.position;
+        this.velocity.moveX = dest.x - this.position.x;
+        this.velocity.moveY = dest.y - this.position.y;
     }
 }

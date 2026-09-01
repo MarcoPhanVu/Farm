@@ -119,18 +119,6 @@ export class GameObject {
                 this.size.width,
                 this.size.height,
             );
-
-            context.beginPath();
-            context.arc(
-                this.position.x + this.size.width / 2,
-                this.position.y + this.size.height / 2,
-                80,
-                0,
-                Math.PI * 2,
-            );
-            context.fillStyle = this.debugColor + "80";
-            context.fill();
-            context.closePath();
         }
     }
 

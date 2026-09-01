@@ -171,7 +171,7 @@ export class GameManager {
         let propertiesHTML = header;
         const unneededProperties = [
             "id",
-            "name",
+            // "name",
             "type",
             // "position",
             "size",
@@ -192,7 +192,7 @@ export class GameManager {
         ];
 
         for (let keyName of Object.keys(this.selectedObject)) {
-            console.log(keyName);
+            // console.log(keyName);
             if (unneededProperties.includes(keyName)) {
                 continue;
             }
@@ -302,7 +302,7 @@ export class GameManager {
 
     update(deltaTime, elapsedTime) {
         for (let object of this.gameObjects) {
-            object.update(deltaTime, this.gameCanvas);
+            object.update(deltaTime, this.gameCanvas, this.gameObjects);
         }
 
         this.updatePropertiesPanel();
@@ -467,10 +467,12 @@ export class GameManager {
 
         requestAnimationFrame(this.gameLoop);
 
-        for (let i = 0; i < 3; i++) {
+        this.spawnAnimal("dog");
+
+        for (let i = 0; i < 8; i++) {
             this.spawnAnimal("chicken");
             this.spawnAnimal("duck");
-            this.spawnAnimal("dog");
+            // this.spawnAnimal("dog");
             this.spawnAnimal("number");
         }
 
