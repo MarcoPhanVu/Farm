@@ -1,24 +1,14 @@
 import { RandomFromMinToMax, PosOrNeg } from "../utils/random.js";
 
 export class GameObject {
-    constructor(
-        id,
-        name,
-        type,
-        position,
-        size,
-        velocity,
-        debugColor,
-        sellValue,
-        layer,
-    ) {
+    constructor(id, name, type, position, size, debugColor, sellValue, layer) {
         this.id = id;
         this.name = name;
         this.type = type;
 
         this.position = position;
         this.size = size;
-        this.velocity = velocity;
+        this.velocity = { moveX: 0, moveY: 0 };
 
         this.debugColor = debugColor;
         this.layer = layer;

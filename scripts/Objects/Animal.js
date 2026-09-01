@@ -9,23 +9,14 @@ export class Animal extends GameObject {
         type,
         position,
         size,
-        velocity,
         debugColor,
         sellValue,
         layer,
+        animalConfig,
     ) {
-        super(
-            id,
-            name,
-            type,
-            position,
-            size,
-            velocity,
-            debugColor,
-            sellValue,
-            layer,
-        );
+        super(id, name, type, position, size, debugColor, sellValue, layer);
 
+        this.config = animalConfig;
         this.isChangingDirection = false;
         this.selfElapsedTime = RandomFromMinToMax(0, 10);
     }
@@ -37,7 +28,7 @@ export class Animal extends GameObject {
         let hitBound = null;
 
         this.selfElapsedTime += deltaTime;
-        if (this.selfElapsedTime >= RandomFromMinToMax(4, 8)) {
+        if (this.selfElapsedTime >= RandomFromMinToMax(2, 8)) {
             hitBound = "none";
             this.selfElapsedTime = 0;
         }
@@ -64,17 +55,19 @@ export class Animal extends GameObject {
         }
 
         if (hitBound !== null) {
-            this.changeDirection(hitBound);
+            // exist
+            this.move(hitBound);
         }
 
         if (this.animation) {
+            // exist
             this.animation.update(deltaTime);
         }
 
         this.seeAround(objectList);
     }
 
-    changeDirection(hitBound) {
+    move(hitBound) {
         if (this.isChangingDirection) {
             return;
         }
