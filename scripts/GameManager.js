@@ -6,7 +6,7 @@ import {
     getRandomValueFromObject,
 } from "./utils/random.js";
 import { colorTemplate } from "./config/colors.js";
-import { animalPool } from "./config/animals.js";
+import { animalPool } from "./config/generalObjects.js";
 import { SpriteAnimation } from "./Objects/SpriteAnimation.js";
 
 export class GameManager {
@@ -67,9 +67,13 @@ export class GameManager {
             150,
             1,
         );
-        initTree.setImage(this.assetsLoader.assetsList["tree"]);
+        initTree.setImage(this.assetsLoader.assetsList["statObjects"]["tree"]);
+        console.log(this.assetsLoader.assetsList.statObjects.tree.walking);
         initTree.setAnimation(
-            new SpriteAnimation(this.assetsLoader.assetsList.tree.walking, 0.5),
+            new SpriteAnimation(
+                this.assetsLoader.assetsList.statObjects.tree.walking,
+                0.15,
+            ),
         );
         this.gameObjects.push(initTree);
 
@@ -367,60 +371,63 @@ export class GameManager {
     spawnAnimal(species) {
         let animal = this.animalPool[species];
 
-        let currentID = this.nextAnimalID++;
-        let name = `${species} ${currentID}`;
-        let type = "animal";
-        let position = {
-            x: RandomFromMinToMax(
-                80,
-                this.gameCanvas.width - animal.size.width,
-            ),
-            y: RandomFromMinToMax(
-                80,
-                this.gameCanvas.height - animal.size.height,
-            ),
-        };
-        let velocity = {
-            moveX: RandomFromMinToMax(20, 60) * PosOrNeg(),
-            moveY: RandomFromMinToMax(20, 60) * PosOrNeg(),
-        };
-        // let size = animal["size"];
-        let debugColor =
-            colorTemplate["BrightAss"].colors[
-                RandomFromMinToMax(
-                    0,
-                    colorTemplate["BrightAss"].colors.length - 1,
-                )
-            ];
+        console.log(this.animalPool);
 
-        let animalObj = new Animal(
-            currentID,
-            name,
-            type,
-            position,
-            animal["size"],
-            velocity,
-            debugColor,
-            animal["sellValue"],
-            1, // Animal will be in layer 1
-        );
+        if (!animal) {
+            console.log(species, "is not exist");
+        } else {
+            let currentID = this.nextAnimalID++;
+            let name = `${species} ${currentID}`;
+            let type = "animal";
+            let position = {
+                x: RandomFromMinToMax(
+                    80,
+                    this.gameCanvas.width - animal.size.width,
+                ),
+                y: RandomFromMinToMax(
+                    80,
+                    this.gameCanvas.height - animal.size.height,
+                ),
+            };
+            let debugColor =
+                colorTemplate["BrightAss"].colors[
+                    RandomFromMinToMax(
+                        0,
+                        colorTemplate["BrightAss"].colors.length - 1,
+                    )
+                ];
 
-        let animalSpriteMyAss = this.assetsLoader.assetsList[species];
+            let animalObj = new Animal(
+                currentID,
+                name,
+                type,
+                position,
+                animal["size"],
+                debugColor,
+                animal["sellValue"],
+                1, // Animal will be in layer 1
+                animal,
+            );
 
-        animalObj.setImage(animalSpriteMyAss["img"]);
+            let animalSpriteMyAss =
+                this.assetsLoader.assetsList["animals"][species];
 
-        let spriteAnimationContainer = new SpriteAnimation(
-            animalSpriteMyAss["walking"],
-            0.2,
-        );
+            animalObj.setImage(animalSpriteMyAss["img"]);
 
-        animalObj.setAnimation(spriteAnimationContainer);
+            let spriteAnimationContainer = new SpriteAnimation(
+                animalSpriteMyAss["walking"],
+                0.2,
+            );
 
-        this.gameObjects.push(animalObj);
+            animalObj.setAnimation(spriteAnimationContainer);
+
+            this.gameObjects.push(animalObj);
+        }
     }
 
     spawnRandomAnimal() {
         this.spawnAnimal(getRandomValueFromObject(animalPool).trueName);
+        console.log("animal: ", animalPool);
     }
 
     spawn10RandomAnimals() {
@@ -469,11 +476,12 @@ export class GameManager {
 
         this.spawnAnimal("dog");
 
-        for (let i = 0; i < 8; i++) {
+        for (let i = 0; i < 5; i++) {
             this.spawnAnimal("chicken");
             this.spawnAnimal("duck");
             // this.spawnAnimal("dog");
-            this.spawnAnimal("number");
+            // this.spawnAnimal("number");
+            // this.spawnAnimal("cat");
         }
 
         // this.gameState = "pause";

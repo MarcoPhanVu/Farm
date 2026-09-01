@@ -35,9 +35,9 @@ export const animalPool = {
         buyValue: 100,
         sellValue: 80,
         sprite: {
-            img: "../../assets/chick-idle-8x8.png",
+            img: null,
             idle: null,
-            walking: "../../assets/duck-walking-2-3-16x16.png",
+            walking: null,
         },
         spriteSpeed: 0.2,
     },
@@ -67,9 +67,8 @@ export const animalPool = {
     //         idle: null,
     //         walking: "../../assets/numbers-walking-4-3-16x16.png",
     //     },
-    //           spriteSpeed: 0.2
-
-    /// },
+    //     spriteSpeed: 0.2,
+    // },
 };
 
 export const stationaryObjectPool = {
