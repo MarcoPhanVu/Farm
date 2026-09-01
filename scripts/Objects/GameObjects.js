@@ -1,18 +1,32 @@
 import { RandomFromMinToMax, PosOrNeg } from "../utils/random.js";
 
 export class GameObject {
-    constructor(id, name, type, state, position, size, velocity, color, layer) {
+    constructor(
+        id,
+        name,
+        type,
+        position,
+        size,
+        velocity,
+        debugColor,
+        sellValue,
+        layer,
+    ) {
         this.id = id;
         this.name = name;
         this.type = type;
-        this.state = state;
 
         this.position = position;
         this.size = size;
         this.velocity = velocity;
 
-        this.color = color;
+        this.debugColor = debugColor;
         this.layer = layer;
+
+        this.sellValue = sellValue;
+
+        this.state = "idle";
+        this.buyValue = 0;
 
         this.idleImage = null;
         this.animation = null;
@@ -24,6 +38,10 @@ export class GameObject {
     }
 
     update(deltaTime) {
+        // console.log(this.type);
+        // console.log("problem", this.position);
+        // console.log(this.velocity);
+        // console.log(this.debugColor);
         this.position.x += this.velocity.moveX * deltaTime;
         this.position.y += this.velocity.moveY * deltaTime;
 
@@ -64,7 +82,7 @@ export class GameObject {
             );
             // console.log("reached image");
         } else {
-            context.fillStyle = this.color;
+            context.fillStyle = this.debugColor;
             context.fillRect(
                 this.position.x,
                 this.position.y,
@@ -93,7 +111,7 @@ export class GameObject {
 
     renderDebugOutline(context) {
         if (this.hovered) {
-            context.lineWidth = 4;
+            context.lineWidth = 2;
             context.strokeStyle = "#fff";
             context.strokeRect(
                 this.position.x,
@@ -104,7 +122,7 @@ export class GameObject {
         }
 
         if (this.selected) {
-            context.lineWidth = 6;
+            context.lineWidth = 2;
             context.strokeStyle = "#000";
             context.strokeRect(
                 this.position.x,
