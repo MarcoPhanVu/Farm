@@ -90,6 +90,7 @@ body {
 
 #gameCanvas {
     background-color: rgb(238, 215, 207);
+    background-color: rgb(180, 180, 180);
     display: block;
 
     overflow: auto;

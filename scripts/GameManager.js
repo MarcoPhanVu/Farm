@@ -340,6 +340,7 @@ export class GameManager {
     spawnAnimal(species) {
         let animal = this.animalPool[species];
 
+        console.log("POOL: ", this.animalPool[species]);
         let currentID = this.nextAnimalID++;
         let name = `${species} ${currentID}`;
         let type = "animal";
@@ -394,6 +395,8 @@ export class GameManager {
 
     spawnRandomAnimal() {
         this.spawnAnimal(getRandomValueFromObject(animalPool).trueName);
+        // this.spawnAnimal("sheep");
+        // this.spawnAnimal("sheep2");
     }
 
     spawn10RandomAnimals() {
@@ -445,6 +448,8 @@ export class GameManager {
             this.spawnAnimal("duck");
             this.spawnAnimal("dog");
             this.spawnAnimal("number");
+            this.spawnAnimal("sheep");
+            this.spawnAnimal("sheep2");
         }
 
         // this.gameState = "pause";

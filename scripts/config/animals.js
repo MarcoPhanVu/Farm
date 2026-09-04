@@ -54,6 +54,28 @@ export const animalPool = {
             walking: "../../assets/tri-walking-1-1-256x256.png",
         },
     },
+    sheep: {
+        trueName: "sheep",
+        size: { width: 100, height: 100 },
+        buyValue: 125,
+        sellValue: 225,
+        sprite: {
+            img: "../../assets/tri-idle-256x256.png",
+            idle: null,
+            walking: "../../assets/sheep-walking-1-8-32x32.png",
+        },
+    },
+    sheep2: {
+        trueName: "sheep2",
+        size: { width: 100, height: 100 },
+        buyValue: 125,
+        sellValue: 225,
+        sprite: {
+            img: "../../assets/tri-idle-256x256.png",
+            idle: null,
+            walking: "../../assets/sheep2-walking-4-2-16x16.png",
+        },
+    },
     number: {
         trueName: "number",
         size: { width: 60, height: 60 },
