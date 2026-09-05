@@ -464,11 +464,20 @@ export class GameManager {
         this.spawnRandomAnimal();
         this.spawnRandomAnimal();
 
-        this.spawnRandomAnimal();
-        this.spawnRandomAnimal();
-        this.spawnRandomAnimal();
-        this.spawnRandomAnimal();
-        this.spawnRandomAnimal();
+        this.spawnAnimal("chicken");
+        this.spawnAnimal("duck");
+        this.spawnAnimal("chicken");
+        this.spawnAnimal("duck");
+        this.spawnAnimal("chicken");
+        this.spawnAnimal("duck");
+        this.spawnAnimal("chicken");
+        this.spawnAnimal("duck");
+
+        // this.spawnRandomAnimal();
+        // this.spawnRandomAnimal();
+        // this.spawnRandomAnimal();
+        // this.spawnRandomAnimal();
+        // this.spawnRandomAnimal();
     }
 
     deleteSelectedObject() {
@@ -509,9 +518,9 @@ export class GameManager {
             this.spawnAnimal("chicken");
             this.spawnAnimal("duck");
             // this.spawnAnimal("dog");
-            this.spawnAnimal("number");
+            // this.spawnAnimal("number");
             this.spawnAnimal("sheep");
-            this.spawnAnimal("sheep2");
+            // this.spawnAnimal("sheep2");
         }
 
         // this.gameState = "pause";
