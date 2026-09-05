@@ -217,20 +217,18 @@ export class Animal extends GameObject {
     }
 
     goTowards(object) {
-        // needs improvement
         let dest = object.position;
         let maxSpeed = 80;
-        if (dest.x - this.position.x > maxSpeed) {
-            this.velocity.moveX = maxSpeed;
-        } else {
-            this.velocity.moveX = dest.x - this.position.x;
-        }
 
-        if (dest.y - this.position.y > maxSpeed) {
-            this.velocity.moveY = maxSpeed;
-        } else {
-            this.velocity.moveY = dest.y - this.position.y;
-        }
+        const dx = dest.x - this.position.x;
+        const dy = dest.y - this.position.y;
+
+        this.velocity.moveX = Math.floor(
+            Math.max(-maxSpeed, Math.min(maxSpeed, dx)),
+        );
+        this.velocity.moveY = Math.floor(
+            Math.max(-maxSpeed, Math.min(maxSpeed, dy)),
+        );
     }
 
     glideTowards(object) {
