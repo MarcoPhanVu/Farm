@@ -90,7 +90,7 @@ body {
 
 #gameCanvas {
     background-color: rgb(238, 215, 207);
-    background-color: rgb(180, 180, 180);
+    background-color: rgb(103, 177, 103);
     display: block;
 
     overflow: auto;
@@ -114,6 +114,14 @@ body {
     background-color: rgb(100, 100, 120);
 
     padding: 12px;
+}
+
+p.property-name {
+    display: flex;
+    margin: 8px 0px;
+    padding: 4px;
+    /* border: solid white 0.2px; */
+    background-color: aliceblue;
 }
 
 p.property-value {

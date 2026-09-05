@@ -177,21 +177,24 @@ export class GameManager {
             // "name",
             "type",
             // "position",
-            "size",
+            // "size",
             // "velocity",
             "debugColor",
             "layer",
-            // "sellValue",
-            // "state",
+            "sellValue",
+            "state",
             "buyValue",
             "idleImage",
             "animation",
             "hovered",
+            "selfElapsedTime",
             "selected",
-            // "selfElapsedTime",
             "isChangingDirection",
-            // "spriteSize",
+            "spriteSize",
             "boundTouched",
+            "config",
+            "targetedObject",
+            "currentActionTime",
         ];
 
         for (let keyName of Object.keys(this.selectedObject)) {
@@ -263,22 +266,37 @@ export class GameManager {
             "selected-selfElapsedTime",
         );
 
+        this.selectedObjectDOM.targetList = document.getElementById(
+            "selected-targetList",
+        );
+
         return;
     }
 
     updatePropertiesPanel() {
         if (
-            this.selectedObject == null ||
-            this.selectedObject == null ||
-            this.selectedObject.position == null ||
-            this.selectedObject.velocity == null
+            this.selectedObject == null
+            // this.selectedObject.position == null ||
+            // this.selectedObject.velocity == null
         ) {
             return;
         }
 
         this.selectedObjectDOM.position.innerHTML = `[x: ${Math.floor(this.selectedObject.position.x)}] [y: ${Math.floor(this.selectedObject.position.y)}]`;
+
         this.selectedObjectDOM.velocity.innerHTML = `[moveX: ${this.selectedObject.velocity.moveX}] [moveY: ${this.selectedObject.velocity.moveY}]`;
-        this.selectedObjectDOM.selfElapsedTime.innerHTML = `elapsedTime: ${this.selectedObject.selfElapsedTime.toPrecision(2)}`;
+
+        // this.selectedObjectDOM.selfElapsedTime.innerHTML = `elapsedTime: ${this.selectedObject.selfElapsedTime.toPrecision(2)}`;
+
+        if (this.selectedObject.type == "animal") {
+            console.log("checking");
+            let inText = "";
+            for (let animal of this.selectedObject.targetList) {
+                inText += animal.name + "__";
+            }
+
+            this.selectedObjectDOM.targetList.innerHTML = `targetList: ${inText}`;
+        }
     }
 
     resizeCanvas() {
@@ -472,7 +490,9 @@ export class GameManager {
 
         this.spawnAnimal("dog");
 
-        for (let i = 0; i < 8; i++) {
+        for (let i = 0; i < 5; i++) {
+            this.spawnAnimal("chicken");
+            this.spawnAnimal("duck");
             this.spawnAnimal("chicken");
             this.spawnAnimal("duck");
             // this.spawnAnimal("dog");
