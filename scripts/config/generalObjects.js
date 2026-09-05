@@ -2,7 +2,7 @@ export const animalPool = {
     chicken: {
         trueName: "chicken",
         size: { width: 40, height: 40 },
-        movingSpeed: { min: 40, max: 80 },
+        movingSpeed: { min: 60, max: 120 },
         lookingRange: 120,
         buyValue: 100,
         sellValue: 20,
@@ -16,7 +16,7 @@ export const animalPool = {
     duck: {
         trueName: "duck",
         size: { width: 40, height: 40 },
-        movingSpeed: { min: 80, max: 120 },
+        movingSpeed: { min: 60, max: 120 },
         lookingRange: 120,
         buyValue: 100,
         sellValue: 30,
@@ -27,20 +27,20 @@ export const animalPool = {
         },
         spriteSpeed: 0.2,
     },
-    cat: {
-        trueName: "cat",
-        size: { width: 64, height: 64 },
-        movingSpeed: { min: 40, max: 80 },
-        lookingRange: 240,
-        buyValue: 100,
-        sellValue: 80,
-        sprite: {
-            img: null,
-            idle: null,
-            walking: null,
-        },
-        spriteSpeed: 0.2,
-    },
+    // cat: {
+    //     trueName: "cat",
+    //     size: { width: 64, height: 64 },
+    //     movingSpeed: { min: 40, max: 80 },
+    //     lookingRange: 240,
+    //     buyValue: 100,
+    //     sellValue: 80,
+    //     sprite: {
+    //         img: null,
+    //         idle: null,
+    //         walking: null,
+    //     },
+    //     spriteSpeed: 0.2,
+    // },
     dog: {
         trueName: "dog",
         size: { width: 64, height: 64 },
@@ -58,6 +58,8 @@ export const animalPool = {
     sheep: {
         trueName: "sheep",
         size: { width: 100, height: 100 },
+        movingSpeed: { min: 40, max: 80 },
+        lookingRange: 120,
         buyValue: 125,
         sellValue: 225,
         sprite: {
@@ -66,29 +68,29 @@ export const animalPool = {
             walking: "../../assets/sheep-walking-1-8-32x32.png",
         },
     },
-    sheep2: {
-        trueName: "sheep2",
-        size: { width: 100, height: 100 },
-        buyValue: 125,
-        sellValue: 225,
-        sprite: {
-            img: "../../assets/tri-idle-256x256.png",
-            idle: null,
-            walking: "../../assets/sheep2-walking-4-2-16x16.png",
-        },
-    },
-    number: {
-        trueName: "number",
-        size: { width: 60, height: 60 },
-        buyValue: 100,
-        sellValue: 50,
-        sprite: {
-            img: "../../assets/numbers-idle-4-3-16x16.png",
-            idle: null,
-            walking: "../../assets/numbers-walking-4-3-16x16.png",
-        },
-        spriteSpeed: 0.15,
-    },
+    // sheep2: {
+    //     trueName: "sheep2",
+    //     size: { width: 100, height: 100 },
+    //     buyValue: 125,
+    //     sellValue: 225,
+    //     sprite: {
+    //         img: "../../assets/tri-idle-256x256.png",
+    //         idle: null,
+    //         walking: "../../assets/sheep2-walking-4-2-16x16.png",
+    //     },
+    // },
+    // number: {
+    //     trueName: "number",
+    //     size: { width: 60, height: 60 },
+    //     buyValue: 100,
+    //     sellValue: 50,
+    //     sprite: {
+    //         img: "../../assets/numbers-idle-4-3-16x16.png",
+    //         idle: null,
+    //         walking: "../../assets/numbers-walking-4-3-16x16.png",
+    //     },
+    //     spriteSpeed: 0.15,
+    // },
 };
 
 export const stationaryObjectPool = {
