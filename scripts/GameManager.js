@@ -458,23 +458,18 @@ export class GameManager {
     }
 
     spawn10RandomAnimals() {
-        this.spawnRandomAnimal();
-        this.spawnRandomAnimal();
-        this.spawnRandomAnimal();
-        this.spawnRandomAnimal();
-        this.spawnRandomAnimal();
+        this.spawnAnimal("dog");
+        this.spawnAnimal("chicken");
+        this.spawnAnimal("duck");
+        this.spawnAnimal("chicken");
+        this.spawnAnimal("duck");
+        this.spawnAnimal("number");
+        this.spawnAnimal("number");
+        this.spawnAnimal("sheep");
+        this.spawnAnimal("sheep");
 
-        this.spawnAnimal("chicken");
-        this.spawnAnimal("duck");
-        this.spawnAnimal("chicken");
-        this.spawnAnimal("duck");
-        this.spawnAnimal("chicken");
-        this.spawnAnimal("duck");
-        this.spawnAnimal("chicken");
-        this.spawnAnimal("duck");
-
-        // this.spawnRandomAnimal();
-        // this.spawnRandomAnimal();
+        this.spawnRandomAnimal();
+        this.spawnRandomAnimal();
         // this.spawnRandomAnimal();
         // this.spawnRandomAnimal();
         // this.spawnRandomAnimal();
@@ -511,16 +506,19 @@ export class GameManager {
         requestAnimationFrame(this.gameLoop);
 
         this.spawnAnimal("dog");
+        this.spawnAnimal("dog");
 
         for (let i = 0; i < 5; i++) {
             this.spawnAnimal("chicken");
             this.spawnAnimal("duck");
             this.spawnAnimal("chicken");
             this.spawnAnimal("duck");
+            this.spawnAnimal("chicken");
+            this.spawnAnimal("duck");
             // this.spawnAnimal("dog");
-            // this.spawnAnimal("number");
+            this.spawnAnimal("number");
             this.spawnAnimal("sheep");
-            // this.spawnAnimal("sheep2");
+            this.spawnAnimal("sheep2");
         }
 
         // this.gameState = "pause";
