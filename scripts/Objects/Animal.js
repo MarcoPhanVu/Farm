@@ -24,11 +24,15 @@ export class Animal extends GameObject {
 
         this.targetedObject = null;
         this.currentActionTime = RandomFromMinToMax(4, 8);
+
+        this.actionCoolDownTime = 0;
     }
 
     update(deltaTime, worldBounds, objectList) {
         this.position.x += this.velocity.moveX * deltaTime;
         this.position.y += this.velocity.moveY * deltaTime;
+
+        this.actionCoolDownTime -= deltaTime;
 
         this.checkWallCollision(deltaTime, worldBounds);
 
@@ -187,8 +191,28 @@ export class Animal extends GameObject {
             return dist <= seeRange;
         });
 
-        if (this.name.includes("dog")) {
-            console.log(this.name, ": ", this.targetList);
+        for (let object of this.targetList) {
+            object.hovered = false;
+            object.selected = false;
+        }
+
+        if (this.targetList.length > 0 && this.actionCoolDownTime <= 0) {
+            let chosenTarget =
+                this.targetList[
+                    RandomFromMinToMax(0, this.targetList.length - 1)
+                ];
+
+            this.targetedObject = chosenTarget;
+
+            console.log("target chosen", chosenTarget.name);
+
+            this.actionCoolDownTime = 8;
+        }
+
+        if (this.targetedObject) {
+            this.targetedObject.hovered = true;
+            this.targetedObject.selected = true;
+            this.goTowards(this.targetedObject);
         }
     }
 
@@ -202,7 +226,7 @@ export class Animal extends GameObject {
             this.velocity.moveX = dest.x - this.position.x;
         }
 
-        if (dest.x - this.position.y > maxSpeed) {
+        if (dest.y - this.position.y > maxSpeed) {
             this.velocity.moveY = maxSpeed;
         } else {
             this.velocity.moveY = dest.y - this.position.y;
