@@ -68,36 +68,37 @@ export const animalPool = {
             walking: "../../assets/sheep-walking-1-8-32x32.png",
         },
     },
-    // sheep2: {
-    //     trueName: "sheep2",
-    //     size: { width: 100, height: 100 },
-    //     buyValue: 125,
-    //     sellValue: 225,
-    //     sprite: {
-    //         img: "../../assets/tri-idle-256x256.png",
-    //         idle: null,
-    //         walking: "../../assets/sheep2-walking-4-2-16x16.png",
-    //     },
-    // },
-    // number: {
-    //     trueName: "number",
-    //     size: { width: 60, height: 60 },
-    //     buyValue: 100,
-    //     sellValue: 50,
-    //     sprite: {
-    //         img: "../../assets/numbers-idle-4-3-16x16.png",
-    //         idle: null,
-    //         walking: "../../assets/numbers-walking-4-3-16x16.png",
-    //     },
-    //     spriteSpeed: 0.15,
-    // },
+    sheep2: {
+        trueName: "sheep2",
+        size: { width: 100, height: 100 },
+        movingSpeed: { min: 40, max: 80 },
+        buyValue: 125,
+        sellValue: 225,
+        sprite: {
+            img: "../../assets/tri-idle-256x256.png",
+            idle: null,
+            walking: "../../assets/sheep2-walking-4-2-16x16.png",
+        },
+    },
+    number: {
+        trueName: "number",
+        size: { width: 60, height: 60 },
+        movingSpeed: { min: 40, max: 80 },
+        buyValue: 100,
+        sellValue: 50,
+        sprite: {
+            img: "../../assets/numbers-idle-4-3-16x16.png",
+            idle: null,
+            walking: "../../assets/numbers-walking-4-3-16x16.png",
+        },
+        spriteSpeed: 0.15,
+    },
 };
 
 export const stationaryObjectPool = {
     tree: {
         trueName: "tree",
         size: { width: 240, height: 240 },
-        movingSpeed: { min: 40, max: 80 },
         lookingRange: 180,
         buyValue: 100,
         sellValue: 300,
