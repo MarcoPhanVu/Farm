@@ -38,6 +38,7 @@ export class GameObject {
 
     render(context) {
         this.renderDebugOutline(context);
+        context.lineWidth = 1; // reset stroke width
 
         if (this.animation) {
             this.animation.render(
@@ -72,7 +73,8 @@ export class GameObject {
             );
         }
 
-        context.lineWidth = 1; // reset stroke width
+        context.fillStyle = "darkmagenta";
+        context.fillText(this.name, this.position.x, this.position.y);
     }
 
     getBottomY() {

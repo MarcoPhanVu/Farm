@@ -30,6 +30,12 @@ export class Animal extends GameObject {
         this.position.x += this.velocity.moveX * deltaTime;
         this.position.y += this.velocity.moveY * deltaTime;
 
+        this.checkWallCollision(deltaTime, worldBounds);
+
+        this.seeAround(objectList);
+    }
+
+    checkWallCollision(deltaTime, worldBounds) {
         let hitBound = null;
 
         this.selfElapsedTime += deltaTime;
@@ -68,8 +74,6 @@ export class Animal extends GameObject {
             // exist
             this.animation.update(deltaTime);
         }
-
-        this.seeAround(objectList);
     }
 
     move(hitBound) {
@@ -153,48 +157,43 @@ export class Animal extends GameObject {
         const seeRange = 180;
 
         for (let object of objectList) {
-            if (
-                (object.name.includes("chicken") ||
-                    object.name.includes("duck")) &&
-                this.name.includes("dog")
-            ) {
-                if (
-                    Math.sqrt(
-                        (object.position.x - this.position.x) ** 2 +
-                            (object.position.y - this.position.y) ** 2,
-                    ) <= seeRange
-                ) {
-                    if (!this.targetList.includes(object)) {
-                        this.targetList.push(object);
-                    }
-                }
+            let isDog = this.name.includes("dog"); // for dog only
+            let isTargetedAnimal =
+                object.name.includes("chicken") ||
+                object.name.includes("duck") ||
+                object.name.includes("dogfood");
+
+            if (!isDog || !isTargetedAnimal) {
+                continue;
+            }
+
+            let dist = Math.sqrt(
+                (object.position.x - this.position.x) ** 2 +
+                    (object.position.y - this.position.y) ** 2,
+            );
+
+            if (dist <= seeRange && !this.targetList.includes(object)) {
+                this.targetList.push(object);
             }
         }
-        // console.log("targetList of ", this.name, ":", this.targetList);
 
-        let theChosenOne = this.targetList.splice(
-            RandomFromMinToMax(0, this.targetList - 1),
-            1,
-        )[0]; // Random
+        this.targetList = this.targetList.filter((target) => {
+            // clear out of range targets
+            let dist = Math.sqrt(
+                (target.position.x - this.position.x) ** 2 +
+                    (target.position.y - this.position.y) ** 2,
+            );
 
-        // let theChosenOne = this.targetList.splice( // the one in the middle of the list
-        //     this.targetList.length / 2,
-        //     1,
-        // )[0];
+            return dist <= seeRange;
+        });
 
-        for (let object of this.targetList) {
-            object.selected = false; // ensure only one is selected
-        }
-
-        if (theChosenOne) {
-            theChosenOne.hovered = true;
-            theChosenOne.selected = true;
-            // console.log("the Chosen One:", theChosenOne);
-            this.goTowards(theChosenOne);
+        if (this.name.includes("dog")) {
+            console.log(this.name, ": ", this.targetList);
         }
     }
 
     goTowards(object) {
+        // needs improvement
         let dest = object.position;
         let maxSpeed = 80;
         if (dest.x - this.position.x > maxSpeed) {

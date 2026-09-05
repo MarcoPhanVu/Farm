@@ -16,7 +16,7 @@ export const animalPool = {
     duck: {
         trueName: "duck",
         size: { width: 40, height: 40 },
-        movingSpeed: { min: 40, max: 80 },
+        movingSpeed: { min: 80, max: 120 },
         lookingRange: 120,
         buyValue: 100,
         sellValue: 30,

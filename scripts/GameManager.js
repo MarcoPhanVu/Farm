@@ -68,7 +68,6 @@ export class GameManager {
             1,
         );
         initTree.setImage(this.assetsLoader.assetsList["statObjects"]["tree"]);
-        console.log(this.assetsLoader.assetsList.statObjects.tree.walking);
         initTree.setAnimation(
             new SpriteAnimation(
                 this.assetsLoader.assetsList.statObjects.tree.walking,
@@ -371,8 +370,6 @@ export class GameManager {
     spawnAnimal(species) {
         let animal = this.animalPool[species];
 
-        console.log(this.animalPool);
-
         if (!animal) {
             console.log(species, "is not exist");
         } else {
@@ -476,7 +473,7 @@ export class GameManager {
 
         this.spawnAnimal("dog");
 
-        for (let i = 0; i < 5; i++) {
+        for (let i = 0; i < 8; i++) {
             this.spawnAnimal("chicken");
             this.spawnAnimal("duck");
             // this.spawnAnimal("dog");
