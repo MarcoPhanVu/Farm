@@ -33,6 +33,9 @@ export class Animal extends GameObject {
         this.position.y += this.velocity.moveY * deltaTime;
 
         this.actionCoolDownTime -= deltaTime;
+        if (this.actionCoolDownTime <= 0) {
+            this.state = "chill";
+        }
 
         this.checkWallCollision(deltaTime, worldBounds);
 
@@ -91,28 +94,38 @@ export class Animal extends GameObject {
         this.velocity.moveY = 0;
         this.boundTouched = false;
         setTimeout(() => {
-            let veloX = RandomFromMinToMax(10, 80);
-            let veloY = RandomFromMinToMax(0, 40);
-
-            if (hitBound === "top") {
-                this.velocity.moveX = veloX * PosOrNeg();
-                this.velocity.moveY = veloY;
-            }
-            if (hitBound === "bottom") {
-                this.velocity.moveX = veloX * PosOrNeg();
-                this.velocity.moveY = -veloY;
-            }
-            if (hitBound === "left") {
-                this.velocity.moveX = veloX;
-                this.velocity.moveY = veloY * PosOrNeg();
-            }
-            if (hitBound === "right") {
-                this.velocity.moveX = -veloX;
-                this.velocity.moveY = veloY * PosOrNeg();
-            }
-            if (hitBound === "none") {
-                this.velocity.moveX = veloX * PosOrNeg();
-                this.velocity.moveY = veloY * PosOrNeg();
+            try {
+                let veloX = RandomFromMinToMax(
+                    this.config.movingSpeed.min,
+                    this.config.movingSpeed.max,
+                );
+                let veloY = RandomFromMinToMax(
+                    this.config.movingSpeed.min,
+                    this.config.movingSpeed.max,
+                );
+                if (hitBound === "top") {
+                    this.velocity.moveX = veloX * PosOrNeg();
+                    this.velocity.moveY = veloY;
+                }
+                if (hitBound === "bottom") {
+                    this.velocity.moveX = veloX * PosOrNeg();
+                    this.velocity.moveY = -veloY;
+                }
+                if (hitBound === "left") {
+                    this.velocity.moveX = veloX;
+                    this.velocity.moveY = veloY * PosOrNeg();
+                }
+                if (hitBound === "right") {
+                    this.velocity.moveX = -veloX;
+                    this.velocity.moveY = veloY * PosOrNeg();
+                }
+                if (hitBound === "none") {
+                    this.velocity.moveX = veloX * PosOrNeg();
+                    this.velocity.moveY = veloY * PosOrNeg();
+                }
+            } catch (error) {
+                console.log(error);
+                console.log(this.config);
             }
 
             this.isChangingDirection = false;
@@ -204,7 +217,7 @@ export class Animal extends GameObject {
 
             this.targetedObject = chosenTarget;
 
-            console.log("target chosen", chosenTarget.name);
+            // console.log("target chosen", chosenTarget.name);
 
             this.actionCoolDownTime = 8;
         }
@@ -213,6 +226,7 @@ export class Animal extends GameObject {
             this.targetedObject.hovered = true;
             this.targetedObject.selected = true;
             this.goTowards(this.targetedObject);
+            this.state = "chasing";
         }
     }
 
