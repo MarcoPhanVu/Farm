@@ -24,11 +24,18 @@ export class Animal extends GameObject {
 
         this.targetedObject = null;
         this.currentActionTime = RandomFromMinToMax(4, 8);
+
+        this.actionCoolDownTime = 0;
     }
 
     update(deltaTime, worldBounds, objectList) {
         this.position.x += this.velocity.moveX * deltaTime;
         this.position.y += this.velocity.moveY * deltaTime;
+
+        this.actionCoolDownTime -= deltaTime;
+        if (this.actionCoolDownTime <= 0) {
+            this.state = "chill";
+        }
 
         this.checkWallCollision(deltaTime, worldBounds);
 
@@ -87,28 +94,38 @@ export class Animal extends GameObject {
         this.velocity.moveY = 0;
         this.boundTouched = false;
         setTimeout(() => {
-            let veloX = RandomFromMinToMax(10, 80);
-            let veloY = RandomFromMinToMax(0, 40);
-
-            if (hitBound === "top") {
-                this.velocity.moveX = veloX * PosOrNeg();
-                this.velocity.moveY = veloY;
-            }
-            if (hitBound === "bottom") {
-                this.velocity.moveX = veloX * PosOrNeg();
-                this.velocity.moveY = -veloY;
-            }
-            if (hitBound === "left") {
-                this.velocity.moveX = veloX;
-                this.velocity.moveY = veloY * PosOrNeg();
-            }
-            if (hitBound === "right") {
-                this.velocity.moveX = -veloX;
-                this.velocity.moveY = veloY * PosOrNeg();
-            }
-            if (hitBound === "none") {
-                this.velocity.moveX = veloX * PosOrNeg();
-                this.velocity.moveY = veloY * PosOrNeg();
+            try {
+                let veloX = RandomFromMinToMax(
+                    this.config.movingSpeed.min,
+                    this.config.movingSpeed.max,
+                );
+                let veloY = RandomFromMinToMax(
+                    this.config.movingSpeed.min,
+                    this.config.movingSpeed.max,
+                );
+                if (hitBound === "top") {
+                    this.velocity.moveX = veloX * PosOrNeg();
+                    this.velocity.moveY = veloY;
+                }
+                if (hitBound === "bottom") {
+                    this.velocity.moveX = veloX * PosOrNeg();
+                    this.velocity.moveY = -veloY;
+                }
+                if (hitBound === "left") {
+                    this.velocity.moveX = veloX;
+                    this.velocity.moveY = veloY * PosOrNeg();
+                }
+                if (hitBound === "right") {
+                    this.velocity.moveX = -veloX;
+                    this.velocity.moveY = veloY * PosOrNeg();
+                }
+                if (hitBound === "none") {
+                    this.velocity.moveX = veloX * PosOrNeg();
+                    this.velocity.moveY = veloY * PosOrNeg();
+                }
+            } catch (error) {
+                console.log(error);
+                console.log(this.config);
             }
 
             this.isChangingDirection = false;
@@ -187,26 +204,45 @@ export class Animal extends GameObject {
             return dist <= seeRange;
         });
 
-        if (this.name.includes("dog")) {
-            console.log(this.name, ": ", this.targetList);
+        for (let object of this.targetList) {
+            object.hovered = false;
+            object.selected = false;
+        }
+
+        if (this.targetList.length > 0 && this.actionCoolDownTime <= 0) {
+            let chosenTarget =
+                this.targetList[
+                    RandomFromMinToMax(0, this.targetList.length - 1)
+                ];
+
+            this.targetedObject = chosenTarget;
+
+            // console.log("target chosen", chosenTarget.name);
+
+            this.actionCoolDownTime = 8;
+        }
+
+        if (this.targetedObject) {
+            this.targetedObject.hovered = true;
+            this.targetedObject.selected = true;
+            this.goTowards(this.targetedObject);
+            this.state = "chasing";
         }
     }
 
     goTowards(object) {
-        // needs improvement
         let dest = object.position;
         let maxSpeed = 80;
-        if (dest.x - this.position.x > maxSpeed) {
-            this.velocity.moveX = maxSpeed;
-        } else {
-            this.velocity.moveX = dest.x - this.position.x;
-        }
 
-        if (dest.x - this.position.y > maxSpeed) {
-            this.velocity.moveY = maxSpeed;
-        } else {
-            this.velocity.moveY = dest.y - this.position.y;
-        }
+        const dx = dest.x - this.position.x;
+        const dy = dest.y - this.position.y;
+
+        this.velocity.moveX = Math.floor(
+            Math.max(-maxSpeed, Math.min(maxSpeed, dx)),
+        );
+        this.velocity.moveY = Math.floor(
+            Math.max(-maxSpeed, Math.min(maxSpeed, dy)),
+        );
     }
 
     glideTowards(object) {

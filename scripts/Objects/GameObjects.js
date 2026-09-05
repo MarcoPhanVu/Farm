@@ -115,8 +115,12 @@ export class GameObject {
     }
 
     setImage(img) {
-        this.idleImage = img.spriteImage;
-        this.spriteSize = img.spriteSize;
+        try {
+            this.idleImage = img.spriteImage;
+            this.spriteSize = img.spriteSize;
+        } catch (error) {
+            console.log("Undefine sprite Image of: ", this);
+        }
     }
 
     setAnimation(animation) {

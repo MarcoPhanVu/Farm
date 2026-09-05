@@ -193,7 +193,7 @@ export class GameManager {
             "spriteSize",
             "boundTouched",
             "config",
-            "targetedObject",
+            // "targetedObject",
             "currentActionTime",
         ];
 
@@ -270,6 +270,14 @@ export class GameManager {
             "selected-targetList",
         );
 
+        this.selectedObjectDOM.targetedObject = document.getElementById(
+            "selected-targetedObject",
+        );
+
+        this.selectedObjectDOM.actionCoolDownTime = document.getElementById(
+            "selected-actionCoolDownTime",
+        );
+
         return;
     }
 
@@ -289,13 +297,18 @@ export class GameManager {
         // this.selectedObjectDOM.selfElapsedTime.innerHTML = `elapsedTime: ${this.selectedObject.selfElapsedTime.toPrecision(2)}`;
 
         if (this.selectedObject.type == "animal") {
-            console.log("checking");
             let inText = "";
             for (let animal of this.selectedObject.targetList) {
                 inText += animal.name + "__";
             }
 
-            this.selectedObjectDOM.targetList.innerHTML = `targetList: ${inText}`;
+            try {
+                this.selectedObjectDOM.actionCoolDownTime.innerHTML = `actionCoolDownTime: ${this.selectedObject.actionCoolDownTime.toPrecision(2)}`;
+                this.selectedObjectDOM.targetList.innerHTML = `targetList: ${inText}`;
+                this.selectedObjectDOM.targetedObject.innerHTML = `targetedObject: ${this.selectedObject.targetedObject.name}`;
+            } catch (error) {
+                // console.log(error);
+            }
         }
     }
 
@@ -451,11 +464,20 @@ export class GameManager {
         this.spawnRandomAnimal();
         this.spawnRandomAnimal();
 
-        this.spawnRandomAnimal();
-        this.spawnRandomAnimal();
-        this.spawnRandomAnimal();
-        this.spawnRandomAnimal();
-        this.spawnRandomAnimal();
+        this.spawnAnimal("chicken");
+        this.spawnAnimal("duck");
+        this.spawnAnimal("chicken");
+        this.spawnAnimal("duck");
+        this.spawnAnimal("chicken");
+        this.spawnAnimal("duck");
+        this.spawnAnimal("chicken");
+        this.spawnAnimal("duck");
+
+        // this.spawnRandomAnimal();
+        // this.spawnRandomAnimal();
+        // this.spawnRandomAnimal();
+        // this.spawnRandomAnimal();
+        // this.spawnRandomAnimal();
     }
 
     deleteSelectedObject() {
@@ -496,9 +518,9 @@ export class GameManager {
             this.spawnAnimal("chicken");
             this.spawnAnimal("duck");
             // this.spawnAnimal("dog");
-            this.spawnAnimal("number");
+            // this.spawnAnimal("number");
             this.spawnAnimal("sheep");
-            this.spawnAnimal("sheep2");
+            // this.spawnAnimal("sheep2");
         }
 
         // this.gameState = "pause";
