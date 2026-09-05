@@ -90,7 +90,9 @@ body {
 
 #gameCanvas {
     background-color: rgb(238, 215, 207);
-    background-color: rgb(103, 177, 103);
+    background-color: rgb(128, 170, 128);
+    /* background-color: #439a86; */
+    /* background-color: #06ba63; */
     display: block;
 
     overflow: auto;
