@@ -1,24 +1,14 @@
 import { RandomFromMinToMax, PosOrNeg } from "../utils/random.js";
 
 export class GameObject {
-    constructor(
-        id,
-        name,
-        type,
-        position,
-        size,
-        velocity,
-        debugColor,
-        sellValue,
-        layer,
-    ) {
+    constructor(id, name, type, position, size, debugColor, sellValue, layer) {
         this.id = id;
         this.name = name;
         this.type = type;
 
         this.position = position;
         this.size = size;
-        this.velocity = velocity;
+        this.velocity = { moveX: 0, moveY: 0 };
 
         this.debugColor = debugColor;
         this.layer = layer;
@@ -38,24 +28,18 @@ export class GameObject {
     }
 
     update(deltaTime) {
-        // console.log(this.type);
-        // console.log("problem", this.position);
-        // console.log(this.velocity);
-        // console.log(this.debugColor);
         this.position.x += this.velocity.moveX * deltaTime;
         this.position.y += this.velocity.moveY * deltaTime;
 
-        // console.log(this.animation);
-
         if (this.animation) {
-            // console.log(this);
-            // console.log("check");
-            // console.log(gameASDASD.gameObjects[1]);
             this.animation.update(deltaTime);
         }
     }
 
     render(context) {
+        this.renderDebugOutline(context);
+        context.lineWidth = 1; // reset stroke width
+
         if (this.animation) {
             this.animation.render(
                 context,
@@ -64,7 +48,6 @@ export class GameObject {
                 this.size.width,
                 this.size.height,
             );
-            // console.log("reached animation");
         } else if (this.idleImage) {
             // use image if exist
             context.drawImage(
@@ -80,7 +63,6 @@ export class GameObject {
                 this.size.width,
                 this.size.height,
             );
-            // console.log("reached image");
         } else {
             context.fillStyle = this.debugColor;
             context.fillRect(
@@ -91,9 +73,8 @@ export class GameObject {
             );
         }
 
-        this.renderDebugOutline(context);
-
-        context.lineWidth = 1; // reset stroke width
+        context.fillStyle = "darkmagenta";
+        context.fillText(this.name, this.position.x, this.position.y);
     }
 
     getBottomY() {
@@ -136,7 +117,6 @@ export class GameObject {
     setImage(img) {
         this.idleImage = img.spriteImage;
         this.spriteSize = img.spriteSize;
-        // console.log(img);
     }
 
     setAnimation(animation) {

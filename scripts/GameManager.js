@@ -6,7 +6,7 @@ import {
     getRandomValueFromObject,
 } from "./utils/random.js";
 import { colorTemplate } from "./config/colors.js";
-import { animalPool } from "./config/animals.js";
+import { animalPool } from "./config/generalObjects.js";
 import { SpriteAnimation } from "./Objects/SpriteAnimation.js";
 
 export class GameManager {
@@ -67,9 +67,12 @@ export class GameManager {
             150,
             1,
         );
-        initTree.setImage(this.assetsLoader.assetsList["tree"]);
+        initTree.setImage(this.assetsLoader.assetsList["statObjects"]["tree"]);
         initTree.setAnimation(
-            new SpriteAnimation(this.assetsLoader.assetsList.tree.walking, 0.5),
+            new SpriteAnimation(
+                this.assetsLoader.assetsList.statObjects.tree.walking,
+                0.15,
+            ),
         );
         this.gameObjects.push(initTree);
 
@@ -169,11 +172,38 @@ export class GameManager {
         // console.log(JSON.stringify(this.selectedObject.animation));
 
         let propertiesHTML = header;
+        const unneededProperties = [
+            "id",
+            // "name",
+            "type",
+            // "position",
+            "size",
+            // "velocity",
+            "debugColor",
+            "layer",
+            // "sellValue",
+            // "state",
+            "buyValue",
+            "idleImage",
+            "animation",
+            "hovered",
+            "selected",
+            // "selfElapsedTime",
+            "isChangingDirection",
+            // "spriteSize",
+            "boundTouched",
+        ];
+
         for (let keyName of Object.keys(this.selectedObject)) {
+            // console.log(keyName);
+            if (unneededProperties.includes(keyName)) {
+                continue;
+            }
             propertiesHTML +=
                 `<p class="property-name" id="selected-${keyName}">` +
-                keyName.charAt(0).toUpperCase() +
-                keyName.slice(1) +
+                // keyName.charAt(0).toUpperCase() +
+                // keyName.slice(1) +
+                keyName +
                 ": ";
 
             try {
@@ -275,7 +305,7 @@ export class GameManager {
 
     update(deltaTime, elapsedTime) {
         for (let object of this.gameObjects) {
-            object.update(deltaTime, this.gameCanvas);
+            object.update(deltaTime, this.gameCanvas, this.gameObjects);
         }
 
         this.updatePropertiesPanel();
@@ -340,63 +370,60 @@ export class GameManager {
     spawnAnimal(species) {
         let animal = this.animalPool[species];
 
-        console.log("POOL: ", this.animalPool[species]);
-        let currentID = this.nextAnimalID++;
-        let name = `${species} ${currentID}`;
-        let type = "animal";
-        let position = {
-            x: RandomFromMinToMax(
-                80,
-                this.gameCanvas.width - animal.size.width,
-            ),
-            y: RandomFromMinToMax(
-                80,
-                this.gameCanvas.height - animal.size.height,
-            ),
-        };
-        let velocity = {
-            moveX: RandomFromMinToMax(20, 60) * PosOrNeg(),
-            moveY: RandomFromMinToMax(20, 60) * PosOrNeg(),
-        };
-        // let size = animal["size"];
-        let debugColor =
-            colorTemplate["BrightAss"].colors[
-                RandomFromMinToMax(
-                    0,
-                    colorTemplate["BrightAss"].colors.length - 1,
-                )
-            ];
+        if (!animal) {
+            console.log(species, "is not exist");
+        } else {
+            let currentID = this.nextAnimalID++;
+            let name = `${species} ${currentID}`;
+            let type = "animal";
+            let position = {
+                x: RandomFromMinToMax(
+                    80,
+                    this.gameCanvas.width - animal.size.width,
+                ),
+                y: RandomFromMinToMax(
+                    80,
+                    this.gameCanvas.height - animal.size.height,
+                ),
+            };
+            let debugColor =
+                colorTemplate["BrightAss"].colors[
+                    RandomFromMinToMax(
+                        0,
+                        colorTemplate["BrightAss"].colors.length - 1,
+                    )
+                ];
 
-        let animalObj = new Animal(
-            currentID,
-            name,
-            type,
-            position,
-            animal["size"],
-            velocity,
-            debugColor,
-            animal["sellValue"],
-            1, // Animal will be in layer 1
-        );
+            let animalObj = new Animal(
+                currentID,
+                name,
+                type,
+                position,
+                animal["size"],
+                debugColor,
+                animal["sellValue"],
+                1, // Animal will be in layer 1
+                animal,
+            );
 
-        let animalSpriteMyAss = this.assetsLoader.assetsList[species];
+            let animalSpriteMyAss =
+                this.assetsLoader.assetsList["animals"][species];
 
-        animalObj.setImage(animalSpriteMyAss["img"]);
+            animalObj.setImage(animalSpriteMyAss["img"]);
 
-        let spriteAnimationContainer = new SpriteAnimation(
-            animalSpriteMyAss["walking"],
-            0.2,
-        );
+            let spriteAnimationContainer = new SpriteAnimation(
+                animalSpriteMyAss["walking"],
+                0.2,
+            );
 
-        animalObj.setAnimation(spriteAnimationContainer);
+            animalObj.setAnimation(spriteAnimationContainer);
 
-        this.gameObjects.push(animalObj);
+            this.gameObjects.push(animalObj);
+        }
     }
 
     spawnRandomAnimal() {
         this.spawnAnimal(getRandomValueFromObject(animalPool).trueName);
-        // this.spawnAnimal("sheep");
-        // this.spawnAnimal("sheep2");
     }
 
     spawn10RandomAnimals() {
@@ -443,10 +470,12 @@ export class GameManager {
 
         requestAnimationFrame(this.gameLoop);
 
-        for (let i = 0; i < 3; i++) {
+        this.spawnAnimal("dog");
+
+        for (let i = 0; i < 8; i++) {
             this.spawnAnimal("chicken");
             this.spawnAnimal("duck");
-            this.spawnAnimal("dog");
+            // this.spawnAnimal("dog");
             this.spawnAnimal("number");
             this.spawnAnimal("sheep");
             this.spawnAnimal("sheep2");

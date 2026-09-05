@@ -1,11 +1,11 @@
 import { GameManager } from "./GameManager.js";
 import { AssetsLoaderProto } from "./Objects/AssetsLoader.js";
-import { animalPool } from "./config/animals.js";
+import { animalPool, stationaryObjectPool } from "./config/generalObjects.js";
 
 // Global scope
 const assetsLoader = new AssetsLoaderProto();
-assetsLoader.load(animalPool);
-console.log("Assets Loader:", assetsLoader);
+assetsLoader.loadAnimals(animalPool);
+assetsLoader.loadObjects(stationaryObjectPool);
 
 const gameASDASD = new GameManager(assetsLoader);
 

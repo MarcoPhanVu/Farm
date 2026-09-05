@@ -9,36 +9,37 @@ export class Animal extends GameObject {
         type,
         position,
         size,
-        velocity,
         debugColor,
         sellValue,
         layer,
+        animalConfig,
     ) {
-        super(
-            id,
-            name,
-            type,
-            position,
-            size,
-            velocity,
-            debugColor,
-            sellValue,
-            layer,
-        );
+        super(id, name, type, position, size, debugColor, sellValue, layer);
 
+        this.config = animalConfig;
         this.isChangingDirection = false;
         this.selfElapsedTime = RandomFromMinToMax(0, 10);
+
+        this.targetList = [];
+
+        this.targetedObject = null;
+        this.currentActionTime = RandomFromMinToMax(4, 8);
     }
 
-    update(deltaTime, worldBounds) {
+    update(deltaTime, worldBounds, objectList) {
         this.position.x += this.velocity.moveX * deltaTime;
         this.position.y += this.velocity.moveY * deltaTime;
 
+        this.checkWallCollision(deltaTime, worldBounds);
+
+        this.seeAround(objectList);
+    }
+
+    checkWallCollision(deltaTime, worldBounds) {
         let hitBound = null;
 
         this.selfElapsedTime += deltaTime;
-        if (this.selfElapsedTime >= 10) {
-            // console.log("7.5 sec passed");
+        if (this.selfElapsedTime >= this.currentActionTime) {
             hitBound = "none";
             this.selfElapsedTime = 0;
         }
@@ -53,7 +54,6 @@ export class Animal extends GameObject {
             this.position.y = worldBounds.height - this.size.height;
             hitBound = "bottom";
         }
-
         // Left Bound
         if (this.position.x <= 0) {
             this.position.x = 0;
@@ -66,15 +66,17 @@ export class Animal extends GameObject {
         }
 
         if (hitBound !== null) {
-            this.changeDirection(hitBound);
+            // exist
+            this.move(hitBound);
         }
 
         if (this.animation) {
+            // exist
             this.animation.update(deltaTime);
         }
     }
 
-    changeDirection(hitBound) {
+    move(hitBound) {
         if (this.isChangingDirection) {
             return;
         }
@@ -111,5 +113,106 @@ export class Animal extends GameObject {
 
             this.isChangingDirection = false;
         }, 1000);
+    }
+
+    renderDebugOutline(context) {
+        if (this.hovered) {
+            context.lineWidth = 2;
+            context.strokeStyle = "#fff";
+            context.strokeRect(
+                this.position.x,
+                this.position.y,
+                this.size.width,
+                this.size.height,
+            );
+        }
+
+        if (this.selected) {
+            context.lineWidth = 2;
+            context.strokeStyle = "#000";
+            context.strokeRect(
+                this.position.x,
+                this.position.y,
+                this.size.width,
+                this.size.height,
+            );
+        }
+
+        if (this.name.includes("dog")) {
+            context.beginPath();
+            context.arc(
+                this.position.x + this.size.width / 2,
+                this.position.y + this.size.height / 2,
+                180,
+                0,
+                Math.PI * 2,
+            );
+            context.fillStyle = this.debugColor + "40";
+            context.fill();
+            context.closePath();
+        }
+    }
+
+    seeAround(objectList) {
+        const seeRange = 180;
+
+        for (let object of objectList) {
+            let isDog = this.name.includes("dog"); // for dog only
+            let isTargetedAnimal =
+                object.name.includes("chicken") ||
+                object.name.includes("duck") ||
+                object.name.includes("dogfood");
+
+            if (!isDog || !isTargetedAnimal) {
+                continue;
+            }
+
+            let dist = Math.sqrt(
+                (object.position.x - this.position.x) ** 2 +
+                    (object.position.y - this.position.y) ** 2,
+            );
+
+            if (dist <= seeRange && !this.targetList.includes(object)) {
+                this.targetList.push(object);
+            }
+        }
+
+        this.targetList = this.targetList.filter((target) => {
+            // clear out of range targets
+            let dist = Math.sqrt(
+                (target.position.x - this.position.x) ** 2 +
+                    (target.position.y - this.position.y) ** 2,
+            );
+
+            return dist <= seeRange;
+        });
+
+        if (this.name.includes("dog")) {
+            console.log(this.name, ": ", this.targetList);
+        }
+    }
+
+    goTowards(object) {
+        // needs improvement
+        let dest = object.position;
+        let maxSpeed = 80;
+        if (dest.x - this.position.x > maxSpeed) {
+            this.velocity.moveX = maxSpeed;
+        } else {
+            this.velocity.moveX = dest.x - this.position.x;
+        }
+
+        if (dest.x - this.position.y > maxSpeed) {
+            this.velocity.moveY = maxSpeed;
+        } else {
+            this.velocity.moveY = dest.y - this.position.y;
+        }
+    }
+
+    glideTowards(object) {
+        //ease out
+        let dest = object.position;
+        this.velocity.moveX = dest.x - this.position.x;
+        this.velocity.moveY = dest.y - this.position.y;
     }
 }
