@@ -464,7 +464,6 @@ export class GameManager {
         this.spawnAnimal("number");
         this.spawnAnimal("number");
         this.spawnAnimal("sheep");
-        this.spawnAnimal("sheep");
 
         this.spawnRandomAnimal();
         this.spawnRandomAnimal();
@@ -503,11 +502,11 @@ export class GameManager {
 
         requestAnimationFrame(this.gameLoop);
 
+        this.ui.populateStoreBar(this.animalPool, this.assetsLoader);
+        this.spawnAnimal("dog");
         this.spawnAnimal("dog");
 
         for (let i = 0; i < 3; i++) {
-            this.spawnAnimal("chicken");
-            this.spawnAnimal("duck");
             this.spawnAnimal("chicken");
             this.spawnAnimal("duck");
             // this.spawnAnimal("dog");

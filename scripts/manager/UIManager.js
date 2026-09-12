@@ -1,5 +1,6 @@
 export class UIManager {
-    constructor() {
+    constructor(callbacks) {
+        this.callbacks = callbacks;
         this.gameCanvas = document.getElementById("gameCanvas");
         this.painter = this.gameCanvas.getContext("2d");
 
@@ -20,5 +21,35 @@ export class UIManager {
             "spawn10RandomAnimalsBtn",
         );
         this.toggleGameStateBtn = document.getElementById("toggleGameStateBtn");
+    }
+
+    populateStoreBar(objectPool, assetLoader) {
+        console.log(objectPool);
+
+        for (let objectName of Object.keys(objectPool)) {
+            let animal = {
+                name: objectPool[objectName].trueName,
+                price: objectPool[objectName].buyValue,
+                idleImgSrc:
+                    assetLoader.assetsList.animals[objectName].idle.spriteImage
+                        .src,
+            };
+
+            let card = document.createElement("button");
+            card.classList.add("animalCard");
+
+            card.innerHTML = `<p>${animal.name}</p>\n<p>${animal.price}</p>`;
+
+            let animalImg = document.createElement("img");
+            animalImg.src = animal.idleImgSrc;
+
+            card.appendChild(animalImg);
+            card.addEventListener("click", () => {
+                this.callbacks.onBuyAnimal(objectName);
+            });
+
+            this.bottomPanel.appendChild(card);
+        }
+        console.log(this.bottomPanel);
     }
 }

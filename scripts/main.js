@@ -8,7 +8,11 @@ const assetsLoader = new AssetsLoader();
 assetsLoader.loadAnimals(animalPool);
 assetsLoader.loadObjects(stationaryObjectPool);
 
-const uiManager = new UIManager();
+const uiManager = new UIManager({
+    onBuyAnimal: (animalName) => {
+        gameASDASD.spawnAnimal(animalName);
+    },
+});
 
 const gameASDASD = new GameManager(assetsLoader, uiManager);
 

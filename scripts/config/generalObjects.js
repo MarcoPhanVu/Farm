@@ -7,8 +7,8 @@ export const animalPool = {
         buyValue: 100,
         sellValue: 20,
         sprite: {
+            idle: "../../assets/chick-idle-8x8.png",
             img: "../../assets/chick-idle-8x8.png",
-            idle: null,
             walking: "../../assets/chick-walking-4-2-8x8.png",
         },
         spriteSpeed: 0.2,
@@ -21,8 +21,8 @@ export const animalPool = {
         buyValue: 100,
         sellValue: 30,
         sprite: {
+            idle: "../../assets/duck-idle-16x16.png",
             img: "../../assets/duck-idle-16x16.png",
-            idle: null,
             walking: "../../assets/duck-walking-4-2-16x16.png",
         },
         spriteSpeed: 0.2,
@@ -35,8 +35,8 @@ export const animalPool = {
         buyValue: 100,
         sellValue: 100,
         sprite: {
+            idle: "../../assets/dog-idle-32x32.png",
             img: "../../assets/dog-idle-32x32.png",
-            idle: null,
             walking: "../../assets/dog-walking-4-2-16x16.png",
         },
         spriteSpeed: 0.2,
@@ -49,8 +49,8 @@ export const animalPool = {
         buyValue: 125,
         sellValue: 225,
         sprite: {
+            idle: "../../assets/sheep-idle-32x32.png",
             img: "../../assets/sheep-idle-32x32.png",
-            idle: null,
             walking: "../../assets/sheep-walking-1-8-32x32.png",
         },
     },
@@ -61,8 +61,8 @@ export const animalPool = {
         buyValue: 125,
         sellValue: 225,
         sprite: {
+            idle: "../../assets/sheep2-idle-16x16.png",
             img: "../../assets/sheep2-idle-16x16.png",
-            idle: null,
             walking: "../../assets/sheep2-walking-4-2-16x16.png",
         },
     },
@@ -73,8 +73,8 @@ export const animalPool = {
         buyValue: 100,
         sellValue: 50,
         sprite: {
+            idle: "../../assets/sheep2-idle-16x16.png",
             img: "../../assets/tri-idle-256x256.png",
-            idle: null,
             walking: "../../assets/numbers-walking-4-3-16x16.png",
         },
         spriteSpeed: 0.15,
@@ -89,8 +89,8 @@ export const stationaryObjectPool = {
         buyValue: 100,
         sellValue: 300,
         sprite: {
+            idle: "../../assets/tree-img-32x32.png",
             img: "../../assets/tree-img-32x32.png",
-            idle: null,
             walking: "../../assets/tri-walking-1-1-256x256.png",
         },
     },
