@@ -1,3 +1,3 @@
 # Farm
 
-https://marcophanvu.github.io/farm/
+https://marcophanvu.github.io/Farm/
