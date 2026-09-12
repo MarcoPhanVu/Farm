@@ -333,12 +333,12 @@ export class GameManager {
     }
 
     update(deltaTime, elapsedTime) {
+        this.updatePropertiesPanel();
+        this.updateResourcesBar();
+
         for (let object of this.gameObjects) {
             object.update(deltaTime, this.gameCanvas, this.gameObjects);
         }
-
-        this.updatePropertiesPanel();
-        this.updateResourcesBar();
     }
 
     render() {
