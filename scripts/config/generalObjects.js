@@ -27,20 +27,6 @@ export const animalPool = {
         },
         spriteSpeed: 0.2,
     },
-    // cat: {
-    //     trueName: "cat",
-    //     size: { width: 64, height: 64 },
-    //     movingSpeed: { min: 40, max: 80 },
-    //     lookingRange: 240,
-    //     buyValue: 100,
-    //     sellValue: 80,
-    //     sprite: {
-    //         img: null,
-    //         idle: null,
-    //         walking: null,
-    //     },
-    //     spriteSpeed: 0.2,
-    // },
     dog: {
         trueName: "dog",
         size: { width: 64, height: 64 },
@@ -49,7 +35,7 @@ export const animalPool = {
         buyValue: 100,
         sellValue: 100,
         sprite: {
-            img: "../../assets/dog-idle-16x16.png",
+            img: "../../assets/dog-idle-32x32.png",
             idle: null,
             walking: "../../assets/dog-walking-4-2-16x16.png",
         },
@@ -63,7 +49,7 @@ export const animalPool = {
         buyValue: 125,
         sellValue: 225,
         sprite: {
-            img: "../../assets/tri-idle-256x256.png",
+            img: "../../assets/sheep-idle-32x32.png",
             idle: null,
             walking: "../../assets/sheep-walking-1-8-32x32.png",
         },
@@ -75,7 +61,7 @@ export const animalPool = {
         buyValue: 125,
         sellValue: 225,
         sprite: {
-            img: "../../assets/tri-idle-256x256.png",
+            img: "../../assets/sheep2-idle-16x16.png",
             idle: null,
             walking: "../../assets/sheep2-walking-4-2-16x16.png",
         },
@@ -87,7 +73,7 @@ export const animalPool = {
         buyValue: 100,
         sellValue: 50,
         sprite: {
-            img: "../../assets/numbers-idle-4-3-16x16.png",
+            img: "../../assets/tri-idle-256x256.png",
             idle: null,
             walking: "../../assets/numbers-walking-4-3-16x16.png",
         },
