@@ -89,8 +89,8 @@ body {
 }
 
 #gameCanvas {
-    background-color: rgb(238, 215, 207);
-    background-color: rgb(128, 170, 128);
+    /* background-color: rgb(238, 215, 207); */
+    background-color: rgb(91, 150, 91);
     /* background-color: #439a86; */
     /* background-color: #06ba63; */
     display: block;
@@ -116,6 +116,11 @@ body {
     background-color: rgb(100, 100, 120);
 
     padding: 12px;
+}
+
+.animalCard {
+    /* background-color: blue; */
+    margin: 0 8px;
 }
 
 p.property-name {
