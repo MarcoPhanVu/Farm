@@ -2,7 +2,7 @@ export const animalPool = {
     chicken: {
         trueName: "chicken",
         size: { width: 40, height: 40 },
-        movingSpeed: { min: 60, max: 120 },
+        movingSpeed: { min: 50, max: 100 },
         lookingRange: 120,
         buyValue: 100,
         sellValue: 20,
@@ -16,7 +16,7 @@ export const animalPool = {
     duck: {
         trueName: "duck",
         size: { width: 40, height: 40 },
-        movingSpeed: { min: 60, max: 120 },
+        movingSpeed: { min: 50, max: 100 },
         lookingRange: 120,
         buyValue: 100,
         sellValue: 30,
@@ -44,7 +44,7 @@ export const animalPool = {
     dog: {
         trueName: "dog",
         size: { width: 64, height: 64 },
-        movingSpeed: { min: 40, max: 80 },
+        movingSpeed: { min: 30, max: 60 },
         lookingRange: 180,
         buyValue: 100,
         sellValue: 100,
@@ -58,7 +58,7 @@ export const animalPool = {
     sheep: {
         trueName: "sheep",
         size: { width: 100, height: 100 },
-        movingSpeed: { min: 40, max: 80 },
+        movingSpeed: { min: 32, max: 60 },
         lookingRange: 120,
         buyValue: 125,
         sellValue: 225,
@@ -71,7 +71,7 @@ export const animalPool = {
     sheep2: {
         trueName: "sheep2",
         size: { width: 100, height: 100 },
-        movingSpeed: { min: 40, max: 80 },
+        movingSpeed: { min: 32, max: 60 },
         buyValue: 125,
         sellValue: 225,
         sprite: {

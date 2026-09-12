@@ -10,30 +10,28 @@ import { animalPool } from "./config/generalObjects.js";
 import { SpriteAnimation } from "./Objects/SpriteAnimation.js";
 
 export class GameManager {
-    constructor(assetsLoader) {
-        this.gameCanvas = document.getElementById("gameCanvas");
+    constructor(assetsLoader, UIManager) {
+        this.assetsLoader = assetsLoader;
+        this.ui = UIManager;
+
+        this.gameCanvas = this.ui.gameCanvas;
         this.painter = this.gameCanvas.getContext("2d");
 
-        this.topPanel = document.getElementById("topPanel");
-        this.toolPanel = document.getElementById("toolPanel");
-        this.canvasPanel = document.getElementById("canvasPanel");
-        this.propertiesPanel = document.getElementById("propertiesPanel");
-        this.bottomPanel = document.getElementById("bottomPanel");
+        this.topPanel = this.ui.topPanel;
+        this.toolPanel = this.ui.toolPanel;
+        this.canvasPanel = this.ui.canvasPanel;
+        this.propertiesPanel = this.ui.propertiesPanel;
+        this.bottomPanel = this.ui.bottomPanel;
 
         // Top Panel
-        this.moneyDisplay = document.getElementById("currentMoneyDisplay");
-        this.eggDisplay = document.getElementById("currentEggDisplay");
-        this.stickDisplay = document.getElementById("currentStickDisplay");
+        this.moneyDisplay = this.ui.moneyDisplay;
+        this.eggDisplay = this.ui.eggDisplay;
+        this.stickDisplay = this.ui.stickDisplay;
 
         // Bottom Panel
-        this.spawnAnimalBtn = document.getElementById("spawnAnimalBtn");
-        this.spawn10RandomAnimalsBtn = document.getElementById(
-            "spawn10RandomAnimalsBtn",
-        );
-        this.toggleGameStateBtn = document.getElementById("toggleGameStateBtn");
-
-        // Initial objects
-        this.assetsLoader = assetsLoader;
+        this.spawnAnimalBtn = this.ui.spawnAnimalBtn;
+        this.spawn10RandomAnimalsBtn = this.ui.spawn10RandomAnimalsBtn;
+        this.toggleGameStateBtn = this.ui.toggleGameStateBtn;
 
         this.gameObjects = [];
 
@@ -506,11 +504,8 @@ export class GameManager {
         requestAnimationFrame(this.gameLoop);
 
         this.spawnAnimal("dog");
-        this.spawnAnimal("dog");
 
-        for (let i = 0; i < 5; i++) {
-            this.spawnAnimal("chicken");
-            this.spawnAnimal("duck");
+        for (let i = 0; i < 3; i++) {
             this.spawnAnimal("chicken");
             this.spawnAnimal("duck");
             this.spawnAnimal("chicken");

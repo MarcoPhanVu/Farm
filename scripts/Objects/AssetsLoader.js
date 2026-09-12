@@ -1,6 +1,6 @@
 import { animalPool, stationaryObjectPool } from "../config/generalObjects.js";
 
-export class AssetsLoaderProto {
+export class AssetsLoader {
     constructor() {
         this.assetsList = { animals: {}, statObjects: {} };
     }
