@@ -1,6 +1,5 @@
 export const animalPool = {
     chicken: {
-        trueName: "chicken",
         size: { width: 40, height: 40 },
         movingSpeed: { min: 50, max: 100 },
         lookingRange: 120,
@@ -14,7 +13,6 @@ export const animalPool = {
         spriteSpeed: 0.2,
     },
     duck: {
-        trueName: "duck",
         size: { width: 40, height: 40 },
         movingSpeed: { min: 50, max: 100 },
         lookingRange: 120,
@@ -28,7 +26,6 @@ export const animalPool = {
         spriteSpeed: 0.2,
     },
     dog: {
-        trueName: "dog",
         size: { width: 64, height: 64 },
         movingSpeed: { min: 30, max: 60 },
         lookingRange: 180,
@@ -42,7 +39,6 @@ export const animalPool = {
         spriteSpeed: 0.2,
     },
     sheep: {
-        trueName: "sheep",
         size: { width: 100, height: 100 },
         movingSpeed: { min: 32, max: 60 },
         lookingRange: 120,
@@ -55,7 +51,6 @@ export const animalPool = {
         },
     },
     sheep2: {
-        trueName: "sheep2",
         size: { width: 100, height: 100 },
         movingSpeed: { min: 32, max: 60 },
         buyValue: 125,
@@ -67,7 +62,6 @@ export const animalPool = {
         },
     },
     number: {
-        trueName: "number",
         size: { width: 60, height: 60 },
         movingSpeed: { min: 40, max: 80 },
         buyValue: 100,
@@ -83,7 +77,6 @@ export const animalPool = {
 
 export const stationaryObjectPool = {
     tree: {
-        trueName: "tree",
         size: { width: 240, height: 240 },
         lookingRange: 180,
         buyValue: 100,
@@ -92,6 +85,16 @@ export const stationaryObjectPool = {
             idle: "../../assets/tree-img-32x32.png",
             img: "../../assets/tree-img-32x32.png",
             walking: "../../assets/tri-walking-1-1-256x256.png",
+        },
+    },
+};
+
+export const interactables = {
+    grain: {
+        size: { width: 20, height: 20 },
+        sprite: {
+            option1: "../../assets/grain-idle-16x16.png",
+            option2: "../../assets/grain2-idle-16x16.png",
         },
     },
 };
