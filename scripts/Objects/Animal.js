@@ -3,29 +3,37 @@ import { GameObject } from "./GameObjects.js";
 import { colorTemplate } from "../config/colors.js";
 
 export class Animal extends GameObject {
+    isChangingDirection = false;
+
+    selfElapsedTime = RandomFromMinToMax(0, 10);
+
+    debugColor =
+        colorTemplate["CuteGayColor"].colors[
+            Math.floor(
+                Math.random() * colorTemplate["CuteGayColor"].colors.length,
+            )
+        ];
+
+    targetList = [];
+
+    targetedObject = null;
+    currentActionTime = RandomFromMinToMax(4, 8);
+
+    actionCoolDownTime = 0;
+
     constructor(
         id,
-        name,
+        species,
         type,
         position,
         size,
-        debugColor,
         sellValue,
         layer,
         animalConfig,
     ) {
-        super(id, name, type, position, size, debugColor, sellValue, layer);
-
+        super(id, species, type, position, size, sellValue, layer);
+        this.species = species;
         this.config = animalConfig;
-        this.isChangingDirection = false;
-        this.selfElapsedTime = RandomFromMinToMax(0, 10);
-
-        this.targetList = [];
-
-        this.targetedObject = null;
-        this.currentActionTime = RandomFromMinToMax(4, 8);
-
-        this.actionCoolDownTime = 0;
     }
 
     update(deltaTime, worldBounds, objectList) {
@@ -155,30 +163,34 @@ export class Animal extends GameObject {
             );
         }
 
-        if (this.name.includes("dog")) {
+        if (this.species.includes("dog")) {
             context.beginPath();
             context.arc(
                 this.position.x + this.size.width / 2,
                 this.position.y + this.size.height / 2,
-                180,
+                120,
                 0,
                 Math.PI * 2,
             );
             context.fillStyle = this.debugColor + "40";
+            context.fillStyle = "#ffffff20";
             context.fill();
             context.closePath();
         }
     }
 
     seeAround(objectList) {
-        const seeRange = 180;
-
+        const seeRange = 120;
         for (let object of objectList) {
-            let isDog = this.name.includes("dog"); // for dog only
+            if (!object.species) {
+                // ensure it is an animal
+                continue;
+            }
+            let isDog = this.species.includes("dog"); // for dog only
             let isTargetedAnimal =
-                object.name.includes("chicken") ||
-                object.name.includes("duck") ||
-                object.name.includes("dogfood");
+                object.species.includes("chicken") ||
+                object.species.includes("duck") ||
+                object.species.includes("dogfood");
 
             if (!isDog || !isTargetedAnimal) {
                 continue;
@@ -216,8 +228,6 @@ export class Animal extends GameObject {
                 ];
 
             this.targetedObject = chosenTarget;
-
-            // console.log("target chosen", chosenTarget.name);
 
             this.actionCoolDownTime = 8;
         }

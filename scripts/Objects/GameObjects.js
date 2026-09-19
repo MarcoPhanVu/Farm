@@ -1,30 +1,39 @@
 import { RandomFromMinToMax, PosOrNeg } from "../utils/random.js";
+import { colorTemplate } from "../config/colors.js";
 
 export class GameObject {
-    constructor(id, name, type, position, size, debugColor, sellValue, layer) {
+    velocity = { moveX: 0, moveY: 0 };
+    debugColor =
+        colorTemplate["CuteGayColor"].colors[
+            Math.floor(
+                Math.random() * colorTemplate["CuteGayColor"].colors.length,
+            )
+        ];
+    state = "idle";
+    buyValue = 0;
+
+    idleImage = null;
+    animation = null;
+
+    hovered = false;
+    selected = false;
+
+    selfElapsedTime = 0;
+
+    constructor(id, name, type, position, size, sellValue, layer) {
         this.id = id;
         this.name = name;
         this.type = type;
 
         this.position = position;
         this.size = size;
-        this.velocity = { moveX: 0, moveY: 0 };
-
-        this.debugColor = debugColor;
-        this.layer = layer;
 
         this.sellValue = sellValue;
 
-        this.state = "idle";
-        this.buyValue = 0;
+        this.layer = layer;
 
-        this.idleImage = null;
-        this.animation = null;
-
-        this.hovered = false;
-        this.selected = false;
-
-        this.selfElapsedTime = 0;
+        // console.log(this.debugColor);
+        // console.log(colorTemplate["CuteGayColor"]);
     }
 
     update(deltaTime) {
@@ -73,7 +82,7 @@ export class GameObject {
             );
         }
 
-        context.fillStyle = "darkmagenta";
+        context.fillStyle = "white";
         context.fillText(this.name, this.position.x, this.position.y);
     }
 

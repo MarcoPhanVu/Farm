@@ -119,8 +119,15 @@ body {
 }
 
 .animalCard {
-    /* background-color: blue; */
     margin: 0 8px;
+    min-width: 80px;
+    min-height: 100px;
+}
+
+.animalCard > img {
+    height: 64px;
+    width: 64px;
+    image-rendering: pixelated;
 }
 
 p.property-name {
