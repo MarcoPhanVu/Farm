@@ -1,13 +1,17 @@
 import { Animal } from "./Objects/Animal.js";
 import { GameObject } from "./Objects/GameObjects.js";
+import { SpriteAnimation } from "./Objects/SpriteAnimation.js";
+
 import {
     RandomFromMinToMax,
     PosOrNeg,
-    getRandomValueFromObject,
+    getRandomKeyFromObject,
+    getRandomElementFromArray,
 } from "./utils/random.js";
+
 import { colorTemplate } from "./config/colors.js";
 import { animalPool } from "./config/generalObjects.js";
-import { SpriteAnimation } from "./Objects/SpriteAnimation.js";
+import { animalNames } from "./config/animalNames.js";
 
 export class GameManager {
     constructor(assetsLoader, UIManager) {
@@ -42,26 +46,7 @@ export class GameManager {
             { x: 160, y: 100 },
             { width: 240, height: 240 },
             { moveX: 0, moveY: 0 },
-            // "cornsilk",
-            // "honeydew",
-            // "ivory",
-            // "floralwhite",
-            // "forestgreen",
-            // "darkseagreen",
-            // "darksalmon",
-            // "darkolivegreen",
-            // "darkmagenta",
-            // "coral",
-            // "burlywood",
-            // "azure",
-            // "beige",
-            // "bisque",
-            // "lightcyan",
-            "lightgreen",
-            // "lightslategrey",
-            // "palevioletred",
-            // "powderblue",
-            // "tomato",
+            "tomato",
             150,
             1,
         );
@@ -87,6 +72,7 @@ export class GameManager {
 
         this.nextAnimalID = 2;
         this.animalPool = animalPool;
+        this.animalNames = animalNames;
 
         // Entirely depended on chatGPT for this part, gotta learn about bindings in the future.
         this.resizeCanvas = this.resizeCanvas.bind(this);
@@ -172,12 +158,10 @@ export class GameManager {
         let propertiesHTML = header;
         const unneededProperties = [
             "id",
-            // "name",
             "type",
             // "position",
             // "size",
             // "velocity",
-            "debugColor",
             "layer",
             "sellValue",
             "state",
@@ -193,6 +177,7 @@ export class GameManager {
             "config",
             // "targetedObject",
             "currentActionTime",
+            // species
         ];
 
         for (let keyName of Object.keys(this.selectedObject)) {
@@ -396,6 +381,12 @@ export class GameManager {
         this.gameState = this.gameState == "playing" ? "paused" : "playing";
     }
 
+    spawnGrain() {}
+
+    /**
+     *
+     * @param {string} species - species
+     */
     spawnAnimal(species) {
         let animal = this.animalPool[species];
 
@@ -403,7 +394,7 @@ export class GameManager {
             console.log(species, "is not exist");
         } else {
             let currentID = this.nextAnimalID++;
-            let name = `${species} ${currentID}`;
+            let name = this.animalNames.pop();
             let type = "animal";
             let position = {
                 x: RandomFromMinToMax(
@@ -415,21 +406,14 @@ export class GameManager {
                     this.gameCanvas.height - animal.size.height,
                 ),
             };
-            let debugColor =
-                colorTemplate["BrightAss"].colors[
-                    RandomFromMinToMax(
-                        0,
-                        colorTemplate["BrightAss"].colors.length - 1,
-                    )
-                ];
 
             let animalObj = new Animal(
                 currentID,
                 name,
+                species,
                 type,
                 position,
                 animal["size"],
-                debugColor,
                 animal["sellValue"],
                 1, // Animal will be in layer 1
                 animal,
@@ -456,20 +440,15 @@ export class GameManager {
     }
 
     spawn10RandomAnimals() {
-        this.spawnAnimal("dog");
-        this.spawnAnimal("chicken");
-        this.spawnAnimal("duck");
-        this.spawnAnimal("chicken");
-        this.spawnAnimal("duck");
-        this.spawnAnimal("number");
-        this.spawnAnimal("number");
-        this.spawnAnimal("sheep");
-
         this.spawnRandomAnimal();
         this.spawnRandomAnimal();
-        // this.spawnRandomAnimal();
-        // this.spawnRandomAnimal();
-        // this.spawnRandomAnimal();
+        this.spawnRandomAnimal();
+        this.spawnRandomAnimal();
+        this.spawnRandomAnimal();
+        this.spawnRandomAnimal();
+        this.spawnRandomAnimal();
+        this.spawnRandomAnimal();
+        this.spawnRandomAnimal();
     }
 
     deleteSelectedObject() {
@@ -509,9 +488,6 @@ export class GameManager {
         for (let i = 0; i < 3; i++) {
             this.spawnAnimal("chicken");
             this.spawnAnimal("duck");
-            // this.spawnAnimal("dog");
-            this.spawnAnimal("number");
-            this.spawnAnimal("sheep");
             this.spawnAnimal("sheep2");
         }
 

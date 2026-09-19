@@ -6,7 +6,12 @@ export function PosOrNeg() {
     return Math.random() < 0.5 ? 1 : -1;
 }
 
-export function getRandomValueFromObject(objList) {
+/**
+ *
+ * @param {Object} objList - is this shit working?
+ * @returns
+ */
+export function getRandomKeyFromObject(objList) {
     const keys = Object.keys(objList);
 
     if (keys.length === 0) {
@@ -14,4 +19,8 @@ export function getRandomValueFromObject(objList) {
     }
 
     return objList[keys[RandomFromMinToMax(0, keys.length - 1)]];
+}
+
+export function getRandomElementFromArray(arr) {
+    return array[Math.floor(Math.random() * array.length)];
 }
