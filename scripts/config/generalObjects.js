@@ -89,7 +89,7 @@ export const stationaryObjectPool = {
     },
 };
 
-export const interactables = {
+export const interactablesPool = {
     grain: {
         size: { width: 20, height: 20 },
         sprite: {

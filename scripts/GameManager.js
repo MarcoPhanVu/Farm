@@ -475,6 +475,28 @@ export class GameManager {
         this.deleteSelectedObject();
     }
 
+    spawnGrain(posX, posY) {
+        const smallGrainPile = new GameObject(
+            "randomID",
+            "grain pile",
+            "food",
+            { x: posX, y: posY },
+            { width: 10, height: 10 },
+            5,
+            1,
+        );
+        smallGrainPile.setImage(
+            this.assetsLoader.assetsList["statObjects"]["tree"],
+        );
+        // smallGrainPile.setAnimation(
+        //     new SpriteAnimation(
+        //         this.assetsLoader.assetsList.statObjects.tree.walking,
+        //         0.15,
+        //     ),
+        // );
+        this.gameObjects.push(smallGrainPile);
+    }
+
     start() {
         window.addEventListener("resize", this.resizeCanvas);
         this.resizeCanvas();

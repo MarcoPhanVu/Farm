@@ -1,8 +1,12 @@
-import { animalPool, stationaryObjectPool } from "../config/generalObjects.js";
+import {
+    animalPool,
+    interactablesPool,
+    stationaryObjectPool,
+} from "../config/generalObjects.js";
 
 export class AssetsLoader {
     constructor() {
-        this.assetsList = { animals: {}, statObjects: {} };
+        this.assetsList = { animals: {}, statObjects: {}, interactables: {} };
     }
 
     loadAnimals(pool) {
