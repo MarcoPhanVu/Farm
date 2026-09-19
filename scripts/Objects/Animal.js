@@ -23,6 +23,7 @@ export class Animal extends GameObject {
 
     constructor(
         id,
+        name,
         species,
         type,
         position,
@@ -32,6 +33,7 @@ export class Animal extends GameObject {
         animalConfig,
     ) {
         super(id, species, type, position, size, sellValue, layer);
+        this.name = name;
         this.species = species;
         this.config = animalConfig;
     }

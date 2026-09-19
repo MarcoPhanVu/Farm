@@ -409,6 +409,7 @@ export class GameManager {
 
             let animalObj = new Animal(
                 currentID,
+                name,
                 species,
                 type,
                 position,
