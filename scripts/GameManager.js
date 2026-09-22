@@ -10,7 +10,7 @@ import {
 } from "./utils/random.js";
 
 import { colorTemplate } from "./config/colors.js";
-import { animalPool } from "./config/generalObjects.js";
+import { animalConfiguration } from "./config/generalObjects.js";
 import { animalNames } from "./config/animalNames.js";
 
 export class GameManager {
@@ -436,7 +436,7 @@ export class GameManager {
     }
 
     spawnRandomAnimal() {
-        this.spawnAnimal(getRandomValueFromObject(animalPool).trueName);
+        this.spawnAnimal(getRandomKeyFromObject(animalPool).trueName);
     }
 
     spawn10RandomAnimals() {
@@ -504,13 +504,14 @@ export class GameManager {
         requestAnimationFrame(this.gameLoop);
 
         this.ui.populateStoreBar(this.animalPool, this.assetsLoader);
-        this.spawnAnimal("dog");
-        this.spawnAnimal("dog");
 
         for (let i = 0; i < 3; i++) {
             this.spawnAnimal("chicken");
             this.spawnAnimal("duck");
+            this.spawnAnimal("sheep");
             this.spawnAnimal("sheep2");
+            this.spawnAnimal("dog");
+            this.spawnAnimal("number");
         }
 
         // this.gameState = "pause";
