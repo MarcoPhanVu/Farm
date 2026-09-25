@@ -5,37 +5,24 @@ import { colorTemplate } from "../config/colors.js";
 export class Animal extends GameObject {
     isChangingDirection = false;
 
-    selfElapsedTime = RandomFromMinToMax(0, 10);
-
-    debugColor =
-        colorTemplate["CuteGayColor"].colors[
-            Math.floor(
-                Math.random() * colorTemplate["CuteGayColor"].colors.length,
-            )
-        ];
-
+    /**
+     * list of all interactable GameObjects
+     * @type {GameObject}
+     */
     targetList = [];
-
     targetedObject = null;
-    currentActionTime = RandomFromMinToMax(4, 8);
 
+    selfElapsedTime = RandomFromMinToMax(0, 10); // randomize
+    currentActionTime = RandomFromMinToMax(4, 8);
+    /**
+     * to keep the animal do current task unless called upon
+     *
+     * @type {double}
+     */
     actionCoolDownTime = 0;
 
-    constructor(
-        id,
-        name,
-        species,
-        type,
-        position,
-        size,
-        sellValue,
-        layer,
-        animalConfig,
-    ) {
-        super(id, species, type, position, size, sellValue, layer);
-        this.name = name;
-        this.species = species;
-        this.config = animalConfig;
+    constructor(id, name, type, position, animalConfig) {
+        super(id, name, type, position, animalConfig);
     }
 
     update(deltaTime, worldBounds, objectList) {
@@ -52,6 +39,11 @@ export class Animal extends GameObject {
         this.seeAround(objectList);
     }
 
+    /**
+     * Fuck ass function, I'll deal with this shit in the future
+     * @param {*} deltaTime
+     * @param {*} worldBounds
+     */
     checkWallCollision(deltaTime, worldBounds) {
         let hitBound = null;
 
@@ -181,6 +173,10 @@ export class Animal extends GameObject {
         }
     }
 
+    /**
+     * Get all objects in a List then go towards a selected object
+     * @param {GameObject} objectList
+     */
     seeAround(objectList) {
         const seeRange = 120;
         for (let object of objectList) {

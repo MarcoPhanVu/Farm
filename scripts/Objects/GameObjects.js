@@ -13,14 +13,14 @@ export class GameObject {
     layer = 1;
 
     buyValue = 0;
-    sellValue = 0
+    sellValue = 0;
 
     /**
      * contains image object and dimension
      *  @type {ImageConfig}
      */
     idleImage = null;
-    spriteDimension = {width: 0, height: 0}
+    spriteDimension = { width: 0, height: 0 };
     /**
      *  @type {animationSheet}
      */
@@ -63,6 +63,7 @@ export class GameObject {
         context.lineWidth = 1; // reset stroke width
 
         if (this.animation) {
+            // if option exist
             this.animation.render(
                 context,
                 this.position.x,
@@ -71,6 +72,7 @@ export class GameObject {
                 this.size.height,
             );
         } else if (this.idleImage) {
+            // if option exist
             // use image if exist
             context.drawImage(
                 this.idleImage,
@@ -99,11 +101,8 @@ export class GameObject {
         context.fillText(this.name, this.position.x, this.position.y);
     }
 
-    getBottomY() {
-        return this.position.y + this.size.height;
-    }
-
     containsPoints(mouseX, mouseY) {
+        // Check if mouse is inside object
         return (
             mouseX >= this.position.x &&
             mouseX <= this.position.x + this.size.width &&
@@ -134,6 +133,30 @@ export class GameObject {
                 this.size.height,
             );
         }
+    }
+
+    // Getters
+    getBottomY() {
+        // Calculating actual object position and use it to calculate render order
+        return this.position.y + this.size.height;
+    }
+
+    getState() {
+        return this.state;
+    }
+
+    getVelocity() {
+        // velocity = {moveX, moveY}
+        return this.velocity;
+    }
+
+    // Setters
+    setState(state) {
+        this.state = state;
+    }
+
+    setVelocity(moveXVal, moveYVal) {
+        this.velocity = { moveX: moveXVal, moveY: moveYVal };
     }
 
     setImage(imgConfig) {
