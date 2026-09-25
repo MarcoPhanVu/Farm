@@ -10,30 +10,43 @@ export class GameObject {
             )
         ];
     state = "idle";
-    buyValue = 0;
+    layer = 1;
 
+    buyValue = 0;
+    sellValue = 0
+
+    /**
+     * contains image object and dimension
+     *  @type {ImageConfig}
+     */
     idleImage = null;
+    spriteDimension = {width: 0, height: 0}
+    /**
+     *  @type {animationSheet}
+     */
     animation = null;
 
     hovered = false;
     selected = false;
 
-    selfElapsedTime = 0;
+    selfElapsedTime = 0; // For animation choices
 
-    constructor(id, name, type, position, size, sellValue, layer) {
+    constructor(id, name, type, position, config) {
         this.id = id;
         this.name = name;
         this.type = type;
 
         this.position = position;
-        this.size = size;
 
-        this.sellValue = sellValue;
+        /**
+         * Object unique configuration
+         * Basic attributes: Buy/Sell Value and Size
+         */
+        this.config = config;
 
-        this.layer = layer;
-
-        // console.log(this.debugColor);
-        // console.log(colorTemplate["CuteGayColor"]);
+        this.size = config.size;
+        this.sellValue = config.sellValue;
+        this.buyValue = config.buyValue;
     }
 
     update(deltaTime) {
@@ -46,7 +59,7 @@ export class GameObject {
     }
 
     render(context) {
-        this.renderDebugOutline(context);
+        this.renderOutline(context);
         context.lineWidth = 1; // reset stroke width
 
         if (this.animation) {
@@ -99,7 +112,7 @@ export class GameObject {
         );
     }
 
-    renderDebugOutline(context) {
+    renderOutline(context) {
         if (this.hovered) {
             context.lineWidth = 2;
             context.strokeStyle = "#fff";
@@ -123,10 +136,10 @@ export class GameObject {
         }
     }
 
-    setImage(img) {
+    setImage(imgConfig) {
         try {
-            this.idleImage = img.spriteImage;
-            this.spriteSize = img.spriteSize;
+            this.idleImage = imgConfig.image;
+            this.spriteDimension = imgConfig.dimension;
         } catch (error) {
             console.log("Undefine sprite Image of: ", this);
         }
