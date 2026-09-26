@@ -1,12 +1,17 @@
 import { GameManager } from "./GameManager.js";
 import { AssetsLoader } from "./Objects/AssetsLoader.js";
-import { animalPool, stationaryObjectPool } from "./config/generalObjects.js";
+
+import { animalConfiguration } from "./config/generalObjects.js";
+import { stationaryObjectConfiguration } from "./config/generalObjects.js";
+import { interactablesConfiguration } from "./config/generalObjects.js";
+
 import { UIManager } from "./manager/UIManager.js";
 
 // Global scope
 const assetsLoader = new AssetsLoader();
-assetsLoader.loadAnimals(animalPool);
-assetsLoader.loadObjects(stationaryObjectPool);
+assetsLoader.loadAnimals(animalConfiguration);
+// assetsLoader.loadObjects(stationaryObjectConfiguration);
+// assetsLoader.loadInteractables(interactablesConfiguration);
 
 const uiManager = new UIManager({
     onBuyAnimal: (animalName) => {

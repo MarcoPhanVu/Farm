@@ -1,35 +1,43 @@
-import { animalPool, stationaryObjectPool } from "../config/generalObjects.js";
+import {
+    animalConfiguration,
+    interactablesConfiguration,
+    stationaryObjectConfiguration,
+} from "../config/generalObjects.js";
 
+/**
+ * This class takes in Object Configurations and process it to be spriteImgs for other classes can use it without having extra functions to load images and animations.
+ */
 export class AssetsLoader {
-    constructor() {
-        this.assetsList = { animals: {}, statObjects: {} };
-    }
+    _assetsList = { animals: {}, statObjects: {}, interactables: {} };
+    constructor() {}
 
-    loadAnimals(pool) {
-        for (let animalSpecies of Object.keys(pool)) {
-            let animal = animalPool[animalSpecies];
+    loadAnimals(config) {
+        for (let animalSpecies of Object.keys(config)) {
+            let animal = animalConfiguration[animalSpecies];
 
-            if (!this.assetsList["animals"][animalSpecies]) {
-                //init animal obj
-                this.assetsList["animals"][animalSpecies] = {};
+            if (!this._assetsList["animals"][animalSpecies]) {
+                this._assetsList["animals"][animalSpecies] = {};
             }
 
-            // Clean version from chatGPT
-            for (let [spriteType, spritePath] of Object.entries(
+            // Cleaner version from chatGPT
+            for (let [spriteType, spriteInfo] of Object.entries(
                 animal.sprite,
             )) {
-                if (spritePath !== null) {
+                if (spriteInfo.src !== null) {
+                    // Create image if source is valid
                     const spriteImage = new Image();
+                    spriteImage.src = new URL(
+                        spriteInfo.src,
+                        import.meta.url,
+                    ).href;
 
-                    spriteImage.src = new URL(spritePath, import.meta.url).href;
+                    // Process sprite file name
+                    let spriteProperties = spriteInfo.src.split("-").splice(1); // get properties after animal name
 
-                    let spriteProperties = animal.sprite[spriteType]
-                        .split("-")
-                        .splice(1);
-
+                    // Get spriteSize
                     let spriteSize = spriteProperties.pop().split("x")[0];
 
-                    this.assetsList["animals"][animalSpecies][spriteType] = {
+                    this._assetsList["animals"][animalSpecies][spriteType] = {
                         spriteImage: spriteImage,
                         spriteSize: Number(spriteSize),
                     };
@@ -39,7 +47,7 @@ export class AssetsLoader {
                             col: Number(spriteProperties[1]),
                             row: Number(spriteProperties[2]),
                         };
-                        this.assetsList["animals"][animalSpecies][spriteType][
+                        this._assetsList["animals"][animalSpecies][spriteType][
                             "spriteSheet"
                         ] = spriteSheet;
                     }
@@ -50,48 +58,7 @@ export class AssetsLoader {
                 }
             }
         }
-    }
-    loadObjects(pool) {
-        for (let objectType of Object.keys(pool)) {
-            let statObject = stationaryObjectPool[objectType];
 
-            if (!this.assetsList["statObjects"][objectType]) {
-                this.assetsList["statObjects"][objectType] = {};
-            }
-
-            // Clean version from chatGPT
-            for (let [spriteType, spritePath] of Object.entries(
-                statObject.sprite,
-            )) {
-                if (spritePath !== null) {
-                    const spriteImage = new Image();
-
-                    spriteImage.src = new URL(spritePath, import.meta.url).href;
-
-                    let spriteProperties = statObject.sprite[spriteType]
-                        .split("-")
-                        .splice(1);
-
-                    let spriteSize = spriteProperties.pop().split("x")[0];
-
-                    this.assetsList["statObjects"][objectType][spriteType] = {
-                        spriteImage: spriteImage,
-                        spriteSize: Number(spriteSize),
-                    };
-
-                    let spriteSheet = {
-                        col: Number(spriteProperties[1]),
-                        row: Number(spriteProperties[2]),
-                    };
-                    this.assetsList["statObjects"][objectType][spriteType][
-                        "spriteSheet"
-                    ] = spriteSheet;
-
-                    console.log(this.assetsList["statObjects"][objectType]);
-
-                    spriteImage.onload = () => {};
-                }
-            }
-        }
+        console.log(this._assetsList);
     }
 }

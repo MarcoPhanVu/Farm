@@ -10,30 +10,42 @@ export class GameObject {
             )
         ];
     state = "idle";
-    buyValue = 0;
+    layer = 1;
 
+    buyValue = 0;
+    sellValue = 0;
+
+    /**
+     * contains image object and dimension (32x64 or sum)
+     *  @type {ImageConfig}
+     */
     idleImage = null;
+    spriteDimension = { width: 0, height: 0 };
+    /**
+     *  @type {animationSheet}
+     */
     animation = null;
 
     hovered = false;
     selected = false;
 
-    selfElapsedTime = 0;
+    selfElapsedTime = 0; // For animation choices
 
-    constructor(id, name, type, position, size, sellValue, layer) {
+    constructor(id, name, position, config) {
         this.id = id;
         this.name = name;
-        this.type = type;
 
         this.position = position;
-        this.size = size;
 
-        this.sellValue = sellValue;
+        /**
+         * Object unique configuration
+         * Basic attributes: Buy/Sell Value and Size
+         */
+        this.config = config;
 
-        this.layer = layer;
-
-        // console.log(this.debugColor);
-        // console.log(colorTemplate["CuteGayColor"]);
+        this.size = config.size;
+        this.sellValue = config.sellValue;
+        this.buyValue = config.buyValue;
     }
 
     update(deltaTime) {
@@ -46,10 +58,11 @@ export class GameObject {
     }
 
     render(context) {
-        this.renderDebugOutline(context);
+        this.renderOutline(context);
         context.lineWidth = 1; // reset stroke width
 
         if (this.animation) {
+            // if option exist
             this.animation.render(
                 context,
                 this.position.x,
@@ -58,6 +71,7 @@ export class GameObject {
                 this.size.height,
             );
         } else if (this.idleImage) {
+            // if option exist
             // use image if exist
             context.drawImage(
                 this.idleImage,
@@ -86,11 +100,8 @@ export class GameObject {
         context.fillText(this.name, this.position.x, this.position.y);
     }
 
-    getBottomY() {
-        return this.position.y + this.size.height;
-    }
-
     containsPoints(mouseX, mouseY) {
+        // Check if mouse is inside object
         return (
             mouseX >= this.position.x &&
             mouseX <= this.position.x + this.size.width &&
@@ -99,7 +110,7 @@ export class GameObject {
         );
     }
 
-    renderDebugOutline(context) {
+    renderOutline(context) {
         if (this.hovered) {
             context.lineWidth = 2;
             context.strokeStyle = "#fff";
@@ -123,10 +134,35 @@ export class GameObject {
         }
     }
 
-    setImage(img) {
+    // Getters
+    getBottomY() {
+        // console.log(this);
+        // Calculating actual object position and use it to calculate render order
+        return this.position.y + this.size.height;
+    }
+
+    getState() {
+        return this.state;
+    }
+
+    getVelocity() {
+        // velocity = {moveX, moveY}
+        return this.velocity;
+    }
+
+    // Setters
+    setState(state) {
+        this.state = state;
+    }
+
+    setVelocity(moveXVal, moveYVal) {
+        this.velocity = { moveX: moveXVal, moveY: moveYVal };
+    }
+
+    setImage(imgConfig) {
         try {
-            this.idleImage = img.spriteImage;
-            this.spriteSize = img.spriteSize;
+            this.idleImage = imgConfig.image;
+            this.spriteDimension = imgConfig.dimension;
         } catch (error) {
             console.log("Undefine sprite Image of: ", this);
         }
