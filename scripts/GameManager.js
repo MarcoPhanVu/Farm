@@ -50,14 +50,14 @@ export class GameManager {
             150,
             1,
         );
-        initTree.setImage(this.assetsLoader.assetsList["statObjects"]["tree"]);
-        initTree.setAnimation(
-            new SpriteAnimation(
-                this.assetsLoader.assetsList.statObjects.tree.walking,
-                0.15,
-            ),
-        );
-        this.gameObjects.push(initTree);
+        // initTree.setImage(this.assetsLoader.assetsList["statObjects"]["tree"]);
+        // initTree.setAnimation(
+        //     new SpriteAnimation(
+        //         this.assetsLoader.assetsList.statObjects.tree.walking,
+        //         0.15,
+        //     ),
+        // );
+        // this.gameObjects.push(initTree);
 
         this.currentMoney = 40;
         this.currentEgg = 70;
@@ -71,7 +71,7 @@ export class GameManager {
         this.selectedObjectDOM = null;
 
         this.nextAnimalID = 2;
-        this.animalPool = animalPool;
+        this.animalConfiguration = animalConfiguration;
         this.animalNames = animalNames;
 
         // Entirely depended on chatGPT for this part, gotta learn about bindings in the future.
@@ -157,26 +157,25 @@ export class GameManager {
 
         let propertiesHTML = header;
         const unneededProperties = [
-            "id",
-            "type",
+            // "id",
             // "position",
             // "size",
             // "velocity",
-            "layer",
-            "sellValue",
-            "state",
-            "buyValue",
-            "idleImage",
-            "animation",
-            "hovered",
-            "selfElapsedTime",
-            "selected",
-            "isChangingDirection",
-            "spriteSize",
-            "boundTouched",
-            "config",
+            // "layer",
+            // "sellValue",
+            // "state",
+            // "buyValue",
+            // "idleImage",
+            // "animation",
+            // "hovered",
+            // "selfElapsedTime",
+            // "selected",
+            // "isChangingDirection",
+            // "spriteSize",
+            // "boundTouched",
+            // "config",
             // "targetedObject",
-            "currentActionTime",
+            // "currentActionTime",
             // species
         ];
 
@@ -388,14 +387,13 @@ export class GameManager {
      * @param {string} species - species
      */
     spawnAnimal(species) {
-        let animal = this.animalPool[species];
+        let animal = this.animalConfiguration[species];
 
         if (!animal) {
             console.log(species, "is not exist");
         } else {
             let currentID = this.nextAnimalID++;
             let name = this.animalNames.pop();
-            let type = "animal";
             let position = {
                 x: RandomFromMinToMax(
                     80,
@@ -407,22 +405,13 @@ export class GameManager {
                 ),
             };
 
-            let animalObj = new Animal(
-                currentID,
-                name,
-                species,
-                type,
-                position,
-                animal["size"],
-                animal["sellValue"],
-                1, // Animal will be in layer 1
-                animal,
-            );
+            let animalObj = new Animal(currentID, name, position, animal);
 
             let animalSpriteMyAss =
-                this.assetsLoader.assetsList["animals"][species];
+                this.assetsLoader._assetsList["animals"][species];
 
-            animalObj.setImage(animalSpriteMyAss["img"]);
+            animalObj.setImage(animalSpriteMyAss["defaultImg"]);
+            // animalObj.setImage(animalSpriteMyAss["img"]);
 
             let spriteAnimationContainer = new SpriteAnimation(
                 animalSpriteMyAss["walking"],
@@ -436,7 +425,7 @@ export class GameManager {
     }
 
     spawnRandomAnimal() {
-        this.spawnAnimal(getRandomKeyFromObject(animalPool).trueName);
+        this.spawnAnimal(getRandomKeyFromObject(animalConfiguration).trueName);
     }
 
     spawn10RandomAnimals() {
@@ -503,7 +492,7 @@ export class GameManager {
 
         requestAnimationFrame(this.gameLoop);
 
-        this.ui.populateStoreBar(this.animalPool, this.assetsLoader);
+        this.ui.populateStoreBar(this.animalConfiguration, this.assetsLoader);
 
         for (let i = 0; i < 3; i++) {
             this.spawnAnimal("chicken");
@@ -512,6 +501,7 @@ export class GameManager {
             this.spawnAnimal("sheep2");
             this.spawnAnimal("dog");
             this.spawnAnimal("number");
+            console.log("passed");
         }
 
         // this.gameState = "pause";

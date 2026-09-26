@@ -24,14 +24,14 @@ export class UIManager {
     }
 
     populateStoreBar(objectPool, assetLoader) {
-        console.log(objectPool);
-
+        // console.log(objectPool);
+        console.log(assetLoader);
         for (let objectName of Object.keys(objectPool)) {
             let animal = {
                 name: objectPool[objectName].trueName,
                 price: objectPool[objectName].buyValue,
                 idleImgSrc:
-                    assetLoader.assetsList.animals[objectName].idle.spriteImage
+                    assetLoader._assetsList.animals[objectName].idle.spriteImage
                         .src,
             };
 

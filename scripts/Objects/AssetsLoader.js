@@ -18,14 +18,11 @@ export class AssetsLoader {
             if (!this._assetsList["animals"][animalSpecies]) {
                 this._assetsList["animals"][animalSpecies] = {};
             }
-            console.log(Object.entries(animal.sprite));
 
             // Cleaner version from chatGPT
             for (let [spriteType, spriteInfo] of Object.entries(
                 animal.sprite,
             )) {
-                console.log(spriteType);
-                console.log(spriteInfo);
                 if (spriteInfo.src !== null) {
                     // Create image if source is valid
                     const spriteImage = new Image();

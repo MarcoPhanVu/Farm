@@ -21,11 +21,21 @@ export class Animal extends GameObject {
      */
     actionCoolDownTime = 0;
 
-    constructor(id, name, type, position, animalConfig) {
-        super(id, name, type, position, animalConfig);
+    /**
+     * Creates an instance of Animal.
+     *
+     * @constructor
+     * @type {string} id
+     * @type {string} name
+     * @type {{int, int}} position
+     * @type {objectConfiguration} animalConfig
+     */
+    constructor(id, name, position, animalConfig) {
+        super(id, name, position, animalConfig);
     }
 
     update(deltaTime, worldBounds, objectList) {
+        console.log(this);
         this.position.x += this.velocity.moveX * deltaTime;
         this.position.y += this.velocity.moveY * deltaTime;
 

@@ -10,7 +10,7 @@ import { UIManager } from "./manager/UIManager.js";
 // Global scope
 const assetsLoader = new AssetsLoader();
 assetsLoader.loadAnimals(animalConfiguration);
-assetsLoader.loadObjects(stationaryObjectConfiguration);
+// assetsLoader.loadObjects(stationaryObjectConfiguration);
 // assetsLoader.loadInteractables(interactablesConfiguration);
 
 const uiManager = new UIManager({

@@ -16,7 +16,7 @@ export class GameObject {
     sellValue = 0;
 
     /**
-     * contains image object and dimension
+     * contains image object and dimension (32x64 or sum)
      *  @type {ImageConfig}
      */
     idleImage = null;
@@ -31,10 +31,9 @@ export class GameObject {
 
     selfElapsedTime = 0; // For animation choices
 
-    constructor(id, name, type, position, config) {
+    constructor(id, name, position, config) {
         this.id = id;
         this.name = name;
-        this.type = type;
 
         this.position = position;
 
@@ -137,6 +136,7 @@ export class GameObject {
 
     // Getters
     getBottomY() {
+        // console.log(this);
         // Calculating actual object position and use it to calculate render order
         return this.position.y + this.size.height;
     }
