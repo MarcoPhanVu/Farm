@@ -387,9 +387,9 @@ export class GameManager {
      * @param {string} species - species
      */
     spawnAnimal(species) {
-        let animal = this.animalConfiguration[species];
+        let animalConfig = this.animalConfiguration[species];
 
-        if (!animal) {
+        if (!animalConfig) {
             console.log(species, "is not exist");
         } else {
             let currentID = this.nextAnimalID++;
@@ -397,15 +397,23 @@ export class GameManager {
             let position = {
                 x: RandomFromMinToMax(
                     80,
-                    this.gameCanvas.width - animal.size.width,
+                    this.gameCanvas.width - animalConfig.size.width,
                 ),
                 y: RandomFromMinToMax(
                     80,
-                    this.gameCanvas.height - animal.size.height,
+                    this.gameCanvas.height - animalConfig.size.height,
                 ),
             };
+            let animalSpriteCollection =
+                this.assetsLoader._assetsList["animals"][species];
 
-            let animalObj = new Animal(currentID, name, position, animal);
+            let animalObj = new Animal(
+                currentID,
+                name,
+                position,
+                animalConfig,
+                animalSpriteCollection,
+            );
 
             let animalSpriteMyAss =
                 this.assetsLoader._assetsList["animals"][species];
@@ -501,7 +509,6 @@ export class GameManager {
             this.spawnAnimal("sheep2");
             this.spawnAnimal("dog");
             this.spawnAnimal("number");
-            console.log("passed");
         }
 
         // this.gameState = "pause";

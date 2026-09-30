@@ -152,7 +152,15 @@ export class GameObject {
 
     // Setters
     setState(state) {
-        this.state = state;
+        // current states: "idle", "active", "inactive"
+        stateList = ["idle, active, inactive"];
+        if (stateList.includes(state)) {
+            this.state = state;
+        } else {
+            console.log("State:", state, "is invalid");
+            null.CuteGayColor;
+            return;
+        }
     }
 
     setVelocity(moveXVal, moveYVal) {

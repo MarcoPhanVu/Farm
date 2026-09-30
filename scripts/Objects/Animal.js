@@ -29,13 +29,16 @@ export class Animal extends GameObject {
      * @type {string} name
      * @type {{int, int}} position
      * @type {objectConfiguration} animalConfig
+     * @type {animationCollection} animalAnimationCollection
      */
-    constructor(id, name, position, animalConfig) {
+    constructor(id, name, position, animalConfig, animalAnimationCollection) {
         super(id, name, position, animalConfig);
+        this.animations = animalAnimationCollection;
+
+        this.setState("walkingRight");
     }
 
     update(deltaTime, worldBounds, objectList) {
-        console.log(this);
         this.position.x += this.velocity.moveX * deltaTime;
         this.position.y += this.velocity.moveY * deltaTime;
 
@@ -268,5 +271,43 @@ export class Animal extends GameObject {
         let dest = object.position;
         this.velocity.moveX = dest.x - this.position.x;
         this.velocity.moveY = dest.y - this.position.y;
+    }
+
+    setState(state) {
+        let stateList = [
+            "idle, active, inactive",
+            "walkingLeft",
+            "walkingRight",
+            "eating",
+            "chasing",
+            "playing",
+        ];
+
+        if (stateList.includes(state)) {
+            this.state = state;
+        } else {
+            console.log("State:", state, "is invalid");
+        }
+
+        if (state.includes("walking")) {
+            this.setAnimation(this.animations);
+        }
+    }
+
+    setVelocity(moveXVal, moveYVal) {
+        this.velocity = { moveX: moveXVal, moveY: moveYVal };
+    }
+
+    setImage(imgConfig) {
+        try {
+            this.idleImage = imgConfig.image;
+            this.spriteDimension = imgConfig.dimension;
+        } catch (error) {
+            console.log("Undefine sprite Image of: ", this);
+        }
+    }
+
+    setAnimation(animation) {
+        this.animation = animation;
     }
 }
