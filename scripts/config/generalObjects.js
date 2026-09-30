@@ -1,16 +1,21 @@
 export const animalConfiguration = {
     chicken: {
-        size: { width: 40, height: 40 },
+        size: { width: 120, height: 120 },
         movingSpeed: { min: 50, max: 100 },
         seeRange: 120,
         buyValue: 100,
         sellValue: 20,
         sprite: {
             defaultImg: { src: "../../assets/chick-idle-32x32.png" },
-            idle: { src: "../../assets/chick-idle-32x32.png", frameDuration: 0.25 },
+            idle: {
+                src: "../../assets/chick-idle-32x32.png",
+                frameDuration: 0.25,
+            },
             walking: {
                 src: "../../assets/chick-walking-4-2-8x8.png",
-                frameDuration: 0.25,
+                src: "../../assets/chick2-walking-3-2-32x32.png",
+                src: "../../assets/chick3-walking-13-1-32x32.png",
+                frameDuration: 0.15,
             },
         },
     },
@@ -22,7 +27,10 @@ export const animalConfiguration = {
         sellValue: 30,
         sprite: {
             defaultImg: { src: "../../assets/duck-idle-16x16.png" },
-            idle: { src: "../../assets/duck-idle-16x16.png", frameDuration: 0.25 },
+            idle: {
+                src: "../../assets/duck-idle-16x16.png",
+                frameDuration: 0.25,
+            },
             walking: {
                 src: "../../assets/duck-walking-4-2-16x16.png",
                 frameDuration: 0.25,
@@ -37,7 +45,10 @@ export const animalConfiguration = {
         sellValue: 100,
         sprite: {
             defaultImg: { src: "../../assets/dog-idle-32x32.png" },
-            idle: { src: "../../assets/dog-idle-32x32.png", frameDuration: 0.25 },
+            idle: {
+                src: "../../assets/dog-idle-32x32.png",
+                frameDuration: 0.25,
+            },
             walking: {
                 src: "../../assets/dog-walking-4-2-16x16.png",
                 frameDuration: 0.25,
@@ -52,7 +63,10 @@ export const animalConfiguration = {
         sellValue: 225,
         sprite: {
             defaultImg: { src: "../../assets/sheep-idle-32x32.png" },
-            idle: { src: "../../assets/sheep-idle-32x32.png", frameDuration: 0.25 },
+            idle: {
+                src: "../../assets/sheep-idle-32x32.png",
+                frameDuration: 0.25,
+            },
             walking: {
                 src: "../../assets/sheep-walking-1-8-32x32.png",
                 frameDuration: 0.25,
@@ -66,7 +80,10 @@ export const animalConfiguration = {
         sellValue: 225,
         sprite: {
             defaultImg: { src: "../../assets/sheep2-idle-16x16.png" },
-            idle: { src: "../../assets/sheep2-idle-16x16.png", frameDuration: 0.25 },
+            idle: {
+                src: "../../assets/sheep2-idle-16x16.png",
+                frameDuration: 0.25,
+            },
             walking: {
                 src: "../../assets/sheep2-walking-4-2-16x16.png",
                 frameDuration: 0.25,
@@ -80,7 +97,10 @@ export const animalConfiguration = {
         sellValue: 50,
         sprite: {
             defaultImg: { src: "../../assets/tri-idle-256x256.png" },
-            idle: { src: "../../assets/sheep2-idle-16x16.png", frameDuration: 0.25 },
+            idle: {
+                src: "../../assets/sheep2-idle-16x16.png",
+                frameDuration: 0.25,
+            },
             walking: {
                 src: "../../assets/numbers-walking-4-3-16x16.png",
                 frameDuration: 0.25,
@@ -97,7 +117,10 @@ export const stationaryObjectConfiguration = {
         sellValue: 300,
         sprite: {
             defaultImg: { src: "../../assets/tree-img-32x32.png" },
-            idle: { src: "../../assets/tree-img-32x32.png", frameDuration: 0.25 },
+            idle: {
+                src: "../../assets/tree-img-32x32.png",
+                frameDuration: 0.25,
+            },
             walking: {
                 src: "../../assets/tri-walking-1-1-256x256.png",
                 frameDuration: 0.25,

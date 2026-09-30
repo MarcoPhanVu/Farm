@@ -25,7 +25,7 @@ export class UIManager {
 
     populateStoreBar(objectPool, assetLoader) {
         // console.log(objectPool);
-        console.log(assetLoader);
+        // console.log(assetLoader);
         for (let objectName of Object.keys(objectPool)) {
             let animal = {
                 name: objectPool[objectName].trueName,
@@ -50,6 +50,5 @@ export class UIManager {
 
             this.bottomPanel.appendChild(card);
         }
-        console.log(this.bottomPanel);
     }
 }

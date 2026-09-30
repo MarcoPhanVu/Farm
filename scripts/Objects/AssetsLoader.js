@@ -59,6 +59,8 @@ export class AssetsLoader {
             }
         }
 
-        console.log(this._assetsList);
+        console.log(this._assetsList.animals);
+        console.log(this._assetsList.statObjects);
+        console.log(this._assetsList.interactables);
     }
 }
