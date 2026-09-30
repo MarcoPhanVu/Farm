@@ -196,22 +196,6 @@ export class Animal extends GameObject {
     seeAround(objectList) {
         const seeRange = this.config.seeRange;
         for (let object of objectList) {
-            // if (!object.species) {
-            //     // ensure it is an animal
-            //     continue;
-            // }
-
-            // For DAWG
-            let isDog = this.species.includes("dog"); // for dog only
-            let isTargetedAnimal =
-                object.species.includes("chicken") ||
-                object.species.includes("duck") ||
-                object.species.includes("dogfood");
-
-            if (!isDog || !isTargetedAnimal) {
-                continue;
-            }
-
             let dist = Math.sqrt(
                 (object.position.x - this.position.x) ** 2 +
                     (object.position.y - this.position.y) ** 2,
@@ -241,7 +225,25 @@ export class Animal extends GameObject {
     }
 
     animalBehavior() {
-        // console.log(this.name, "do something");
+        // General Behavior
+
+        if (
+            this.species.includes("sheep") ||
+            this.species.includes("chicken") ||
+            this.species.includes("duck")
+        ) {
+            if (
+                this.interactabletargetList.length > 0 &&
+                this.actionCoolDownTime <= 0
+            ) {
+                for (let target of this.interactabletargetList) {
+                    if (target.name.includes("grain")) {
+                        this.goTowards(target);
+                    }
+                }
+            }
+        }
+
         if (this.species.includes("dog")) {
             if (
                 this.interactabletargetList.length > 0 &&
@@ -257,7 +259,7 @@ export class Animal extends GameObject {
 
                 this.targetedObject = chosenTarget;
 
-                this.actionCoolDownTime = 8;
+                this.actionCoolDownTime = 6;
             }
 
             if (this.targetedObject) {

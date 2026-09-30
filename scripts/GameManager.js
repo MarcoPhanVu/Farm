@@ -10,7 +10,13 @@ import {
 } from "./utils/random.js";
 
 import { colorTemplate } from "./config/colors.js";
-import { animalsConfiguration } from "./config/generalObjects.js";
+
+import {
+    animalsConfiguration,
+    stationariesConfiguration,
+    interactablesConfiguration,
+} from "./config/generalObjects.js";
+
 import { animalNames } from "./config/animalNames.js";
 
 export class GameManager {
@@ -50,10 +56,10 @@ export class GameManager {
             150,
             1,
         );
-        // initTree.setImage(this.assetsLoader.assetsList["statObjects"]["tree"]);
+        // initTree.setImage(this.assetsLoader.assetsList["stationaries"]["tree"]);
         // initTree.setAnimation(
         //     new SpriteAnimation(
-        //         this.assetsLoader.assetsList.statObjects.tree.walking,
+        //         this.assetsLoader.assetsList.stationaries.tree.walking,
         //         0.15,
         //     ),
         // );
@@ -137,6 +143,7 @@ export class GameManager {
                 obj.selected = obj === this.selectedObject;
             }
 
+            this.spawnGrain(mouse.x, mouse.y);
             this.buildPropertiesPanel();
         });
     }
@@ -380,8 +387,6 @@ export class GameManager {
         this.gameState = this.gameState == "playing" ? "paused" : "playing";
     }
 
-    spawnGrain() {}
-
     /**
      *
      * @param {string} species - species
@@ -473,24 +478,21 @@ export class GameManager {
     }
 
     spawnGrain(posX, posY) {
+        console.log("GRAIN AT", posX, posY);
+
         const smallGrainPile = new GameObject(
             "randomID",
             "grain pile",
-            "food",
-            { x: posX, y: posY },
-            { width: 10, height: 10 },
-            5,
-            1,
+            {
+                x: posX,
+                y: posY,
+            },
+            interactablesConfiguration.grain,
         );
         smallGrainPile.setImage(
-            this.assetsLoader.assetsList["statObjects"]["tree"],
+            this.assetsLoader._assetsList["interactables"]["grain"],
         );
-        // smallGrainPile.setAnimation(
-        //     new SpriteAnimation(
-        //         this.assetsLoader.assetsList.statObjects.tree.walking,
-        //         0.15,
-        //     ),
-        // );
+
         this.gameObjects.push(smallGrainPile);
     }
 
