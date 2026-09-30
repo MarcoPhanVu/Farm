@@ -3,7 +3,7 @@ export const animalsConfiguration = {
         species: "chicken",
         size: { width: 80, height: 80 },
         movingSpeed: { min: 50, max: 100 },
-        seeRange: 120,
+        seeRange: 400,
         buyValue: 100,
         sellValue: 20,
         sprite: {
@@ -24,7 +24,7 @@ export const animalsConfiguration = {
         species: "duck",
         size: { width: 64, height: 64 },
         movingSpeed: { min: 50, max: 100 },
-        seeRange: 120,
+        seeRange: 400,
         buyValue: 100,
         sellValue: 30,
         sprite: {
@@ -43,7 +43,7 @@ export const animalsConfiguration = {
         species: "dog",
         size: { width: 80, height: 80 },
         movingSpeed: { min: 30, max: 60 },
-        seeRange: 180,
+        seeRange: 400,
         buyValue: 100,
         sellValue: 100,
         sprite: {
@@ -62,7 +62,7 @@ export const animalsConfiguration = {
         species: "sheep",
         size: { width: 160, height: 160 },
         movingSpeed: { min: 32, max: 60 },
-        seeRange: 120,
+        seeRange: 400,
         buyValue: 125,
         sellValue: 225,
         sprite: {

@@ -160,6 +160,7 @@ export class Animal extends GameObject {
                 this.size.width,
                 this.size.height,
             );
+            context.closePath();
         }
 
         if (this.selected) {
@@ -171,22 +172,21 @@ export class Animal extends GameObject {
                 this.size.width,
                 this.size.height,
             );
-        }
-
-        if (this.species.includes("dog")) {
-            context.beginPath();
-            context.arc(
-                this.position.x + this.size.width / 2,
-                this.position.y + this.size.height / 2,
-                120,
-                0,
-                Math.PI * 2,
-            );
-            context.fillStyle = this.debugColor + "40";
-            context.fillStyle = "#ffffff20";
-            context.fill();
             context.closePath();
         }
+
+        context.beginPath();
+        context.arc(
+            this.position.x + this.size.width / 2,
+            this.position.y + this.size.height / 2,
+            this.config.seeRange,
+            0,
+            Math.PI * 2,
+        );
+        context.fillStyle = this.debugColor + "40";
+        context.fillStyle = "#ffffff20";
+        context.fill();
+        context.closePath();
     }
 
     /**
@@ -268,12 +268,6 @@ export class Animal extends GameObject {
                 this.goTowards(this.targetedObject);
                 this.state = "chasing";
             }
-
-            // for (let object of this.interactabletargetList) {
-            //     // deselect all objects in list(for dog only I guess)
-            //     object.hovered = false;
-            //     object.selected = false;
-            // }
         }
     }
 
