@@ -138,8 +138,12 @@ export const interactablesConfiguration = {
     grain: {
         size: { width: 20, height: 20 },
         sprite: {
-            src: "../../assets/grain-idle-16x16.png",
-            option2: "../../assets/grain2-idle-16x16.png",
+            idle: {
+                src: "../../assets/grain-idle-16x16.png",
+            },
+            idle2: {
+                src: "../../assets/grain2-idle-16x16.png",
+            },
         },
     },
 };
