@@ -2,8 +2,8 @@ export class SpriteAnimation {
     constructor(animation, frameDuration) {
         this.spriteImage = animation.spriteImage;
 
-        this.spriteWidth = animation.spriteSize;
-        this.spriteHeight = animation.spriteSize;
+        this.spriteWidth = animation.spriteSize.width;
+        this.spriteHeight = animation.spriteSize.height;
 
         this.spriteSheetColumn = animation.spriteSheet.col;
         this.spriteSheetRow = animation.spriteSheet.row;

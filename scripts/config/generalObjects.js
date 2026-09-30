@@ -1,4 +1,4 @@
-export const animalConfiguration = {
+export const animalsConfiguration = {
     chicken: {
         species: "chicken",
         size: { width: 80, height: 80 },
@@ -115,10 +115,9 @@ export const animalConfiguration = {
     },
 };
 
-export const stationaryObjectConfiguration = {
+export const stationariesConfiguration = {
     tree: {
         size: { width: 240, height: 240 },
-        seeRange: 180,
         buyValue: 100,
         sellValue: 300,
         sprite: {
@@ -139,7 +138,7 @@ export const interactablesConfiguration = {
     grain: {
         size: { width: 20, height: 20 },
         sprite: {
-            option1: "../../assets/grain-idle-16x16.png",
+            src: "../../assets/grain-idle-16x16.png",
             option2: "../../assets/grain2-idle-16x16.png",
         },
     },
