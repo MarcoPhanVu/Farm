@@ -1,8 +1,9 @@
-export const animalConfiguration = {
+export const animalsConfiguration = {
     chicken: {
+        species: "chicken",
         size: { width: 80, height: 80 },
         movingSpeed: { min: 50, max: 100 },
-        seeRange: 120,
+        seeRange: 400,
         buyValue: 100,
         sellValue: 20,
         sprite: {
@@ -20,9 +21,10 @@ export const animalConfiguration = {
         },
     },
     duck: {
+        species: "duck",
         size: { width: 64, height: 64 },
         movingSpeed: { min: 50, max: 100 },
-        seeRange: 120,
+        seeRange: 400,
         buyValue: 100,
         sellValue: 30,
         sprite: {
@@ -38,9 +40,10 @@ export const animalConfiguration = {
         },
     },
     dog: {
-        size: { width: 96, height: 96 },
+        species: "dog",
+        size: { width: 80, height: 80 },
         movingSpeed: { min: 30, max: 60 },
-        seeRange: 180,
+        seeRange: 400,
         buyValue: 100,
         sellValue: 100,
         sprite: {
@@ -56,9 +59,10 @@ export const animalConfiguration = {
         },
     },
     sheep: {
+        species: "sheep",
         size: { width: 160, height: 160 },
         movingSpeed: { min: 32, max: 60 },
-        seeRange: 120,
+        seeRange: 400,
         buyValue: 125,
         sellValue: 225,
         sprite: {
@@ -74,6 +78,7 @@ export const animalConfiguration = {
         },
     },
     sheep2: {
+        species: "sheep2",
         size: { width: 100, height: 100 },
         movingSpeed: { min: 32, max: 60 },
         buyValue: 125,
@@ -91,6 +96,7 @@ export const animalConfiguration = {
         },
     },
     number: {
+        species: "number",
         size: { width: 60, height: 60 },
         movingSpeed: { min: 40, max: 80 },
         buyValue: 100,
@@ -109,10 +115,9 @@ export const animalConfiguration = {
     },
 };
 
-export const stationaryObjectConfiguration = {
+export const stationariesConfiguration = {
     tree: {
         size: { width: 240, height: 240 },
-        seeRange: 180,
         buyValue: 100,
         sellValue: 300,
         sprite: {
@@ -133,8 +138,12 @@ export const interactablesConfiguration = {
     grain: {
         size: { width: 20, height: 20 },
         sprite: {
-            option1: "../../assets/grain-idle-16x16.png",
-            option2: "../../assets/grain2-idle-16x16.png",
+            idle: {
+                src: "../../assets/grain-idle-16x16.png",
+            },
+            idle2: {
+                src: "../../assets/grain2-idle-16x16.png",
+            },
         },
     },
 };

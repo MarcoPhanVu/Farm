@@ -9,7 +9,7 @@ export class Animal extends GameObject {
      * list of all interactable GameObjects
      * @type {GameObject}
      */
-    targetList = [];
+    interactabletargetList = [];
     targetedObject = null;
 
     selfElapsedTime = RandomFromMinToMax(0, 10); // randomize
@@ -28,7 +28,7 @@ export class Animal extends GameObject {
      * @type {string} id
      * @type {string} name
      * @type {{int, int}} position
-     * @type {objectConfiguration} animalConfig
+     * @type {generalObjects} animalConfig
      * @type {animationCollection} animalAnimationCollection
      */
     constructor(id, name, position, animalConfig, animalAnimationCollection) {
@@ -36,6 +36,7 @@ export class Animal extends GameObject {
         this.animations = animalAnimationCollection;
 
         this.setState("walkingRight");
+        this.species = animalConfig.species;
     }
 
     update(deltaTime, worldBounds, objectList) {
@@ -98,6 +99,8 @@ export class Animal extends GameObject {
         }
     }
 
+    chooseNewDirection() {}
+
     move(hitBound) {
         if (this.isChangingDirection) {
             return;
@@ -147,7 +150,7 @@ export class Animal extends GameObject {
         }, 1000);
     }
 
-    renderDebugOutline(context) {
+    renderOutline(context) {
         if (this.hovered) {
             context.lineWidth = 2;
             context.strokeStyle = "#fff";
@@ -157,6 +160,7 @@ export class Animal extends GameObject {
                 this.size.width,
                 this.size.height,
             );
+            context.closePath();
         }
 
         if (this.selected) {
@@ -168,86 +172,102 @@ export class Animal extends GameObject {
                 this.size.width,
                 this.size.height,
             );
-        }
-
-        if (this.species.includes("dog")) {
-            context.beginPath();
-            context.arc(
-                this.position.x + this.size.width / 2,
-                this.position.y + this.size.height / 2,
-                120,
-                0,
-                Math.PI * 2,
-            );
-            context.fillStyle = this.debugColor + "40";
-            context.fillStyle = "#ffffff20";
-            context.fill();
             context.closePath();
         }
+
+        context.beginPath();
+        context.arc(
+            this.position.x + this.size.width / 2,
+            this.position.y + this.size.height / 2,
+            this.config.seeRange,
+            0,
+            Math.PI * 2,
+        );
+        context.fillStyle = this.debugColor + "40";
+        context.fillStyle = "#ffffff20";
+        context.fill();
+        context.closePath();
     }
 
     /**
-     * Get all objects in a List then go towards a selected object
+     * Get all objects in a list then do an Animal Behavior
      * @param {GameObject} objectList
      */
     seeAround(objectList) {
-        const seeRange = 120;
+        const seeRange = this.config.seeRange;
         for (let object of objectList) {
-            if (!object.species) {
-                // ensure it is an animal
-                continue;
-            }
-            let isDog = this.species.includes("dog"); // for dog only
-            let isTargetedAnimal =
-                object.species.includes("chicken") ||
-                object.species.includes("duck") ||
-                object.species.includes("dogfood");
-
-            if (!isDog || !isTargetedAnimal) {
-                continue;
-            }
-
             let dist = Math.sqrt(
                 (object.position.x - this.position.x) ** 2 +
                     (object.position.y - this.position.y) ** 2,
             );
 
-            if (dist <= seeRange && !this.targetList.includes(object)) {
-                this.targetList.push(object);
+            if (
+                dist <= seeRange &&
+                !this.interactabletargetList.includes(object)
+            ) {
+                this.interactabletargetList.push(object);
             }
         }
 
-        this.targetList = this.targetList.filter((target) => {
-            // clear out of range targets
-            let dist = Math.sqrt(
-                (target.position.x - this.position.x) ** 2 +
-                    (target.position.y - this.position.y) ** 2,
-            );
+        this.interactabletargetList = this.interactabletargetList.filter(
+            (target) => {
+                // clear out of range targets
+                let dist = Math.sqrt(
+                    (target.position.x - this.position.x) ** 2 +
+                        (target.position.y - this.position.y) ** 2,
+                );
 
-            return dist <= seeRange;
-        });
+                return dist <= seeRange;
+            },
+        );
 
-        for (let object of this.targetList) {
-            object.hovered = false;
-            object.selected = false;
+        this.animalBehavior();
+    }
+
+    animalBehavior() {
+        // General Behavior
+
+        if (
+            this.species.includes("sheep") ||
+            this.species.includes("chicken") ||
+            this.species.includes("duck")
+        ) {
+            if (
+                this.interactabletargetList.length > 0 &&
+                this.actionCoolDownTime <= 0
+            ) {
+                for (let target of this.interactabletargetList) {
+                    if (target.name.includes("grain")) {
+                        this.goTowards(target);
+                    }
+                }
+            }
         }
 
-        if (this.targetList.length > 0 && this.actionCoolDownTime <= 0) {
-            let chosenTarget =
-                this.targetList[
-                    RandomFromMinToMax(0, this.targetList.length - 1)
-                ];
+        if (this.species.includes("dog")) {
+            if (
+                this.interactabletargetList.length > 0 &&
+                this.actionCoolDownTime <= 0
+            ) {
+                let chosenTarget =
+                    this.interactabletargetList[
+                        RandomFromMinToMax(
+                            0,
+                            this.interactabletargetList.length - 1,
+                        )
+                    ];
 
-            this.targetedObject = chosenTarget;
+                this.targetedObject = chosenTarget;
 
-            this.actionCoolDownTime = 8;
-        }
+                this.actionCoolDownTime = 6;
+            }
 
-        if (this.targetedObject) {
-            this.targetedObject.hovered = true;
-            this.targetedObject.selected = true;
-            this.goTowards(this.targetedObject);
-            this.state = "chasing";
+            if (this.targetedObject) {
+                this.targetedObject.hovered = true;
+                this.targetedObject.selected = true;
+                this.goTowards(this.targetedObject);
+                this.state = "chasing";
+            }
         }
     }
 
