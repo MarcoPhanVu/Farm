@@ -1,6 +1,6 @@
 export const animalConfiguration = {
     chicken: {
-        size: { width: 120, height: 120 },
+        size: { width: 80, height: 80 },
         movingSpeed: { min: 50, max: 100 },
         seeRange: 120,
         buyValue: 100,
@@ -20,7 +20,7 @@ export const animalConfiguration = {
         },
     },
     duck: {
-        size: { width: 40, height: 40 },
+        size: { width: 64, height: 64 },
         movingSpeed: { min: 50, max: 100 },
         seeRange: 120,
         buyValue: 100,
@@ -38,7 +38,7 @@ export const animalConfiguration = {
         },
     },
     dog: {
-        size: { width: 64, height: 64 },
+        size: { width: 96, height: 96 },
         movingSpeed: { min: 30, max: 60 },
         seeRange: 180,
         buyValue: 100,
@@ -56,7 +56,7 @@ export const animalConfiguration = {
         },
     },
     sheep: {
-        size: { width: 100, height: 100 },
+        size: { width: 160, height: 160 },
         movingSpeed: { min: 32, max: 60 },
         seeRange: 120,
         buyValue: 125,
