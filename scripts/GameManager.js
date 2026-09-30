@@ -10,7 +10,7 @@ import {
 } from "./utils/random.js";
 
 import { colorTemplate } from "./config/colors.js";
-import { animalConfiguration } from "./config/generalObjects.js";
+import { animalsConfiguration } from "./config/generalObjects.js";
 import { animalNames } from "./config/animalNames.js";
 
 export class GameManager {
@@ -71,7 +71,7 @@ export class GameManager {
         this.selectedObjectDOM = null;
 
         this.nextAnimalID = 2;
-        this.animalConfiguration = animalConfiguration;
+        this.animalsConfiguration = animalsConfiguration;
         this.animalNames = animalNames;
 
         // Entirely depended on chatGPT for this part, gotta learn about bindings in the future.
@@ -387,7 +387,7 @@ export class GameManager {
      * @param {string} species - species
      */
     spawnAnimal(species) {
-        let animalConfig = this.animalConfiguration[species];
+        let animalConfig = this.animalsConfiguration[species];
 
         if (!animalConfig) {
             console.log(species, "is not exist");
@@ -433,7 +433,7 @@ export class GameManager {
     }
 
     spawnRandomAnimal() {
-        this.spawnAnimal(getRandomKeyFromObject(animalConfiguration).trueName);
+        this.spawnAnimal(getRandomKeyFromObject(animalsConfiguration).trueName);
     }
 
     spawn10RandomAnimals() {
@@ -500,7 +500,7 @@ export class GameManager {
 
         requestAnimationFrame(this.gameLoop);
 
-        this.ui.populateStoreBar(this.animalConfiguration, this.assetsLoader);
+        this.ui.populateStoreBar(this.animalsConfiguration, this.assetsLoader);
 
         for (let i = 0; i < 3; i++) {
             this.spawnAnimal("chicken");
