@@ -57,16 +57,49 @@ export class GameObject {
         }
     }
 
+
+
     render(context) {
         this.renderOutline(context);
         context.lineWidth = 1; // reset stroke width
+
+        // Draw points
+        context.fillStyle = "red";
+        context.fillRect(
+                this.position.x - this.size.width / 2,
+                this.position.y - this.size.height / 2,
+                3,
+                3
+            );
+            context.fillRect(
+                this.position.x + this.size.width / 2,
+                this.position.y - this.size.height / 2,
+                3,
+                3
+            );
+            context.fillRect(
+                this.position.x - this.size.width / 2,
+                this.position.y + this.size.height / 2,
+                3,
+                3
+            );
+            context.fillRect(
+                this.position.x + this.size.width / 2,
+                this.position.y + this.size.height / 2,
+                3,
+                3
+            );
+
+
+
+
 
         if (this.animation) {
             // if option exist
             this.animation.render(
                 context,
-                this.position.x,
-                this.position.y,
+                this.position.x - this.size.width / 2,
+                this.position.y - this.size.height / 2,
                 this.size.width,
                 this.size.height,
             );
@@ -78,35 +111,37 @@ export class GameObject {
 
                 0,
                 0,
-                this.spriteSize,
-                this.spriteSize,
+                this.size.width,
+                this.size.height,
 
-                this.position.x,
-                this.position.y,
+                this.position.x - this.size.width / 2,
+                this.position.y - this.size.height / 2,
                 this.size.width,
                 this.size.height,
             );
         } else {
             context.fillStyle = this.debugColor;
             context.fillRect(
-                this.position.x,
-                this.position.y,
+                this.position.x - this.size.width / 2,
+                this.position.y - this.size.height / 2,
                 this.size.width,
                 this.size.height,
             );
         }
 
         context.fillStyle = "white";
-        context.fillText(this.name, this.position.x, this.position.y);
+        context.fillText(this.name, 
+            this.position.x - this.size.width / 2,
+            this.position.y - this.size.height / 2);
     }
 
     containsPoints(mouseX, mouseY) {
         // Check if mouse is inside object
         return (
-            mouseX >= this.position.x &&
-            mouseX <= this.position.x + this.size.width &&
-            mouseY >= this.position.y &&
-            mouseY <= this.position.y + this.size.height
+            mouseX >= this.position.x - this.size.width / 2 &&
+            mouseX <= this.position.x + this.size.width / 2 &&
+            mouseY >= this.position.y - this.size.height / 2 &&
+            mouseY <= this.position.y + this.size.height / 2
         );
     }
 
@@ -115,8 +150,8 @@ export class GameObject {
             context.lineWidth = 2;
             context.strokeStyle = "#fff";
             context.strokeRect(
-                this.position.x,
-                this.position.y,
+                this.position.x - this.size.width / 2,
+                this.position.y - this.size.height / 2,
                 this.size.width,
                 this.size.height,
             );
@@ -126,8 +161,8 @@ export class GameObject {
             context.lineWidth = 2;
             context.strokeStyle = "#000";
             context.strokeRect(
-                this.position.x,
-                this.position.y,
+                this.position.x - this.size.width / 2,
+                this.position.y - this.size.height / 2,
                 this.size.width,
                 this.size.height,
             );
