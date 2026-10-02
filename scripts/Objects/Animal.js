@@ -151,29 +151,7 @@ export class Animal extends GameObject {
     }
 
     renderOutline(context) {
-        if (this.hovered) {
-            context.lineWidth = 2;
-            context.strokeStyle = "#fff";
-            context.strokeRect(
-                this.position.x,
-                this.position.y,
-                this.size.width,
-                this.size.height,
-            );
-            context.closePath();
-        }
-
-        if (this.selected) {
-            context.lineWidth = 2;
-            context.strokeStyle = "#000";
-            context.strokeRect(
-                this.position.x,
-                this.position.y,
-                this.size.width,
-                this.size.height,
-            );
-            context.closePath();
-        }
+        super.renderOutline(context);
 
         context.beginPath();
         context.arc(

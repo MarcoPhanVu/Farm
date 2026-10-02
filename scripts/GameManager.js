@@ -8,6 +8,7 @@ import {
     getRandomKeyFromObject,
     getRandomElementFromArray,
 } from "./utils/random.js";
+import { print } from "./utils/common.js";
 
 import { colorTemplate } from "./config/colors.js";
 
@@ -20,6 +21,20 @@ import {
 import { animalNames } from "./config/animalNames.js";
 
 export class GameManager {
+    gameObjects = [];
+
+    currentMoney = 40;
+    currentEgg = 70;
+    currentStick = 90;
+
+    lastTime = 0;
+    gameState = "playing";
+
+    hoveredObject = null;
+    selectedObject = null;
+    selectedObjectDOM = null;
+
+    mouse = {x: 0, y: 0}
     constructor(assetsLoader, UIManager) {
         this.assetsLoader = assetsLoader;
         this.ui = UIManager;
@@ -43,7 +58,6 @@ export class GameManager {
         this.spawn10RandomAnimalsBtn = this.ui.spawn10RandomAnimalsBtn;
         this.toggleGameStateBtn = this.ui.toggleGameStateBtn;
 
-        this.gameObjects = [];
 
         const initTree = new GameObject(
             1,
@@ -65,17 +79,6 @@ export class GameManager {
         // );
         // this.gameObjects.push(initTree);
 
-        this.currentMoney = 40;
-        this.currentEgg = 70;
-        this.currentStick = 90;
-
-        this.lastTime = 0;
-        this.gameState = "playing";
-
-        this.hoveredObject = null;
-        this.selectedObject = null;
-        this.selectedObjectDOM = null;
-
         this.nextAnimalID = 2;
         this.animalsConfiguration = animalsConfiguration;
         this.animalNames = animalNames;
@@ -93,6 +96,13 @@ export class GameManager {
         // EventListeners
         // Have to bind functions first
         // this.spawnAnimalBtn.addEventListener("click", this.spawnRandomAnimal);
+        document.addEventListener("keydown", (ev) => {
+            console.log(ev.key)
+            if (ev.key == "space") {
+                console.log("spaced something");
+            } 
+        })
+
         this.spawnAnimalBtn.addEventListener("click", () => {
             this.spawnRandomAnimal();
             this.currentMoney -= 30;
@@ -107,17 +117,19 @@ export class GameManager {
 
         // Hover Over Object
         this.gameCanvas.addEventListener("mousemove", (event) => {
-            const mouse = this.getMousePosition(event);
+            this.getMousePosition(event);
             const objsList = this.getObjectsFromFrontToBack();
             this.hoveredObject = null; // ensure null
 
             for (let obj of objsList) {
                 // need to find a more optimal way to deal with
-                if (obj.containsPoints(mouse.x, mouse.y)) {
+                if (obj.containsPoints(this.mouse.x, this.mouse.y)) {
                     this.hoveredObject = obj;
                     break;
                 }
             }
+
+        // print("before render")
 
             for (let obj of this.gameObjects) {
                 // determine the hovered state of hovered object.
@@ -127,13 +139,13 @@ export class GameManager {
 
         // Select Objects
         this.gameCanvas.addEventListener("click", (event) => {
-            const mouse = this.getMousePosition(event);
+            this.getMousePosition(event);
             const objsList = this.getObjectsFromFrontToBack();
 
             this.selectedObject = null;
 
             for (let obj of objsList) {
-                if (obj.containsPoints(mouse.x, mouse.y)) {
+                if (obj.containsPoints(this.mouse.x, this.mouse.y)) {
                     this.selectedObject = obj;
                     break;
                 }
@@ -143,7 +155,7 @@ export class GameManager {
                 obj.selected = obj === this.selectedObject;
             }
 
-            this.spawnGrain(mouse.x, mouse.y);
+            this.spawnGrain(this.mouse.x, this.mouse.y);
             this.buildPropertiesPanel();
         });
     }
@@ -341,6 +353,14 @@ export class GameManager {
             this.gameCanvas.height,
         );
 
+        this.painter.fillStyle = "white";
+        this.painter.fillRect(
+            this.mouse.x,
+            this.mouse.y,
+            5,
+            5,
+        )
+
         this.painter.imageSmoothingEnabled = false;
 
         const sortedObjects = [...this.gameObjects].sort((a, b) => {
@@ -359,10 +379,14 @@ export class GameManager {
     getMousePosition(event) {
         const rect = this.gameCanvas.getBoundingClientRect(); // Dist from this.gameCanvas to client's windows
 
-        return {
-            x: event.clientX - rect.left,
-            y: event.clientY - rect.top,
-        };
+        let mousePos = {
+            x: event.clientX - rect.left + 2,
+            y: event.clientY - rect.top + 6,
+        }
+
+        this.mouse = mousePos;
+
+        return mousePos;
     }
 
     getObjectsFromFrontToBack() {
@@ -504,13 +528,10 @@ export class GameManager {
 
         this.ui.populateStoreBar(this.animalsConfiguration, this.assetsLoader);
 
-        for (let i = 0; i < 3; i++) {
-            this.spawnAnimal("chicken");
+        for (let i = 0; i < 1; i++) {
+            // this.spawnAnimal("chicken");
             this.spawnAnimal("duck");
-            this.spawnAnimal("sheep");
-            this.spawnAnimal("sheep2");
-            this.spawnAnimal("dog");
-            this.spawnAnimal("number");
+            // this.spawnAnimal("dog");
         }
 
         // this.gameState = "pause";
