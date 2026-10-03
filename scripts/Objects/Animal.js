@@ -214,11 +214,7 @@ export class Animal extends GameObject {
                 this.interactabletargetList.length > 0 &&
                 this.actionCoolDownTime <= 0
             ) {
-                for (let target of this.interactabletargetList) {
-                    if (target.name.includes("grain")) {
-                        this.goTowards(target);
-                    }
-                }
+                this.targetedObject = this.getClosestTarget("grain");
             }
         }
 
@@ -239,14 +235,42 @@ export class Animal extends GameObject {
 
                 this.actionCoolDownTime = 6;
             }
+        }
 
-            if (this.targetedObject) {
-                this.targetedObject.hovered = true;
-                this.targetedObject.selected = true;
-                this.goTowards(this.targetedObject);
-                this.state = "chasing";
+        if (this.targetedObject) {
+            this.targetedObject.hovered = true;
+            this.targetedObject.selected = true;
+            console.log(this.targetedObject);
+            this.goTowards(this.targetedObject);
+            this.state = "chasing";
+        }
+    }
+
+    getClosestTarget(targetNameSpace) {
+        let closestTarget = null;
+        let closestDistance = Infinity;
+
+        for (let target of this.interactabletargetList) {
+            if (!target.name.includes(targetNameSpace)) {
+                continue;
+            }
+
+            let dx = target.position.x - this.position.x;
+            let dy = target.position.y - this.position.y;
+
+            let dist = dx ** dx + dy ** dy; // (skip sqrt)
+
+            if (dist < closestDistance) {
+                closestDistance = dist;
+                closestTarget = target;
             }
         }
+
+        return closestTarget;
+    }
+
+    eatObject(object) {
+        object.consumed = true;
     }
 
     goTowards(object) {
@@ -255,6 +279,10 @@ export class Animal extends GameObject {
 
         const dx = dest.x - this.position.x;
         const dy = dest.y - this.position.y;
+
+        if (dx <= 50 && dy <= 50) {
+            this.eatObject(object);
+        }
 
         this.velocity.moveX = Math.floor(
             Math.max(-maxSpeed, Math.min(maxSpeed, dx)),

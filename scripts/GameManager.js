@@ -34,7 +34,7 @@ export class GameManager {
     selectedObject = null;
     selectedObjectDOM = null;
 
-    mouse = {x: 0, y: 0}
+    mouse = { x: 0, y: 0 };
     constructor(assetsLoader, UIManager) {
         this.assetsLoader = assetsLoader;
         this.ui = UIManager;
@@ -57,7 +57,6 @@ export class GameManager {
         this.spawnAnimalBtn = this.ui.spawnAnimalBtn;
         this.spawn10RandomAnimalsBtn = this.ui.spawn10RandomAnimalsBtn;
         this.toggleGameStateBtn = this.ui.toggleGameStateBtn;
-
 
         const initTree = new GameObject(
             1,
@@ -97,11 +96,11 @@ export class GameManager {
         // Have to bind functions first
         // this.spawnAnimalBtn.addEventListener("click", this.spawnRandomAnimal);
         document.addEventListener("keydown", (ev) => {
-            console.log(ev.key)
+            console.log(ev.key);
             if (ev.key == "space") {
                 console.log("spaced something");
-            } 
-        })
+            }
+        });
 
         this.spawnAnimalBtn.addEventListener("click", () => {
             this.spawnRandomAnimal();
@@ -129,7 +128,7 @@ export class GameManager {
                 }
             }
 
-        // print("before render")
+            // print("before render")
 
             for (let obj of this.gameObjects) {
                 // determine the hovered state of hovered object.
@@ -342,6 +341,10 @@ export class GameManager {
         for (let object of this.gameObjects) {
             object.update(deltaTime, this.gameCanvas, this.gameObjects);
         }
+
+        this.gameObjects = this.gameObjects.filter(
+            (object) => !object.consumed,
+        );
     }
 
     render() {
@@ -354,12 +357,7 @@ export class GameManager {
         );
 
         this.painter.fillStyle = "white";
-        this.painter.fillRect(
-            this.mouse.x,
-            this.mouse.y,
-            5,
-            5,
-        )
+        this.painter.fillRect(this.mouse.x, this.mouse.y, 5, 5);
 
         this.painter.imageSmoothingEnabled = false;
 
@@ -382,7 +380,7 @@ export class GameManager {
         let mousePos = {
             x: event.clientX - rect.left + 2,
             y: event.clientY - rect.top + 6,
-        }
+        };
 
         this.mouse = mousePos;
 
@@ -477,17 +475,22 @@ export class GameManager {
         this.spawnRandomAnimal();
     }
 
+    removeGameObject(obj) {
+        const index = this.gameObjects.indexOf(obj);
+
+        if (index !== -1) {
+            this.gameObjects.splice(index, 1);
+        }
+
+        conseol.log("obj removed");
+    }
+
     deleteSelectedObject() {
         if (this.selectedObject == null) {
             return;
         }
 
-        let index = this.gameObjects.indexOf(this.selectedObject);
-
-        if (index !== -1) {
-            // object exist
-            this.gameObjects.splice(index, 1); // take 1 ele out of that index.
-        }
+        this.removeGameObject(this.selectedObject);
 
         this.selectedObject = null;
         this.selectedObjectDOM = null;
@@ -528,8 +531,8 @@ export class GameManager {
 
         this.ui.populateStoreBar(this.animalsConfiguration, this.assetsLoader);
 
-        for (let i = 0; i < 1; i++) {
-            // this.spawnAnimal("chicken");
+        for (let i = 0; i < 4; i++) {
+            this.spawnAnimal("chicken");
             this.spawnAnimal("duck");
             // this.spawnAnimal("dog");
         }

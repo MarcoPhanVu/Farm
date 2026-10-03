@@ -15,6 +15,8 @@ export class GameObject {
     buyValue = 0;
     sellValue = 0;
 
+    consumed = false;
+
     /**
      * contains image object and dimension (32x64 or sum)
      *  @type {ImageConfig}
@@ -57,8 +59,6 @@ export class GameObject {
         }
     }
 
-
-
     render(context) {
         this.renderOutline(context);
         context.lineWidth = 1; // reset stroke width
@@ -66,33 +66,29 @@ export class GameObject {
         // Draw points
         context.fillStyle = "red";
         context.fillRect(
-                this.position.x - this.size.width / 2,
-                this.position.y - this.size.height / 2,
-                3,
-                3
-            );
-            context.fillRect(
-                this.position.x + this.size.width / 2,
-                this.position.y - this.size.height / 2,
-                3,
-                3
-            );
-            context.fillRect(
-                this.position.x - this.size.width / 2,
-                this.position.y + this.size.height / 2,
-                3,
-                3
-            );
-            context.fillRect(
-                this.position.x + this.size.width / 2,
-                this.position.y + this.size.height / 2,
-                3,
-                3
-            );
-
-
-
-
+            this.position.x - this.size.width / 2,
+            this.position.y - this.size.height / 2,
+            3,
+            3,
+        );
+        context.fillRect(
+            this.position.x + this.size.width / 2,
+            this.position.y - this.size.height / 2,
+            3,
+            3,
+        );
+        context.fillRect(
+            this.position.x - this.size.width / 2,
+            this.position.y + this.size.height / 2,
+            3,
+            3,
+        );
+        context.fillRect(
+            this.position.x + this.size.width / 2,
+            this.position.y + this.size.height / 2,
+            3,
+            3,
+        );
 
         if (this.animation) {
             // if option exist
@@ -130,9 +126,11 @@ export class GameObject {
         }
 
         context.fillStyle = "white";
-        context.fillText(this.name, 
+        context.fillText(
+            this.name,
             this.position.x - this.size.width / 2,
-            this.position.y - this.size.height / 2);
+            this.position.y - this.size.height / 2,
+        );
     }
 
     containsPoints(mouseX, mouseY) {
