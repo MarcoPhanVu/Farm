@@ -99,8 +99,6 @@ export class Animal extends GameObject {
         }
     }
 
-    chooseNewDirection() {}
-
     move(hitBound) {
         if (this.isChangingDirection) {
             return;
@@ -150,21 +148,36 @@ export class Animal extends GameObject {
         }, 1000);
     }
 
-    renderOutline(context) {
-        super.renderOutline(context);
+    debugVisualization(context) {
+        super.debugVisualization(context);
 
+        // render seeing range
         context.beginPath();
         context.arc(
-            this.position.x + this.size.width / 2,
-            this.position.y + this.size.height / 2,
+            this.position.x,
+            this.position.y,
             this.config.seeRange,
             0,
             Math.PI * 2,
         );
         context.fillStyle = this.debugColor + "40";
-        context.fillStyle = "#ffffff20";
+        context.fillStyle = "#ffffff10";
         context.fill();
         context.closePath();
+
+        // render target chosen path
+        if (this.targetedObject != null) {
+            let target = this.targetedObject;
+            context.beginPath();
+            context.strokeStyle = "salmon";
+            if (this.state == "chasing") {
+                context.strokeStyle = "green";
+            }
+            context.lineWidth = 5;
+            context.moveTo(this.position.x, this.position.y);
+            context.lineTo(target.position.x, target.position.y);
+            context.stroke();
+        }
     }
 
     /**
@@ -240,9 +253,7 @@ export class Animal extends GameObject {
         if (this.targetedObject) {
             this.targetedObject.hovered = true;
             this.targetedObject.selected = true;
-            console.log(this.targetedObject);
             this.goTowards(this.targetedObject);
-            this.state = "chasing";
         }
     }
 
@@ -271,17 +282,27 @@ export class Animal extends GameObject {
 
     eatObject(object) {
         object.consumed = true;
+        console.log(this.name, "ate", object.name);
     }
 
     goTowards(object) {
         let dest = object.position;
-        let maxSpeed = 80;
+        let maxSpeed = this.config.movingSpeed.max;
+        let minSpeed = this.config.movingSpeed.min;
 
-        const dx = dest.x - this.position.x;
-        const dy = dest.y - this.position.y;
+        let dx = dest.x - this.position.x;
+        let dy = dest.y - this.position.y;
 
         if (dx <= 50 && dy <= 50) {
             this.eatObject(object);
+        }
+
+        if (dx < minSpeed) {
+            dx = minSpeed;
+        }
+
+        if (dy < minSpeed) {
+            dy = minSpeed;
         }
 
         this.velocity.moveX = Math.floor(
@@ -301,7 +322,9 @@ export class Animal extends GameObject {
 
     setState(state) {
         let stateList = [
-            "idle, active, inactive",
+            "idle",
+            "active",
+            "inactive",
             "walkingLeft",
             "walkingRight",
             "eating",
