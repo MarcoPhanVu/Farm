@@ -60,7 +60,7 @@ export class GameObject {
     }
 
     render(context) {
-        this.renderOutline(context);
+        this.debugVisualization(context);
         context.lineWidth = 1; // reset stroke width
 
         // Draw points
@@ -143,28 +143,23 @@ export class GameObject {
         );
     }
 
-    renderOutline(context) {
+    debugVisualization(context) {
+        context.lineWidth = 2;
+
+        context.strokeStyle = "#00000000";
         if (this.hovered) {
-            context.lineWidth = 2;
             context.strokeStyle = "#fff";
-            context.strokeRect(
-                this.position.x - this.size.width / 2,
-                this.position.y - this.size.height / 2,
-                this.size.width,
-                this.size.height,
-            );
+        }
+        if (this.selected) {
+            context.strokeStyle = "#000";
         }
 
-        if (this.selected) {
-            context.lineWidth = 2;
-            context.strokeStyle = "#000";
-            context.strokeRect(
-                this.position.x - this.size.width / 2,
-                this.position.y - this.size.height / 2,
-                this.size.width,
-                this.size.height,
-            );
-        }
+        context.strokeRect(
+            this.position.x - this.size.width / 2,
+            this.position.y - this.size.height / 2,
+            this.size.width,
+            this.size.height,
+        );
     }
 
     // Getters
