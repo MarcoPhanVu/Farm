@@ -128,8 +128,6 @@ export class GameManager {
                 }
             }
 
-            // print("before render")
-
             for (let obj of this.gameObjects) {
                 // determine the hovered state of hovered object.
                 obj.hovered = obj === this.hoveredObject;
@@ -356,8 +354,15 @@ export class GameManager {
             this.gameCanvas.height,
         );
 
+        // show cursor
         this.painter.fillStyle = "white";
-        this.painter.fillRect(this.mouse.x, this.mouse.y, 5, 5);
+        let cursorSize = 12;
+        this.painter.fillRect(
+            this.mouse.x - cursorSize / 2,
+            this.mouse.y - cursorSize / 2,
+            cursorSize,
+            cursorSize,
+        );
 
         this.painter.imageSmoothingEnabled = false;
 
@@ -460,7 +465,7 @@ export class GameManager {
     }
 
     spawnRandomAnimal() {
-        this.spawnAnimal(getRandomKeyFromObject(animalsConfiguration).trueName);
+        this.spawnAnimal(getRandomKeyFromObject(animalsConfiguration).species);
     }
 
     spawn10RandomAnimals() {
@@ -482,7 +487,7 @@ export class GameManager {
             this.gameObjects.splice(index, 1);
         }
 
-        conseol.log("obj removed");
+        console.log("obj removed");
     }
 
     deleteSelectedObject() {
@@ -504,9 +509,16 @@ export class GameManager {
         this.deleteSelectedObject();
     }
 
-    spawnGrain(posX, posY) {
-        console.log("GRAIN AT", posX, posY);
+    spawnManyGrains() {
+        for (let i = 0; i < 36; i++) {
+            this.spawnGrain(
+                RandomFromMinToMax(0, this.gameCanvas.width),
+                RandomFromMinToMax(0, this.gameCanvas.height),
+            );
+        }
+    }
 
+    spawnGrain(posX, posY) {
         const smallGrainPile = new GameObject(
             "randomID",
             "grain pile",
@@ -523,6 +535,39 @@ export class GameManager {
         this.gameObjects.push(smallGrainPile);
     }
 
+    drawingLessons() {
+        let ptn = this.painter; // requestAnimationFrame(this.gameLoop);
+
+        ptn.fillStyle = "salmon";
+        ptn.font = "normal 120px sans-serif";
+        ptn.fillText("something", 500, 500);
+        ptn.moveTo(560, 540);
+        ptn.lineTo(680, 590);
+        ptn.lineTo(630, 710);
+        ptn.lineTo(510, 660);
+        ptn.fill();
+        // this.gameState = "pause";
+
+        ptn.beginPath();
+        ptn.strokeStyle = "lightgray";
+        for (let i = 0; i < 16; i++) {
+            ptn.moveTo(500 + i * 20, 500 + 0);
+            ptn.lineTo(500 + i * 20, 500 + 300);
+            ptn.moveTo(500 + 0, 500 + i * 20);
+            ptn.lineTo(500 + 300, 500 + i * 20);
+            ptn.stroke();
+        }
+
+        ptn.beginPath();
+        ptn.strokeStyle = "lightblue";
+        ptn.lineWidth = 30;
+        ptn.lineCap = "round";
+        ptn.lineCap = "square";
+        ptn.moveTo(800, 500);
+        ptn.lineTo(900, 550);
+        ptn.stroke();
+    }
+
     start() {
         window.addEventListener("resize", this.resizeCanvas);
         this.resizeCanvas();
@@ -534,9 +579,11 @@ export class GameManager {
         for (let i = 0; i < 4; i++) {
             this.spawnAnimal("chicken");
             this.spawnAnimal("duck");
-            // this.spawnAnimal("dog");
+            this.spawnAnimal("dog");
         }
 
-        // this.gameState = "pause";
+        this.spawnManyGrains();
+
+        // this.drawingLessons();
     }
 }

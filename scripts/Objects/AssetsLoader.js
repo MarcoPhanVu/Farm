@@ -12,10 +12,10 @@ export class AssetsLoader {
     constructor() {}
 
     load(configurations) {
-        console.log(Object.entries(configurations));
+        // console.log(Object.entries(configurations));
         for (let [configName, config] of Object.entries(configurations)) {
-            console.log(configName);
-            console.log(config);
+            // console.log(configName);
+            // console.log(config);
             for (let objectName of Object.keys(config)) {
                 let object = config[objectName];
 

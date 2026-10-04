@@ -21,6 +21,6 @@ export function getRandomKeyFromObject(objList) {
     return objList[keys[RandomFromMinToMax(0, keys.length - 1)]];
 }
 
-export function getRandomElementFromArray(arr) {
+export function getRandomElementFromArray(array) {
     return array[Math.floor(Math.random() * array.length)];
 }
