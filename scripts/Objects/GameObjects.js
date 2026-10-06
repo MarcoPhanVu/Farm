@@ -125,11 +125,12 @@ export class GameObject {
             );
         }
 
+        context.font = "16px DynaPuff";
         context.fillStyle = "white";
         context.fillText(
             this.name,
             this.position.x - this.size.width / 2,
-            this.position.y - this.size.height / 2,
+            this.position.y - this.size.height / 2 - 12,
         );
     }
 

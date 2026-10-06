@@ -23,6 +23,7 @@ import { animalNames } from "./config/animalNames.js";
 export class GameManager {
     gameObjects = [];
 
+    grainCount = 0;
     currentMoney = 40;
     currentEgg = 70;
     currentStick = 90;
@@ -173,26 +174,30 @@ export class GameManager {
 
         let propertiesHTML = header;
         const unneededProperties = [
-            // "id",
+            "id",
             // "position",
-            // "size",
+            "size",
             // "velocity",
-            // "layer",
-            // "sellValue",
-            // "state",
-            // "buyValue",
-            // "idleImage",
-            // "animation",
-            // "hovered",
-            // "selfElapsedTime",
-            // "selected",
-            // "isChangingDirection",
-            // "spriteSize",
-            // "boundTouched",
-            // "config",
+            "layer",
+            "sellValue",
+            "state",
+            "buyValue",
+            "idleImage",
+            "animation",
+            "hovered",
+            "selfElapsedTime",
+            "selected",
+            "isChangingDirection",
+            "spriteSize",
+            "boundTouched",
+            "config",
             // "targetedObject",
-            // "currentActionTime",
-            // species
+            "currentActionTime",
+            // species,
+            "debugColor",
+            "animations",
+            "spriteDimension",
+            "consumed",
         ];
 
         for (let keyName of Object.keys(this.selectedObject)) {
@@ -509,11 +514,11 @@ export class GameManager {
         this.deleteSelectedObject();
     }
 
-    spawnManyGrains() {
-        for (let i = 0; i < 36; i++) {
+    spawnManyGrains(n) {
+        for (let i = 0; i < n; i++) {
             this.spawnGrain(
-                RandomFromMinToMax(0, this.gameCanvas.width),
-                RandomFromMinToMax(0, this.gameCanvas.height),
+                RandomFromMinToMax(100, this.gameCanvas.width - 100),
+                RandomFromMinToMax(100, this.gameCanvas.height - 100),
             );
         }
     }
@@ -521,7 +526,7 @@ export class GameManager {
     spawnGrain(posX, posY) {
         const smallGrainPile = new GameObject(
             "randomID",
-            "grain pile",
+            `grain pile ${this.grainCount++}`,
             {
                 x: posX,
                 y: posY,
@@ -576,13 +581,13 @@ export class GameManager {
 
         this.ui.populateStoreBar(this.animalsConfiguration, this.assetsLoader);
 
-        for (let i = 0; i < 4; i++) {
-            this.spawnAnimal("chicken");
-            this.spawnAnimal("duck");
+        for (let i = 0; i < 8; i++) {
+            // this.spawnAnimal("chicken");
+            // this.spawnAnimal("duck");
             this.spawnAnimal("dog");
         }
 
-        this.spawnManyGrains();
+        this.spawnManyGrains(5);
 
         // this.drawingLessons();
     }

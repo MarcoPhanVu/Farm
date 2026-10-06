@@ -194,7 +194,8 @@ export class Animal extends GameObject {
 
             if (
                 dist <= seeRange &&
-                !this.interactabletargetList.includes(object)
+                !this.interactabletargetList.includes(object) &&
+                this != object
             ) {
                 this.interactabletargetList.push(object);
             }
@@ -256,7 +257,6 @@ export class Animal extends GameObject {
         }
 
         if (this.targetedObject) {
-            this.targetedObject.hovered = true;
             this.targetedObject.selected = true;
             this.goTowards(this.targetedObject);
         }
@@ -287,6 +287,7 @@ export class Animal extends GameObject {
 
     eatObject(object) {
         object.consumed = true;
+        this.targetedObject = null;
         console.log(this.name, "ate", object.name);
     }
 
@@ -298,16 +299,18 @@ export class Animal extends GameObject {
         let dx = dest.x - this.position.x;
         let dy = dest.y - this.position.y;
 
+        // skip sqrt
         if (dx ** dx + dy ** dy <= 2500) {
             this.eatObject(object);
         }
 
-        if (dx < 0) {
-            dx = minSpeed;
+        // ensure negative and small speed would be accessible
+        if (Math.abs(dx) < minSpeed && dx !== 0) {
+            dx = Math.sign(dx) * minSpeed;
         }
 
-        if (dy < 0) {
-            dy = minSpeed;
+        if (Math.abs(dy) < minSpeed && dy !== 0) {
+            dy = Math.sign(dy) * minSpeed;
         }
 
         this.velocity.moveX = Math.floor(
