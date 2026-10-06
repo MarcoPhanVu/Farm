@@ -246,6 +246,11 @@ export class Animal extends GameObject {
 
                 this.targetedObject = chosenTarget;
 
+                if (chosenTarget == this) {
+                    console.log("can't choose self");
+                    this.targetedObject = null;
+                }
+
                 this.actionCoolDownTime = 6;
             }
         }
@@ -293,15 +298,15 @@ export class Animal extends GameObject {
         let dx = dest.x - this.position.x;
         let dy = dest.y - this.position.y;
 
-        if (dx <= 50 && dy <= 50) {
+        if (dx ** dx + dy ** dy <= 2500) {
             this.eatObject(object);
         }
 
-        if (dx < minSpeed) {
+        if (dx < 0) {
             dx = minSpeed;
         }
 
-        if (dy < minSpeed) {
+        if (dy < 0) {
             dy = minSpeed;
         }
 
