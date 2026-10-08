@@ -8,9 +8,6 @@ import {
     getRandomKeyFromObject,
     getRandomElementFromArray,
 } from "./utils/random.js";
-import { print } from "./utils/common.js";
-
-import { colorTemplate } from "./config/colors.js";
 
 import {
     animalsConfiguration,
@@ -43,43 +40,7 @@ export class GameManager {
         this.gameCanvas = this.ui.gameCanvas;
         this.painter = this.gameCanvas.getContext("2d");
 
-        this.topPanel = this.ui.topPanel;
-        this.toolPanel = this.ui.toolPanel;
-        this.canvasPanel = this.ui.canvasPanel;
-        this.propertiesPanel = this.ui.propertiesPanel;
-        this.bottomPanel = this.ui.bottomPanel;
-
-        // Top Panel
-        this.moneyDisplay = this.ui.moneyDisplay;
-        this.eggDisplay = this.ui.eggDisplay;
-        this.stickDisplay = this.ui.stickDisplay;
-
-        // Bottom Panel
-        this.spawnAnimalBtn = this.ui.spawnAnimalBtn;
-        this.spawn10RandomAnimalsBtn = this.ui.spawn10RandomAnimalsBtn;
-        this.toggleGameStateBtn = this.ui.toggleGameStateBtn;
-
-        const initTree = new GameObject(
-            1,
-            "Tree",
-            "object",
-            { x: 160, y: 100 },
-            { width: 240, height: 240 },
-            { moveX: 0, moveY: 0 },
-            "tomato",
-            150,
-            1,
-        );
-        // initTree.setImage(this.assetsLoader.assetsList["stationaries"]["tree"]);
-        // initTree.setAnimation(
-        //     new SpriteAnimation(
-        //         this.assetsLoader.assetsList.stationaries.tree.walking,
-        //         0.15,
-        //     ),
-        // );
-        // this.gameObjects.push(initTree);
-
-        this.nextAnimalID = 2;
+        this.nextAnimalID = 0;
         this.animalsConfiguration = animalsConfiguration;
         this.animalNames = animalNames;
 
@@ -94,8 +55,7 @@ export class GameManager {
         this.togglePlaying = this.togglePlaying.bind(this);
 
         // EventListeners
-        // Have to bind functions first
-        // this.spawnAnimalBtn.addEventListener("click", this.spawnRandomAnimal);
+        // Have to bind functions so they know that they belong to GAMEMANAGER first
         document.addEventListener("keydown", (ev) => {
             console.log(ev.key);
             if (ev.key == "space") {
@@ -103,17 +63,20 @@ export class GameManager {
             }
         });
 
-        this.spawnAnimalBtn.addEventListener("click", () => {
+        this.ui.spawnAnimalBtn.addEventListener("click", () => {
             this.spawnRandomAnimal();
             this.currentMoney -= 30;
         });
 
-        this.spawn10RandomAnimalsBtn.addEventListener("click", () => {
+        this.ui.spawn10RandomAnimalsBtn.addEventListener("click", () => {
             this.spawn10RandomAnimals();
             this.currentMoney -= 300;
         });
 
-        this.toggleGameStateBtn.addEventListener("click", this.togglePlaying);
+        this.ui.toggleGameStateBtn.addEventListener(
+            "click",
+            this.togglePlaying,
+        );
 
         // Hover Over Object
         this.gameCanvas.addEventListener("mousemove", (event) => {
@@ -154,170 +117,13 @@ export class GameManager {
             }
 
             this.spawnGrain(this.mouse.x, this.mouse.y);
-            this.buildPropertiesPanel();
+            this.ui.buildPropertiesPanel(this.selectedObject);
         });
     }
 
-    buildPropertiesPanel() {
-        const header = "<h3>Properties</h3>";
-        if (this.selectedObject == null) {
-            this.propertiesPanel.innerHTML =
-                header + `Nothing selected for now`;
-            return;
-        }
-
-        const footer =
-            '<button id="deleteSelectedBtn" class="simpleBtn">Delete</button>' +
-            `<button id="sellSelectedBtn" class="simpleBtn">Sell for ${this.selectedObject.sellValue} </button>`;
-
-        // console.log(JSON.stringify(this.selectedObject.animation));
-
-        let propertiesHTML = header;
-        const unneededProperties = [
-            "id",
-            // "position",
-            "size",
-            // "velocity",
-            "layer",
-            "sellValue",
-            "state",
-            "buyValue",
-            "idleImage",
-            "animation",
-            "hovered",
-            "selfElapsedTime",
-            "selected",
-            "isChangingDirection",
-            "spriteSize",
-            "boundTouched",
-            "config",
-            // "targetedObject",
-            "currentActionTime",
-            // species,
-            "debugColor",
-            "animations",
-            "spriteDimension",
-            "consumed",
-        ];
-
-        for (let keyName of Object.keys(this.selectedObject)) {
-            // console.log(keyName);
-            if (unneededProperties.includes(keyName)) {
-                continue;
-            }
-            propertiesHTML +=
-                `<p class="property-name" id="selected-${keyName}">` +
-                // keyName.charAt(0).toUpperCase() +
-                // keyName.slice(1) +
-                keyName +
-                ": ";
-
-            try {
-                if (this.selectedObject[keyName] == null) {
-                    // Img and Animation will be Null in default
-                    continue;
-                }
-
-                if (this.selectedObject[keyName].constructor == Object) {
-                    // Expand if a dictionary
-                    for (let key of Object.keys(this.selectedObject[keyName])) {
-                        propertiesHTML +=
-                            // '<p class="property-value">' +
-                            `[${key}: ${this.selectedObject[keyName][key]}] `;
-                    }
-                }
-
-                if (this.selectedObject[keyName].constructor == Number) {
-                    propertiesHTML += Math.floor(this.selectedObject[keyName]);
-                } else {
-                    propertiesHTML +=
-                        // '<p class="property-value">' +
-                        this.selectedObject[keyName];
-                }
-            } catch (error) {
-                console.log(this.selectedObject);
-                console.log(this.selectedObject[keyName]);
-                console.log(error);
-            } finally {
-                propertiesHTML += "</p>\n";
-            }
-        }
-
-        this.propertiesPanel.innerHTML = propertiesHTML + footer;
-
-        document
-            .getElementById("deleteSelectedBtn")
-            .addEventListener("click", () => {
-                this.deleteSelectedObject();
-            });
-
-        document
-            .getElementById("sellSelectedBtn")
-            .addEventListener("click", () => {
-                this.sellSelectedObject();
-            });
-
-        this.selectedObjectDOM = new Object();
-
-        this.selectedObjectDOM.position =
-            document.getElementById("selected-position");
-
-        this.selectedObjectDOM.velocity =
-            document.getElementById("selected-velocity");
-
-        this.selectedObjectDOM.selfElapsedTime = document.getElementById(
-            "selected-selfElapsedTime",
-        );
-
-        this.selectedObjectDOM.targetList = document.getElementById(
-            "selected-targetList",
-        );
-
-        this.selectedObjectDOM.targetedObject = document.getElementById(
-            "selected-targetedObject",
-        );
-
-        this.selectedObjectDOM.actionCoolDownTime = document.getElementById(
-            "selected-actionCoolDownTime",
-        );
-
-        return;
-    }
-
-    updatePropertiesPanel() {
-        if (
-            this.selectedObject == null
-            // this.selectedObject.position == null ||
-            // this.selectedObject.velocity == null
-        ) {
-            return;
-        }
-
-        this.selectedObjectDOM.position.innerHTML = `[x: ${Math.floor(this.selectedObject.position.x)}] [y: ${Math.floor(this.selectedObject.position.y)}]`;
-
-        this.selectedObjectDOM.velocity.innerHTML = `[moveX: ${this.selectedObject.velocity.moveX}] [moveY: ${this.selectedObject.velocity.moveY}]`;
-
-        // this.selectedObjectDOM.selfElapsedTime.innerHTML = `elapsedTime: ${this.selectedObject.selfElapsedTime.toPrecision(2)}`;
-
-        if (this.selectedObject.type == "animal") {
-            let inText = "";
-            for (let animal of this.selectedObject.targetList) {
-                inText += animal.name + "__";
-            }
-
-            try {
-                this.selectedObjectDOM.actionCoolDownTime.innerHTML = `actionCoolDownTime: ${this.selectedObject.actionCoolDownTime.toPrecision(2)}`;
-                this.selectedObjectDOM.targetList.innerHTML = `targetList: ${inText}`;
-                this.selectedObjectDOM.targetedObject.innerHTML = `targetedObject: ${this.selectedObject.targetedObject.name}`;
-            } catch (error) {
-                // console.log(error);
-            }
-        }
-    }
-
     resizeCanvas() {
-        this.gameCanvas.width = this.canvasPanel.clientWidth;
-        this.gameCanvas.height = this.canvasPanel.clientHeight;
+        this.gameCanvas.width = this.ui.canvasPanel.clientWidth;
+        this.gameCanvas.height = this.ui.canvasPanel.clientHeight;
         this.render();
     }
 
@@ -325,7 +131,6 @@ export class GameManager {
         let elapsedTime = currentTime - this.lastTime;
         let deltaTime = elapsedTime / 1000;
         this.lastTime = currentTime;
-
         // Prevent huge jumps if tab was inactive(like spawning balls in physic engine)
         deltaTime = Math.min(deltaTime, 0.05);
 
@@ -338,7 +143,7 @@ export class GameManager {
     }
 
     update(deltaTime, elapsedTime) {
-        this.updatePropertiesPanel();
+        this.ui.updatePropertiesPanel();
         this.updateResourcesBar();
 
         for (let object of this.gameObjects) {
@@ -410,9 +215,11 @@ export class GameManager {
     }
 
     updateResourcesBar() {
-        this.moneyDisplay.innerText = this.currentMoney;
-        this.eggDisplay.innerText = this.currentEgg;
-        this.stickDisplay.innerText = this.currentStick;
+        this.ui.updateResources({
+            money: this.currentMoney,
+            eggs: this.currentEgg,
+            sticks: this.currentStick,
+        });
     }
 
     togglePlaying() {
@@ -506,7 +313,7 @@ export class GameManager {
         this.selectedObjectDOM = null;
         this.hoveredObject = null;
 
-        this.buildPropertiesPanel();
+        this.ui.buildPropertiesPanel(this.selectedObject);
     }
 
     sellSelectedObject() {

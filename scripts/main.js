@@ -16,18 +16,32 @@ const configurationCollection = {
 };
 
 assetsLoader.load(configurationCollection);
-// assetsLoader.load(stationariesConfiguration);
-// assetsLoader.load(interactablesConfiguration);
 
 const uiManager = new UIManager({
     onBuyAnimal: (animalName) => {
-        gameASDASD.spawnAnimal(animalName);
+        MAINGAMEMANGER.spawnAnimal(animalName);
     },
+
+    onBuy10RandomAnimals: () => {
+        MAINGAMEMANGER.spawn10RandomAnimals();
+    },
+
+    onBuyRandomAnimal: () => {
+        MAINGAMEMANGER.spawnRandomAnimal();
+    },
+
+    onToggleGameState: () => {
+        MAINGAMEMANGER.togglePlaying();
+    }
+
+    onDeleteSelected: () => {
+        
+    }
 });
 
-const gameASDASD = new GameManager(assetsLoader, uiManager);
+const MAINGAMEMANGER = new GameManager(assetsLoader, uiManager);
 
-window.gameASDASD = gameASDASD;
+window.MAINGAMEMANGER = MAINGAMEMANGER;
 window.assetsLoader = assetsLoader;
 
-gameASDASD.start();
+MAINGAMEMANGER.start();
