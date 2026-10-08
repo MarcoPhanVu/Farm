@@ -1,5 +1,5 @@
 import { GameManager } from "./GameManager.js";
-import { AssetsLoader } from "./Objects/AssetsLoader.js";
+import { AssetsLoader } from "./objects/AssetsLoader.js";
 
 import { animalsConfiguration } from "./config/generalObjects.js";
 import { stationariesConfiguration } from "./config/generalObjects.js";

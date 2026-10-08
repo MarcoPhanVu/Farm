@@ -1,6 +1,6 @@
-import { Animal } from "./Objects/Animal.js";
-import { GameObject } from "./Objects/GameObjects.js";
-import { SpriteAnimation } from "./Objects/SpriteAnimation.js";
+import { Animal } from "./objects/Animal.js";
+import { GameObject } from "./objects/GameObjects.js";
+import { SpriteAnimation } from "./objects/SpriteAnimation.js";
 
 import {
     RandomFromMinToMax,
