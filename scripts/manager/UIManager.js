@@ -17,15 +17,13 @@ export class UIManager {
 
         // Bottom Panel
         this.spawnAnimalBtn = document.getElementById("spawnAnimalBtn");
-        this.spawn10RandomAnimalsBtn = document.getElementById(
-            "spawn10RandomAnimalsBtn",
+        this.spawn5RandomAnimalsBtn = document.getElementById(
+            "spawn5RandomAnimalsBtn",
         );
         this.toggleGameStateBtn = document.getElementById("toggleGameStateBtn");
     }
 
     populateStoreBar(objectPool, assetLoader) {
-        // console.log(objectPool);
-        // console.log(assetLoader);
         for (let objectName of Object.keys(objectPool)) {
             let animal = {
                 name: objectPool[objectName].trueName,
@@ -85,7 +83,7 @@ export class UIManager {
             "idleImage",
             "animation",
             "hovered",
-            "selfElapsedTime",
+            // "selfElapsedTime",
             "selected",
             "isChangingDirection",
             "spriteSize",
@@ -142,19 +140,8 @@ export class UIManager {
 
         this.propertiesPanel.innerHTML = propertiesHTML + footer;
 
-        document
-            .getElementById("deleteSelectedBtn")
-            .addEventListener("click", () => {
-                this.deleteSelectedObject();
-            });
-
-        document
-            .getElementById("sellSelectedBtn")
-            .addEventListener("click", () => {
-                this.sellSelectedObject();
-            });
-
-        this.DOMSHIT = new Object();
+        // this.DOMSHIT = new Object();
+        this.DOMSHIT = {};
 
         this.DOMSHIT.position = document.getElementById("selected-position");
 
@@ -164,8 +151,8 @@ export class UIManager {
             "selected-selfElapsedTime",
         );
 
-        this.DOMSHIT.targetList = document.getElementById(
-            "selected-targetList",
+        this.DOMSHIT.interactableTargetList = document.getElementById(
+            "selected-interactableTargetList",
         );
 
         this.DOMSHIT.targetedObject = document.getElementById(
@@ -175,6 +162,19 @@ export class UIManager {
         this.DOMSHIT.actionCoolDownTime = document.getElementById(
             "selected-actionCoolDownTime",
         );
+
+
+        document
+            .getElementById("deleteSelectedBtn")
+            .addEventListener("click", () => {
+                this.callbacks.onDeleteSelected();
+            });
+
+        document
+            .getElementById("sellSelectedBtn")
+            .addEventListener("click", () => {
+                this.callbacks.onSellSelected();
+            });
 
         return;
     }
@@ -188,25 +188,50 @@ export class UIManager {
             return;
         }
 
+        // console.log("thisDOMSHIT:", this.DOMSHIT);
+        // console.log("selectedObject:", selectedObject);
+        // this.callbacks.onToggleGameState();
         this.DOMSHIT.position.innerHTML = `[x: ${Math.floor(selectedObject.position.x)}] [y: ${Math.floor(selectedObject.position.y)}]`;
 
         this.DOMSHIT.velocity.innerHTML = `[moveX: ${selectedObject.velocity.moveX}] [moveY: ${selectedObject.velocity.moveY}]`;
 
-        // this.DOMSHIT.selfElapsedTime.innerHTML = `elapsedTime: ${selectedObject.selfElapsedTime.toPrecision(2)}`;
+        this.DOMSHIT.selfElapsedTime.innerHTML = `elapsedTime: ${selectedObject.selfElapsedTime.toPrecision(2)}`;
+
+        // console.log(selectedObject)
+        // this.callbacks.onToggleGameState()
 
         if (selectedObject.type == "animal") {
             let inText = "";
-            for (let animal of selectedObject.targetList) {
+            for (let animal of selectedObject.interactableTargetList) {
                 inText += animal.name + "__";
+                console.log(animal)
             }
-
+            // this.callbacks.onToggleGameState()
             try {
                 this.DOMSHIT.actionCoolDownTime.innerHTML = `actionCoolDownTime: ${selectedObject.actionCoolDownTime.toPrecision(2)}`;
-                this.DOMSHIT.targetList.innerHTML = `targetList: ${inText}`;
+                this.DOMSHIT.interactableTargetList.innerHTML = `interactableTargetList: ${inText}`;
                 this.DOMSHIT.targetedObject.innerHTML = `targetedObject: ${selectedObject.targetedObject.name}`;
             } catch (error) {
-                // console.log(error);
+                console.log(error);
             }
         }
+    }
+
+    setUpEventListeners() {
+        console.log("reaching set up");
+
+        this.spawnAnimalBtn.addEventListener("click", () => {
+            this.callbacks.BuyRandomAnimal();
+            this.callbacks.currentMoney -= 30;
+        });
+
+        this.spawn5RandomAnimalsBtn.addEventListener("click", () => {
+            this.callbacks.onBuy5RandomAnimals();
+        });
+
+        this.toggleGameStateBtn.addEventListener(
+            "click",
+            this.callbacks.onToggleGameState,
+        );
     }
 }

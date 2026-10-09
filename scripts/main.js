@@ -19,29 +19,41 @@ assetsLoader.load(configurationCollection);
 
 const uiManager = new UIManager({
     onBuyAnimal: (animalName) => {
-        MAINGAMEMANGER.spawnAnimal(animalName);
+        FARM.spawnAnimal(animalName);
     },
 
-    onBuy10RandomAnimals: () => {
-        MAINGAMEMANGER.spawn10RandomAnimals();
+    onBuy5RandomAnimals: () => {
+        FARM.spawn5RandomAnimals();
+        console.log("spawn5RandomAnimals");
+        FARM.currentMoney -= 150;
     },
 
     onBuyRandomAnimal: () => {
-        MAINGAMEMANGER.spawnRandomAnimal();
+        FARM.spawnRandomAnimal();
+        console.log("spawnRandomAnimal");
     },
 
     onToggleGameState: () => {
-        MAINGAMEMANGER.togglePlaying();
-    }
+        FARM.togglePlaying();
+        console.log("togglePlaying", FARM.gameState);
+    },
 
     onDeleteSelected: () => {
-        
+        FARM.deleteSelectedObject();
+        console.log("deleteSelectedObject");
+    },
+
+    onSellSelected: () => {
+        FARM.sellSelectedObject();
+        console.log("sellSelectedObject");
     }
 });
 
-const MAINGAMEMANGER = new GameManager(assetsLoader, uiManager);
+uiManager.setUpEventListeners()
 
-window.MAINGAMEMANGER = MAINGAMEMANGER;
+const FARM = new GameManager(assetsLoader, uiManager);
+
+window.FARM = FARM;
 window.assetsLoader = assetsLoader;
 
-MAINGAMEMANGER.start();
+FARM.start();

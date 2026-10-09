@@ -49,7 +49,7 @@ export class GameManager {
         this.gameLoop = this.gameLoop.bind(this);
         this.spawnAnimal = this.spawnAnimal.bind(this);
         this.spawnRandomAnimal = this.spawnRandomAnimal.bind(this);
-        this.spawn10RandomAnimals = this.spawn10RandomAnimals.bind(this);
+        this.spawn5RandomAnimals = this.spawn5RandomAnimals.bind(this);
         this.update = this.update.bind(this);
         this.render = this.render.bind(this);
         this.togglePlaying = this.togglePlaying.bind(this);
@@ -57,32 +57,16 @@ export class GameManager {
         // EventListeners
         // Have to bind functions so they know that they belong to GAMEMANAGER first
         document.addEventListener("keydown", (ev) => {
-            console.log(ev.key);
             if (ev.key == "space") {
                 console.log("spaced something");
             }
         });
 
-        this.ui.spawnAnimalBtn.addEventListener("click", () => {
-            this.spawnRandomAnimal();
-            this.currentMoney -= 30;
-        });
-
-        this.ui.spawn10RandomAnimalsBtn.addEventListener("click", () => {
-            this.spawn10RandomAnimals();
-            this.currentMoney -= 300;
-        });
-
-        this.ui.toggleGameStateBtn.addEventListener(
-            "click",
-            this.togglePlaying,
-        );
-
         // Hover Over Object
         this.gameCanvas.addEventListener("mousemove", (event) => {
             this.getMousePosition(event);
             const objsList = this.getObjectsFromFrontToBack();
-            this.hoveredObject = null; // ensure null
+            this.hoveredObject = null; // ensure null(new target)
 
             for (let obj of objsList) {
                 // need to find a more optimal way to deal with
@@ -103,7 +87,7 @@ export class GameManager {
             this.getMousePosition(event);
             const objsList = this.getObjectsFromFrontToBack();
 
-            this.selectedObject = null;
+            this.selectedObject = null; //always one selected at a time
 
             for (let obj of objsList) {
                 if (obj.containsPoints(this.mouse.x, this.mouse.y)) {
@@ -131,6 +115,7 @@ export class GameManager {
         let elapsedTime = currentTime - this.lastTime;
         let deltaTime = elapsedTime / 1000;
         this.lastTime = currentTime;
+
         // Prevent huge jumps if tab was inactive(like spawning balls in physic engine)
         deltaTime = Math.min(deltaTime, 0.05);
 
@@ -143,7 +128,7 @@ export class GameManager {
     }
 
     update(deltaTime, elapsedTime) {
-        this.ui.updatePropertiesPanel();
+        this.ui.updatePropertiesPanel(this.selectedObject);
         this.updateResourcesBar();
 
         for (let object of this.gameObjects) {
@@ -219,6 +204,7 @@ export class GameManager {
             money: this.currentMoney,
             eggs: this.currentEgg,
             sticks: this.currentStick,
+            elapsedTime: this.elapsedTime
         });
     }
 
@@ -227,7 +213,6 @@ export class GameManager {
     }
 
     /**
-     *
      * @param {string} species - species
      */
     spawnAnimal(species) {
@@ -263,7 +248,6 @@ export class GameManager {
                 this.assetsLoader._assetsList["animals"][species];
 
             animalObj.setImage(animalSpriteMyAss["defaultImg"]);
-            // animalObj.setImage(animalSpriteMyAss["img"]);
 
             let spriteAnimationContainer = new SpriteAnimation(
                 animalSpriteMyAss["walking"],
@@ -280,11 +264,7 @@ export class GameManager {
         this.spawnAnimal(getRandomKeyFromObject(animalsConfiguration).species);
     }
 
-    spawn10RandomAnimals() {
-        this.spawnRandomAnimal();
-        this.spawnRandomAnimal();
-        this.spawnRandomAnimal();
-        this.spawnRandomAnimal();
+    spawn5RandomAnimals() {
         this.spawnRandomAnimal();
         this.spawnRandomAnimal();
         this.spawnRandomAnimal();
