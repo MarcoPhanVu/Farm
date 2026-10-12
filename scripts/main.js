@@ -46,10 +46,10 @@ const uiManager = new UIManager({
     onSellSelected: () => {
         FARM.sellSelectedObject();
         console.log("sellSelectedObject");
-    }
+    },
 });
 
-uiManager.setUpEventListeners()
+uiManager.setUpEventListeners();
 
 const FARM = new GameManager(assetsLoader, uiManager);
 
