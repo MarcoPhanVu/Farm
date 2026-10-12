@@ -1,7 +1,7 @@
 export const animalsConfiguration = {
     chicken: {
         species: "chicken",
-        size: { width: 80, height: 80 },
+        size: { width: 36, height: 36 },
         movingSpeed: { min: 50, max: 100 },
         seeRange: 240,
         buyValue: 100,
@@ -22,7 +22,7 @@ export const animalsConfiguration = {
     },
     duck: {
         species: "duck",
-        size: { width: 64, height: 64 },
+        size: { width: 48, height: 48 },
         movingSpeed: { min: 50, max: 100 },
         seeRange: 240,
         buyValue: 100,
@@ -60,7 +60,7 @@ export const animalsConfiguration = {
     },
     sheep: {
         species: "sheep",
-        size: { width: 160, height: 160 },
+        size: { width: 120, height: 120 },
         movingSpeed: { min: 32, max: 60 },
         seeRange: 240,
         buyValue: 125,
@@ -79,7 +79,7 @@ export const animalsConfiguration = {
     },
     sheep2: {
         species: "sheep2",
-        size: { width: 100, height: 100 },
+        size: { width: 92, height: 92 },
         movingSpeed: { min: 32, max: 60 },
         buyValue: 125,
         sellValue: 225,
@@ -138,11 +138,26 @@ export const interactablesConfiguration = {
     grain: {
         size: { width: 20, height: 20 },
         sprite: {
+            defaultImg: {
+                src: "../../assets/grain-idle-16x16.png",
+            },
             idle: {
                 src: "../../assets/grain-idle-16x16.png",
             },
             idle2: {
                 src: "../../assets/grain2-idle-16x16.png",
+            },
+        },
+    },
+
+    bone: {
+        size: { width: 20, height: 20 },
+        sprite: {
+            defaultImg: {
+                src: "../../assets/bone-idle-32x32.png",
+            },
+            idle: {
+                src: "../../assets/bone-idle-32x32.png",
             },
         },
     },

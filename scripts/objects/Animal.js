@@ -15,8 +15,7 @@ export class Animal extends GameObject {
     selfElapsedTime = RandomFromMinToMax(0, 10); // randomize
     currentActionTime = RandomFromMinToMax(4, 8);
     /**
-     * to keep the animal do current task unless called upon
-     *
+     * to keep the animal do current task unless be called upon
      * @type {double}
      */
     actionCoolDownTime = 0;
@@ -247,10 +246,10 @@ export class Animal extends GameObject {
 
                 this.targetedObject = chosenTarget;
 
-                if (chosenTarget == this) {
-                    console.log("can't choose self");
-                    this.targetedObject = null;
-                }
+                // if (chosenTarget == this) {
+                //     console.log("can't choose self");
+                //     this.targetedObject = null;
+                // }
 
                 this.actionCoolDownTime = 6;
             }

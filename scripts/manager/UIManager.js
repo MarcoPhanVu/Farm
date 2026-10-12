@@ -14,6 +14,7 @@ export class UIManager {
         this.moneyDisplay = document.getElementById("currentMoneyDisplay");
         this.eggDisplay = document.getElementById("currentEggDisplay");
         this.stickDisplay = document.getElementById("currentStickDisplay");
+        this.timeDisplay = document.getElementById("elapsedTimeDisplay");
 
         // Bottom Panel
         this.spawnAnimalBtn = document.getElementById("spawnAnimalBtn");
@@ -54,6 +55,7 @@ export class UIManager {
         this.moneyDisplay.innerText = resources.money;
         this.eggDisplay.innerText = resources.eggs;
         this.stickDisplay.innerText = resources.sticks;
+        this.timeDisplay.innerText = resources.elapsedTime;
     }
 
     buildPropertiesPanel(selectedObject) {
@@ -163,7 +165,6 @@ export class UIManager {
             "selected-actionCoolDownTime",
         );
 
-
         document
             .getElementById("deleteSelectedBtn")
             .addEventListener("click", () => {
@@ -204,7 +205,7 @@ export class UIManager {
             let inText = "";
             for (let animal of selectedObject.interactableTargetList) {
                 inText += animal.name + "__";
-                console.log(animal)
+                console.log(animal);
             }
             // this.callbacks.onToggleGameState()
             try {
@@ -221,8 +222,7 @@ export class UIManager {
         console.log("reaching set up");
 
         this.spawnAnimalBtn.addEventListener("click", () => {
-            this.callbacks.BuyRandomAnimal();
-            this.callbacks.currentMoney -= 30;
+            this.callbacks.onBuyRandomAnimal();
         });
 
         this.spawn5RandomAnimalsBtn.addEventListener("click", () => {

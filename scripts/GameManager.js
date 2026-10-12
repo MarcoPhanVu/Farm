@@ -18,14 +18,29 @@ import {
 import { animalNames } from "./config/animalNames.js";
 
 export class GameManager {
+    // Initial variables
     gameObjects = [];
 
     grainCount = 0;
+    boneCount = 0;
+
     currentMoney = 40;
     currentEgg = 70;
     currentStick = 90;
+    nextAnimalID = 0;
 
+    // Timer
     lastTime = 0;
+    totalElapsedTime = 0;
+    grainSpawnTimer = 0;
+    grassSpawnTimer = 0;
+    boneSpawnTimer = 0;
+
+    // Spawn Intervals
+    grainSpawnInterval = 4;
+    grassSpawnInterval = 8;
+    boneSpawnInterval = 4;
+
     gameState = "playing";
 
     hoveredObject = null;
@@ -33,6 +48,7 @@ export class GameManager {
     selectedObjectDOM = null;
 
     mouse = { x: 0, y: 0 };
+
     constructor(assetsLoader, UIManager) {
         this.assetsLoader = assetsLoader;
         this.ui = UIManager;
@@ -40,7 +56,6 @@ export class GameManager {
         this.gameCanvas = this.ui.gameCanvas;
         this.painter = this.gameCanvas.getContext("2d");
 
-        this.nextAnimalID = 0;
         this.animalsConfiguration = animalsConfiguration;
         this.animalNames = animalNames;
 
@@ -112,32 +127,61 @@ export class GameManager {
     }
 
     gameLoop(currentTime) {
-        let elapsedTime = currentTime - this.lastTime;
-        let deltaTime = elapsedTime / 1000;
+        let instantElapsedTime = currentTime - this.lastTime;
+        let deltaTime = instantElapsedTime / 1000;
         this.lastTime = currentTime;
+        this.totalElapsedTime += deltaTime; // prevent totalElapse keep increasing when tab is unfocus(requestAnimationFrame will keep on counting)
+
+        // spawn time counter
+        this.grainSpawnTimer += deltaTime;
+        this.grassSpawnTimer += deltaTime;
+        this.boneSpawnTimer += deltaTime;
 
         // Prevent huge jumps if tab was inactive(like spawning balls in physic engine)
         deltaTime = Math.min(deltaTime, 0.05);
 
         if (this.gameState === "playing") {
-            this.update(deltaTime, elapsedTime);
+            this.update(deltaTime);
         }
 
         this.render();
         requestAnimationFrame(this.gameLoop);
     }
 
-    update(deltaTime, elapsedTime) {
+    update(deltaTime) {
         this.ui.updatePropertiesPanel(this.selectedObject);
-        this.updateResourcesBar();
+        this.ui.updateResources({
+            money: this.currentMoney,
+            eggs: this.currentEgg,
+            sticks: this.currentStick,
+            elapsedTime: this.totalElapsedTime,
+        });
 
+        // Update all other objects in general
         for (let object of this.gameObjects) {
             object.update(deltaTime, this.gameCanvas, this.gameObjects);
         }
 
+        // Clear consumed/killed/destroyed objects
         this.gameObjects = this.gameObjects.filter(
             (object) => !object.consumed,
         );
+
+        // Spawn food every interval
+        if (this.grainSpawnTimer >= this.grainSpawnInterval) {
+            this.grainSpawnTimer -= this.grainSpawnInterval;
+            this.spawnManyGrains(3);
+            console.log("grains spawned");
+        }
+        if (this.grassSpawnTimer >= this.grassSpawnInterval) {
+            this.grassSpawnTimer -= this.grassSpawnInterval;
+            console.log("grass spawned");
+        }
+        if (this.boneSpawnTimer >= this.boneSpawnInterval) {
+            this.boneSpawnTimer -= this.boneSpawnInterval;
+            this.spawnManyBones(3);
+            console.log("bones spawned");
+        }
     }
 
     render() {
@@ -197,15 +241,6 @@ export class GameManager {
         });
 
         return sortedObjects;
-    }
-
-    updateResourcesBar() {
-        this.ui.updateResources({
-            money: this.currentMoney,
-            eggs: this.currentEgg,
-            sticks: this.currentStick,
-            elapsedTime: this.elapsedTime
-        });
     }
 
     togglePlaying() {
@@ -301,11 +336,24 @@ export class GameManager {
         this.deleteSelectedObject();
     }
 
+    /**
+     *
+     * @type {int} n: amount of grains per spawn
+     */
     spawnManyGrains(n) {
         for (let i = 0; i < n; i++) {
             this.spawnGrain(
-                RandomFromMinToMax(100, this.gameCanvas.width - 100),
-                RandomFromMinToMax(100, this.gameCanvas.height - 100),
+                RandomFromMinToMax(50, this.gameCanvas.width - 50),
+                RandomFromMinToMax(50, this.gameCanvas.height - 50),
+            );
+        }
+    }
+
+    spawnManyBones(n) {
+        for (let i = 0; i < n; i++) {
+            this.spawnBone(
+                RandomFromMinToMax(50, this.gameCanvas.width - 50),
+                RandomFromMinToMax(50, this.gameCanvas.height - 50),
             );
         }
     }
@@ -325,6 +373,23 @@ export class GameManager {
         );
 
         this.gameObjects.push(smallGrainPile);
+    }
+
+    spawnBone(posX, posY) {
+        const pieceOfBone = new GameObject(
+            "randomID",
+            `bone ${this.boneCount++}`,
+            {
+                x: posX,
+                y: posY,
+            },
+            interactablesConfiguration.bone,
+        );
+        pieceOfBone.setImage(
+            this.assetsLoader._assetsList["interactables"]["bone"],
+        );
+
+        this.gameObjects.push(pieceOfBone);
     }
 
     drawingLessons() {
@@ -373,8 +438,6 @@ export class GameManager {
             // this.spawnAnimal("duck");
             this.spawnAnimal("dog");
         }
-
-        this.spawnManyGrains(5);
 
         // this.drawingLessons();
     }
