@@ -24,28 +24,25 @@ const uiManager = new UIManager({
 
     onBuy5RandomAnimals: () => {
         FARM.spawn5RandomAnimals();
-        console.log("spawn5RandomAnimals");
+        console.assert("spawn5RandomAnimals");
         FARM.currentMoney -= 150;
     },
 
     onBuyRandomAnimal: () => {
         FARM.spawnRandomAnimal();
-        console.log("spawnRandomAnimal");
     },
 
     onToggleGameState: () => {
         FARM.togglePlaying();
-        console.log("togglePlaying", FARM.gameState);
+        console.assert("togglePlaying", FARM.gameState);
     },
 
     onDeleteSelected: () => {
         FARM.deleteSelectedObject();
-        console.log("deleteSelectedObject");
     },
 
     onSellSelected: () => {
         FARM.sellSelectedObject();
-        console.log("sellSelectedObject");
     },
 });
 

@@ -9,7 +9,7 @@ export class Animal extends GameObject {
      * list of all interactable GameObjects
      * @type {GameObject}
      */
-    interactabletargetList = [];
+    interactableTargetList = [];
     targetedObject = null;
 
     selfElapsedTime = RandomFromMinToMax(0, 10); // randomize
@@ -193,14 +193,14 @@ export class Animal extends GameObject {
 
             if (
                 dist <= seeRange &&
-                !this.interactabletargetList.includes(object) &&
+                !this.interactableTargetList.includes(object) &&
                 this != object
             ) {
-                this.interactabletargetList.push(object);
+                this.interactableTargetList.push(object);
             }
         }
 
-        this.interactabletargetList = this.interactabletargetList.filter(
+        this.interactableTargetList = this.interactableTargetList.filter(
             (target) => {
                 // clear out of range targets
                 let dist = Math.sqrt(
@@ -224,7 +224,7 @@ export class Animal extends GameObject {
             this.species.includes("duck")
         ) {
             if (
-                this.interactabletargetList.length > 0 &&
+                this.interactableTargetList.length > 0 &&
                 this.actionCoolDownTime <= 0
             ) {
                 this.targetedObject = this.getClosestTarget("grain");
@@ -233,14 +233,14 @@ export class Animal extends GameObject {
 
         if (this.species.includes("dog")) {
             if (
-                this.interactabletargetList.length > 0 &&
+                this.interactableTargetList.length > 0 &&
                 this.actionCoolDownTime <= 0
             ) {
                 let chosenTarget =
-                    this.interactabletargetList[
+                    this.interactableTargetList[
                         RandomFromMinToMax(
                             0,
-                            this.interactabletargetList.length - 1,
+                            this.interactableTargetList.length - 1,
                         )
                     ];
 
@@ -265,7 +265,7 @@ export class Animal extends GameObject {
         let closestTarget = null;
         let closestDistance = Infinity;
 
-        for (let target of this.interactabletargetList) {
+        for (let target of this.interactableTargetList) {
             if (!target.name.includes(targetNameSpace)) {
                 continue;
             }

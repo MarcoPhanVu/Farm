@@ -165,7 +165,6 @@ export class GameObject {
 
     // Getters
     getBottomY() {
-        // console.log(this);
         // Calculating actual object position and use it to calculate render order
         return this.position.y + this.size.height;
     }
