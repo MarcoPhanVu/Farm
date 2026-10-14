@@ -136,7 +136,7 @@ export const stationariesConfiguration = {
 
 export const interactablesConfiguration = {
     grain: {
-        size: { width: 20, height: 20 },
+        size: { width: 40, height: 40 },
         sprite: {
             defaultImg: {
                 src: "../../assets/grain-idle-16x16.png",
@@ -151,7 +151,7 @@ export const interactablesConfiguration = {
     },
 
     bone: {
-        size: { width: 20, height: 20 },
+        size: { width: 40, height: 40 },
         sprite: {
             defaultImg: {
                 src: "../../assets/bone-idle-32x32.png",

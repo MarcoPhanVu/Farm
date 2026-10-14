@@ -32,14 +32,14 @@ export class GameManager {
     // Timer
     lastTime = 0;
     totalElapsedTime = 0;
-    grainSpawnTimer = 0;
-    grassSpawnTimer = 0;
-    boneSpawnTimer = 0;
+    grainSpawnTimer = 6;
+    grassSpawnTimer = 6;
+    boneSpawnTimer = 6;
 
     // Spawn Intervals
-    grainSpawnInterval = 4;
-    grassSpawnInterval = 8;
-    boneSpawnInterval = 4;
+    grainSpawnInterval = 8;
+    grassSpawnInterval = 12;
+    boneSpawnInterval = 16;
 
     gameState = "playing";
 
@@ -369,10 +369,22 @@ export class GameManager {
             interactablesConfiguration.grain,
         );
         smallGrainPile.setImage(
-            this.assetsLoader._assetsList["interactables"]["grain"],
+            this.assetsLoader._assetsList["interactables"]["grain"]["idle"],
         );
 
         this.gameObjects.push(smallGrainPile);
+
+        const grainSprite =
+            this.assetsLoader._assetsList.interactables.grain.defaultImg;
+
+        console.log("grain sprite:", grainSprite);
+        console.log("image:", grainSprite.spriteImage);
+        console.log("loaded:", grainSprite.spriteImage.complete);
+        console.log(
+            "size:",
+            grainSprite.spriteImage.naturalWidth,
+            grainSprite.spriteImage.naturalHeight,
+        );
     }
 
     spawnBone(posX, posY) {
@@ -386,43 +398,23 @@ export class GameManager {
             interactablesConfiguration.bone,
         );
         pieceOfBone.setImage(
-            this.assetsLoader._assetsList["interactables"]["bone"],
+            this.assetsLoader._assetsList["interactables"]["bone"][
+                "defaultImg"
+            ],
         );
 
         this.gameObjects.push(pieceOfBone);
-    }
 
-    drawingLessons() {
-        let ptn = this.painter; // requestAnimationFrame(this.gameLoop);
-
-        ptn.fillStyle = "salmon";
-        ptn.font = "normal 120px sans-serif";
-        ptn.fillText("something", 500, 500);
-        ptn.moveTo(560, 540);
-        ptn.lineTo(680, 590);
-        ptn.lineTo(630, 710);
-        ptn.lineTo(510, 660);
-        ptn.fill();
-        // this.gameState = "pause";
-
-        ptn.beginPath();
-        ptn.strokeStyle = "lightgray";
-        for (let i = 0; i < 16; i++) {
-            ptn.moveTo(500 + i * 20, 500 + 0);
-            ptn.lineTo(500 + i * 20, 500 + 300);
-            ptn.moveTo(500 + 0, 500 + i * 20);
-            ptn.lineTo(500 + 300, 500 + i * 20);
-            ptn.stroke();
-        }
-
-        ptn.beginPath();
-        ptn.strokeStyle = "lightblue";
-        ptn.lineWidth = 30;
-        ptn.lineCap = "round";
-        ptn.lineCap = "square";
-        ptn.moveTo(800, 500);
-        ptn.lineTo(900, 550);
-        ptn.stroke();
+        const boneSprite =
+            this.assetsLoader._assetsList.interactables.bone.defaultImg;
+        console.log("boneSprite:", boneSprite);
+        console.log("image:", boneSprite.spriteImage);
+        console.log("loaded:", boneSprite.spriteImage.complete);
+        console.log(
+            "size:",
+            boneSprite.spriteImage.naturalWidth,
+            boneSprite.spriteImage.naturalHeight,
+        );
     }
 
     start() {
@@ -438,7 +430,5 @@ export class GameManager {
             // this.spawnAnimal("duck");
             this.spawnAnimal("dog");
         }
-
-        // this.drawingLessons();
     }
 }

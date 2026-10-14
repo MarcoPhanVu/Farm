@@ -349,21 +349,4 @@ export class Animal extends GameObject {
             this.setAnimation(this.animations);
         }
     }
-
-    setVelocity(moveXVal, moveYVal) {
-        this.velocity = { moveX: moveXVal, moveY: moveYVal };
-    }
-
-    setImage(imgConfig) {
-        try {
-            this.idleImage = imgConfig.image;
-            this.spriteDimension = imgConfig.dimension;
-        } catch (error) {
-            console.log("Undefine sprite Image of: ", this);
-        }
-    }
-
-    setAnimation(animation) {
-        this.animation = animation;
-    }
 }
