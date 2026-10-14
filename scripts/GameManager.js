@@ -403,14 +403,6 @@ export class GameManager {
 
         const boneSprite =
             this.assetsLoader._assetsList.interactables.bone.defaultImg;
-        console.log("boneSprite:", boneSprite);
-        console.log("image:", boneSprite.spriteImage);
-        console.log("loaded:", boneSprite.spriteImage.complete);
-        console.log(
-            "size:",
-            boneSprite.spriteImage.naturalWidth,
-            boneSprite.spriteImage.naturalHeight,
-        );
     }
 
     start() {

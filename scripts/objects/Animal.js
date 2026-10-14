@@ -246,11 +246,6 @@ export class Animal extends GameObject {
 
                 this.targetedObject = chosenTarget;
 
-                // if (chosenTarget == this) {
-                //     console.log("can't choose self");
-                //     this.targetedObject = null;
-                // }
-
                 this.actionCoolDownTime = 6;
             }
         }
