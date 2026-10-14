@@ -34,6 +34,7 @@ export class Animal extends GameObject {
         super(id, name, position, animalConfig);
         this.animations = animalAnimationCollection;
 
+        this.config.seeRange = this.config.seeRange * 240;
         this.setState("walkingRight");
         this.species = animalConfig.species;
     }

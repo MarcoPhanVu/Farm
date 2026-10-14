@@ -32,14 +32,14 @@ export class GameManager {
     // Timer
     lastTime = 0;
     totalElapsedTime = 0;
-    grainSpawnTimer = 0;
-    grassSpawnTimer = 0;
-    boneSpawnTimer = 0;
+    grainSpawnTimer = 6;
+    grassSpawnTimer = 6;
+    boneSpawnTimer = 6;
 
     // Spawn Intervals
-    grainSpawnInterval = 4;
-    grassSpawnInterval = 8;
-    boneSpawnInterval = 4;
+    grainSpawnInterval = 8;
+    grassSpawnInterval = 12;
+    boneSpawnInterval = 16;
 
     gameState = "playing";
 
@@ -292,6 +292,8 @@ export class GameManager {
             animalObj.setAnimation(spriteAnimationContainer);
 
             this.gameObjects.push(animalObj);
+
+            return animalObj
         }
     }
 
@@ -433,12 +435,16 @@ export class GameManager {
 
         this.ui.populateStoreBar(this.animalsConfiguration, this.assetsLoader);
 
-        for (let i = 0; i < 8; i++) {
-            // this.spawnAnimal("chicken");
-            // this.spawnAnimal("duck");
-            this.spawnAnimal("dog");
-        }
+        let newestDawg = null;
 
-        // this.drawingLessons();
+        for (let i = 0; i < 3; i++) {
+            newestDawg = this.spawnAnimal("dog");
+            console.log(newestDawg.name)
+        }
+        
+        // newestDawg.selected = true;
+        this.ui.buildPropertiesPanel(newestDawg);
+        console.log(newestDawg);
+        // this.gameState = "paused"
     }
 }
