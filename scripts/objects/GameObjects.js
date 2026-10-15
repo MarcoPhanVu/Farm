@@ -107,8 +107,8 @@ export class GameObject {
 
                 0,
                 0,
-                this.size.width,
-                this.size.height,
+                this.spriteDimension.width,
+                this.spriteDimension.height,
 
                 this.position.x - this.size.width / 2,
                 this.position.y - this.size.height / 2,
@@ -165,7 +165,6 @@ export class GameObject {
 
     // Getters
     getBottomY() {
-        // console.log(this);
         // Calculating actual object position and use it to calculate render order
         return this.position.y + this.size.height;
     }
@@ -197,12 +196,13 @@ export class GameObject {
     }
 
     setImage(imgConfig) {
-        try {
-            this.idleImage = imgConfig.image;
-            this.spriteDimension = imgConfig.dimension;
-        } catch (error) {
-            console.log("Undefine sprite Image of: ", this);
+        if (!imgConfig?.spriteImage) {
+            console.error("invalid image config:", imgConfig);
+            return;
         }
+
+        this.idleImage = imgConfig.spriteImage;
+        this.spriteDimension = imgConfig.spriteSize;
     }
 
     setAnimation(animation) {

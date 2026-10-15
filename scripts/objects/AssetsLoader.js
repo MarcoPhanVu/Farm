@@ -60,5 +60,6 @@ export class AssetsLoader {
                 }
             }
         }
+        console.log(this._assetsList);
     }
 }

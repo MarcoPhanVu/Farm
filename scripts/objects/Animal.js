@@ -9,7 +9,7 @@ export class Animal extends GameObject {
      * list of all interactable GameObjects
      * @type {GameObject}
      */
-    interactabletargetList = [];
+    interactableTargetList = [];
     targetedObject = null;
 
     selfElapsedTime = RandomFromMinToMax(0, 10); // randomize
@@ -194,14 +194,14 @@ export class Animal extends GameObject {
 
             if (
                 dist <= seeRange &&
-                !this.interactabletargetList.includes(object) &&
+                !this.interactableTargetList.includes(object) &&
                 this != object
             ) {
-                this.interactabletargetList.push(object);
+                this.interactableTargetList.push(object);
             }
         }
 
-        this.interactabletargetList = this.interactabletargetList.filter(
+        this.interactableTargetList = this.interactableTargetList.filter(
             (target) => {
                 // clear out of range targets
                 let dist = Math.sqrt(
@@ -225,7 +225,7 @@ export class Animal extends GameObject {
             this.species.includes("duck")
         ) {
             if (
-                this.interactabletargetList.length > 0 &&
+                this.interactableTargetList.length > 0 &&
                 this.actionCoolDownTime <= 0
             ) {
                 this.targetedObject = this.getClosestTarget("grain");
@@ -234,23 +234,18 @@ export class Animal extends GameObject {
 
         if (this.species.includes("dog")) {
             if (
-                this.interactabletargetList.length > 0 &&
+                this.interactableTargetList.length > 0 &&
                 this.actionCoolDownTime <= 0
             ) {
                 let chosenTarget =
-                    this.interactabletargetList[
+                    this.interactableTargetList[
                         RandomFromMinToMax(
                             0,
-                            this.interactabletargetList.length - 1,
+                            this.interactableTargetList.length - 1,
                         )
                     ];
 
                 this.targetedObject = chosenTarget;
-
-                // if (chosenTarget == this) {
-                //     console.log("can't choose self");
-                //     this.targetedObject = null;
-                // }
 
                 this.actionCoolDownTime = 6;
             }
@@ -266,7 +261,7 @@ export class Animal extends GameObject {
         let closestTarget = null;
         let closestDistance = Infinity;
 
-        for (let target of this.interactabletargetList) {
+        for (let target of this.interactableTargetList) {
             if (!target.name.includes(targetNameSpace)) {
                 continue;
             }
@@ -349,22 +344,5 @@ export class Animal extends GameObject {
         if (state.includes("walking")) {
             this.setAnimation(this.animations);
         }
-    }
-
-    setVelocity(moveXVal, moveYVal) {
-        this.velocity = { moveX: moveXVal, moveY: moveYVal };
-    }
-
-    setImage(imgConfig) {
-        try {
-            this.idleImage = imgConfig.image;
-            this.spriteDimension = imgConfig.dimension;
-        } catch (error) {
-            console.log("Undefine sprite Image of: ", this);
-        }
-    }
-
-    setAnimation(animation) {
-        this.animation = animation;
     }
 }

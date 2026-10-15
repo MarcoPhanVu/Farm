@@ -36,23 +36,18 @@ export class SpriteAnimation {
         let sourceX = column * this.spriteWidth;
         let sourceY = row * this.spriteHeight;
 
-        try {
-            ctx.drawImage(
-                this.spriteImage,
+        ctx.drawImage(
+            this.spriteImage,
 
-                sourceX,
-                sourceY,
-                this.spriteWidth,
-                this.spriteHeight,
+            sourceX,
+            sourceY,
+            this.spriteWidth,
+            this.spriteHeight,
 
-                posX,
-                posY,
-                objWidth,
-                objHeight,
-            );
-        } catch (error) {
-            console.log("Error:", error);
-            console.log("Name");
-        }
+            posX,
+            posY,
+            objWidth,
+            objHeight,
+        );
     }
 }

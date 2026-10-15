@@ -32,6 +32,8 @@ export class GameManager {
     // Timer
     lastTime = 0;
     totalElapsedTime = 0;
+    properyUpdateTimer = 0;
+
     grainSpawnTimer = 6;
     grassSpawnTimer = 6;
     boneSpawnTimer = 6;
@@ -129,16 +131,11 @@ export class GameManager {
     gameLoop(currentTime) {
         let instantElapsedTime = currentTime - this.lastTime;
         let deltaTime = instantElapsedTime / 1000;
-        this.lastTime = currentTime;
-        this.totalElapsedTime += deltaTime; // prevent totalElapse keep increasing when tab is unfocus(requestAnimationFrame will keep on counting)
-
-        // spawn time counter
-        this.grainSpawnTimer += deltaTime;
-        this.grassSpawnTimer += deltaTime;
-        this.boneSpawnTimer += deltaTime;
 
         // Prevent huge jumps if tab was inactive(like spawning balls in physic engine)
         deltaTime = Math.min(deltaTime, 0.05);
+
+        this.lastTime = currentTime;
 
         if (this.gameState === "playing") {
             this.update(deltaTime);
@@ -149,13 +146,24 @@ export class GameManager {
     }
 
     update(deltaTime) {
-        this.ui.updatePropertiesPanel(this.selectedObject);
+        this.properyUpdateTimer += deltaTime;
+        if (this.properyUpdateTimer >= 0.2) {
+            this.ui.updatePropertiesPanel(this.selectedObject);
+            this.properyUpdateTimer -= 0.2;
+        }
+
+        this.totalElapsedTime += deltaTime; // prevent totalElapse keep increasing when tab is unfocus(requestAnimationFrame will keep on counting)
         this.ui.updateResources({
             money: this.currentMoney,
             eggs: this.currentEgg,
             sticks: this.currentStick,
             elapsedTime: this.totalElapsedTime,
         });
+
+        // spawn time counter
+        this.grainSpawnTimer += deltaTime;
+        this.grassSpawnTimer += deltaTime;
+        this.boneSpawnTimer += deltaTime;
 
         // Update all other objects in general
         for (let object of this.gameObjects) {
@@ -171,16 +179,13 @@ export class GameManager {
         if (this.grainSpawnTimer >= this.grainSpawnInterval) {
             this.grainSpawnTimer -= this.grainSpawnInterval;
             this.spawnManyGrains(3);
-            console.log("grains spawned");
         }
         if (this.grassSpawnTimer >= this.grassSpawnInterval) {
             this.grassSpawnTimer -= this.grassSpawnInterval;
-            console.log("grass spawned");
         }
         if (this.boneSpawnTimer >= this.boneSpawnInterval) {
             this.boneSpawnTimer -= this.boneSpawnInterval;
             this.spawnManyBones(3);
-            console.log("bones spawned");
         }
     }
 
@@ -254,7 +259,7 @@ export class GameManager {
         let animalConfig = this.animalsConfiguration[species];
 
         if (!animalConfig) {
-            console.log(species, "is not exist");
+            console.error(species, "is not exist");
         } else {
             let currentID = this.nextAnimalID++;
             let name = this.animalNames.pop();
@@ -316,7 +321,7 @@ export class GameManager {
             this.gameObjects.splice(index, 1);
         }
 
-        console.log("obj removed");
+        console.error("obj removed");
     }
 
     deleteSelectedObject() {
@@ -371,10 +376,13 @@ export class GameManager {
             interactablesConfiguration.grain,
         );
         smallGrainPile.setImage(
-            this.assetsLoader._assetsList["interactables"]["grain"],
+            this.assetsLoader._assetsList["interactables"]["grain"]["idle"],
         );
 
         this.gameObjects.push(smallGrainPile);
+
+        const grainSprite =
+            this.assetsLoader._assetsList.interactables.grain.defaultImg;
     }
 
     spawnBone(posX, posY) {
@@ -388,43 +396,15 @@ export class GameManager {
             interactablesConfiguration.bone,
         );
         pieceOfBone.setImage(
-            this.assetsLoader._assetsList["interactables"]["bone"],
+            this.assetsLoader._assetsList["interactables"]["bone"][
+                "defaultImg"
+            ],
         );
 
         this.gameObjects.push(pieceOfBone);
-    }
 
-    drawingLessons() {
-        let ptn = this.painter; // requestAnimationFrame(this.gameLoop);
-
-        ptn.fillStyle = "salmon";
-        ptn.font = "normal 120px sans-serif";
-        ptn.fillText("something", 500, 500);
-        ptn.moveTo(560, 540);
-        ptn.lineTo(680, 590);
-        ptn.lineTo(630, 710);
-        ptn.lineTo(510, 660);
-        ptn.fill();
-        // this.gameState = "pause";
-
-        ptn.beginPath();
-        ptn.strokeStyle = "lightgray";
-        for (let i = 0; i < 16; i++) {
-            ptn.moveTo(500 + i * 20, 500 + 0);
-            ptn.lineTo(500 + i * 20, 500 + 300);
-            ptn.moveTo(500 + 0, 500 + i * 20);
-            ptn.lineTo(500 + 300, 500 + i * 20);
-            ptn.stroke();
-        }
-
-        ptn.beginPath();
-        ptn.strokeStyle = "lightblue";
-        ptn.lineWidth = 30;
-        ptn.lineCap = "round";
-        ptn.lineCap = "square";
-        ptn.moveTo(800, 500);
-        ptn.lineTo(900, 550);
-        ptn.stroke();
+        const boneSprite =
+            this.assetsLoader._assetsList.interactables.bone.defaultImg;
     }
 
     start() {
