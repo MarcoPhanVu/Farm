@@ -1,4 +1,6 @@
 export class UIManager {
+    previousPropertyValues = {};
+
     constructor(callbacks) {
         this.callbacks = callbacks;
         this.gameCanvas = document.getElementById("gameCanvas");
@@ -55,7 +57,7 @@ export class UIManager {
         this.moneyDisplay.innerText = resources.money;
         this.eggDisplay.innerText = resources.eggs;
         this.stickDisplay.innerText = resources.sticks;
-        this.timeDisplay.innerText = resources.elapsedTime;
+        this.timeDisplay.innerText = resources.elapsedTime.toPrecision(2) + "s";
     }
 
     buildPropertiesPanel(selectedObject) {
@@ -70,38 +72,34 @@ export class UIManager {
             '<button id="deleteSelectedBtn" class="simpleBtn">Delete</button>' +
             `<button id="sellSelectedBtn" class="simpleBtn">Sell for ${selectedObject.sellValue} </button>`;
 
-        // console.log(JSON.stringify(selectedObject.animation));
-
         let propertiesHTML = header;
         const unneededProperties = [
-        "debugColor",
-        // "velocity",
-        // "state",
-        "layer",
-        "buyValue",
-        "sellValue",
-        "consumed",,
-        "idleImage",
-        "spriteDimension",
-        "animation",
-        "hovered",
-        "selected",
-        // "selfElapsedTime",
-        "id",
-        "name",
-        // "position",
-        // "size",
-        "isChangingDirection",
-        "interactabletargetList",
-        "targetedObject",
-        "currentActionTime",
-        "actionCoolDownTime",
-        "species",
-        // "config",
-        // "animations",
+            "id",
+            // "position",
+            "size",
+            // "velocity",
+            "layer",
+            "sellValue",
+            "state",
+            "buyValue",
+            "idleImage",
+            "animation",
+            "hovered",
+            // "selfElapsedTime",
+            "selected",
+            "isChangingDirection",
+            "spriteSize",
+            "boundTouched",
+            "config",
+            // "targetedObject",
+            "currentActionTime",
+            // species,
+            "debugColor",
+            "animations",
+            "spriteDimension",
+            "consumed",
         ];
 
-        // for properties with more than one value, it'll return [Object object]. Will need further elaboration later
         for (let keyName of Object.keys(selectedObject)) {
             if (unneededProperties.includes(keyName)) {
                 continue;
@@ -144,28 +142,23 @@ export class UIManager {
 
         this.propertiesPanel.innerHTML = propertiesHTML + footer;
 
-        // this.DOMSHIT = new Object();
+        // Update live properties
+        let liveProperties = [
+            "position",
+            "velocity",
+            "selfElapsedTime",
+            "interactableTargetList",
+            "targetedObject",
+            "actionCoolDownTime",
+        ];
+
         this.DOMSHIT = {};
 
-        this.DOMSHIT.position = document.getElementById("selected-position");
-
-        this.DOMSHIT.velocity = document.getElementById("selected-velocity");
-
-        this.DOMSHIT.selfElapsedTime = document.getElementById(
-            "selected-selfElapsedTime",
-        );
-
-        this.DOMSHIT.interactableTargetList = document.getElementById(
-            "selected-interactableTargetList",
-        );
-
-        this.DOMSHIT.targetedObject = document.getElementById(
-            "selected-targetedObject",
-        );
-
-        this.DOMSHIT.actionCoolDownTime = document.getElementById(
-            "selected-actionCoolDownTime",
-        );
+        for (let property of liveProperties) {
+            this.DOMSHIT[property] = document.getElementById(
+                `selected-${property}`,
+            );
+        }
 
         document
             .getElementById("deleteSelectedBtn")
@@ -183,46 +176,56 @@ export class UIManager {
     }
 
     updatePropertiesPanel(selectedObject) {
-        if (
-            selectedObject == null
-            // selectedObject.position == null ||
-            // selectedObject.velocity == null
-        ) {
+        if (selectedObject == null) {
             return;
         }
 
-        // console.log("thisDOMSHIT:", this.DOMSHIT);
-        // console.log("selectedObject:", selectedObject);
-        // this.callbacks.onToggleGameState();
-        this.DOMSHIT.position.innerHTML = `[x: ${Math.floor(selectedObject.position.x)}] [y: ${Math.floor(selectedObject.position.y)}]`;
-
-        this.DOMSHIT.velocity.innerHTML = `[moveX: ${selectedObject.velocity.moveX}] [moveY: ${selectedObject.velocity.moveY}]`;
-
-        this.DOMSHIT.selfElapsedTime.innerHTML = `elapsedTime: ${selectedObject.selfElapsedTime.toPrecision(2)}`;
-
-        // console.log(selectedObject)
-        // this.callbacks.onToggleGameState()
-
-        if (selectedObject.type == "animal") {
-            let inText = "";
-            for (let animal of selectedObject.interactableTargetList) {
-                inText += animal.name + "__";
-                console.log(animal);
-            }
-            // this.callbacks.onToggleGameState()
-            try {
-                this.DOMSHIT.actionCoolDownTime.innerHTML = `actionCoolDownTime: ${selectedObject.actionCoolDownTime.toPrecision(2)}`;
-                this.DOMSHIT.interactableTargetList.innerHTML = `interactableTargetList: ${inText}`;
-                this.DOMSHIT.targetedObject.innerHTML = `targetedObject: ${selectedObject.targetedObject.name}`;
-            } catch (error) {
-                console.log(error);
-            }
+        if (selectedObject.constructor.name != "Animal") {
+            return;
         }
+
+        let liveValues = {
+            position:
+                `Position: [x: ${Math.floor(selectedObject.position.x)}]` +
+                `[y: ${Math.floor(selectedObject.position.y)}]`,
+            velocity:
+                `Velocity: [moveX: ${Math.floor(selectedObject.velocity.moveX)}]` +
+                `[moveY: ${Math.floor(selectedObject.velocity.moveY)}]`,
+            selfElapsedTime:
+                "selfElapsedTime: " +
+                selectedObject.selfElapsedTime.toPrecision(2),
+            actionCoolDownTime:
+                "actionCoolDownTime: " +
+                selectedObject.actionCoolDownTime.toPrecision(2),
+        };
+
+        let interactableTargetListDisplayValue = "interactableTargetList: ";
+
+        for (let target of selectedObject.interactableTargetList) {
+            interactableTargetListDisplayValue += `${target.name}__`;
+        }
+
+        let targetedObjectDisplayValue = "targetedObject: ";
+        if (selectedObject.targetedObject != null) {
+            targetedObjectDisplayValue += selectedObject.targetedObject.name;
+        } else {
+            targetedObjectDisplayValue += "nothing";
+        }
+
+        for (let [key, value] of Object.entries(liveValues)) {
+            if (this.previousPropertyValues[key] == value) {
+                // ONly update if the value changed
+                continue;
+            }
+
+            this.DOMSHIT[key].innerText = value;
+            this.previousPropertyValues[key] = value;
+        }
+
+        // this.callbacks.onToggleGameState();
     }
 
     setUpEventListeners() {
-        console.log("reaching set up");
-
         this.spawnAnimalBtn.addEventListener("click", () => {
             this.callbacks.onBuyRandomAnimal();
         });
