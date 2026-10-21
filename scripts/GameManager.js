@@ -32,6 +32,8 @@ export class GameManager {
     // Timer
     lastTime = 0;
     totalElapsedTime = 0;
+    properyUpdateTimer = 0;
+
     grainSpawnTimer = 6;
     grassSpawnTimer = 6;
     boneSpawnTimer = 6;
