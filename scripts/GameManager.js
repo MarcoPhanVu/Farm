@@ -77,7 +77,6 @@ export class GameManager {
 
     resizeCanvas() {
         const parent = this.gameCanvas.parentElement;
-        console.log(parent);
 
         this.gameCanvas.width = parent.clientWidth;
         this.gameCanvas.height = parent.clientHeight;
@@ -204,7 +203,7 @@ export class GameManager {
             if (this.grabbedObject != null) {
                 this.grabbedObject.position = this.mousePosition;
             } else {
-                console.log("nothing grabbed for now");
+                // console.log("nothing grabbed for now");
             }
         });
 
