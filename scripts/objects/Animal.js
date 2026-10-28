@@ -150,19 +150,19 @@ export class Animal extends GameObject {
     debugVisualization(context) {
         super.debugVisualization(context);
 
-        // render seeing range
-        context.beginPath();
-        context.arc(
-            this.position.x,
-            this.position.y,
-            this.config.seeRange,
-            0,
-            Math.PI * 2,
-        );
-        context.fillStyle = this.debugColor + "40";
-        context.fillStyle = "#ffffff10";
-        context.fill();
-        context.closePath();
+        // // render seeing range
+        // context.beginPath();
+        // context.arc(
+        //     this.position.x,
+        //     this.position.y,
+        //     this.config.seeRange,
+        //     0,
+        //     Math.PI * 2,
+        // );
+        // context.fillStyle = this.debugColor + "40";
+        // // context.fillStyle = "#ffffff10";
+        // context.fill();
+        // context.closePath();
 
         // render target chosen path
         if (this.targetedObject != null) {
@@ -251,7 +251,7 @@ export class Animal extends GameObject {
         }
 
         if (this.targetedObject) {
-            this.targetedObject.selected = true;
+            // this.targetedObject.selected = true;
             this.goTowards(this.targetedObject);
         }
     }
@@ -282,7 +282,7 @@ export class Animal extends GameObject {
     eatObject(object) {
         object.consumed = true;
         this.targetedObject = null;
-        console.log(this.name, "ate", object.name);
+        // console.log(this.name, "ate", object.name);
     }
 
     goTowards(object) {

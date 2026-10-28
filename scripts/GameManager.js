@@ -47,9 +47,10 @@ export class GameManager {
 
     hoveredObject = null;
     selectedObject = null;
+    grabbedObject = null;
     selectedObjectDOM = null;
 
-    mouse = { x: 0, y: 0 };
+    mousePosition = { x: 0, y: 0 };
 
     constructor(assetsLoader, UIManager) {
         this.assetsLoader = assetsLoader;
@@ -87,7 +88,7 @@ export class GameManager {
 
             for (let obj of objsList) {
                 // need to find a more optimal way to deal with
-                if (obj.containsPoints(this.mouse.x, this.mouse.y)) {
+                if (obj.containsPoints(this.mousePosition.x, this.mousePosition.y)) {
                     this.hoveredObject = obj;
                     break;
                 }
@@ -107,7 +108,7 @@ export class GameManager {
             this.selectedObject = null; //always one selected at a time
 
             for (let obj of objsList) {
-                if (obj.containsPoints(this.mouse.x, this.mouse.y)) {
+                if (obj.containsPoints(this.mousePosition.x, this.mousePosition.y)) {
                     this.selectedObject = obj;
                     break;
                 }
@@ -117,8 +118,33 @@ export class GameManager {
                 obj.selected = obj === this.selectedObject;
             }
 
-            this.spawnGrain(this.mouse.x, this.mouse.y);
+            this.spawnGrain(this.mousePosition.x, this.mousePosition.y);
             this.ui.buildPropertiesPanel(this.selectedObject);
+        });
+
+                // Select Objects
+        this.gameCanvas.addEventListener("mousedown", (event) => {
+            this.getMousePosition(event);
+            const objsList = this.getObjectsFromFrontToBack();
+
+            console.log("Grabbing")
+            console.log(this.mousePosition)
+
+            this.grabbedObject = null; //always one selected at a time
+
+            for (let obj of objsList) {
+                if (obj.containsPoints(this.mousePosition.x, this.mousePosition.y)) {
+                    this.grabbedObject = obj;
+                    break;
+                }
+            }
+
+            for (let obj of this.gameObjects) {
+                obj.selected = obj === this.grabbedObject;
+            }
+
+            this.grabbedObject.position = this.mousePosition;
+            this.grabbedObject.velocity = {moveX: 0, moveY: 0};
         });
     }
 
@@ -202,8 +228,8 @@ export class GameManager {
         this.painter.fillStyle = "white";
         let cursorSize = 12;
         this.painter.fillRect(
-            this.mouse.x - cursorSize / 2,
-            this.mouse.y - cursorSize / 2,
+            this.mousePosition.x - cursorSize / 2,
+            this.mousePosition.y - cursorSize / 2,
             cursorSize,
             cursorSize,
         );
@@ -231,7 +257,7 @@ export class GameManager {
             y: event.clientY - rect.top + 6,
         };
 
-        this.mouse = mousePos;
+        this.mousePosition = mousePos;
 
         return mousePos;
     }

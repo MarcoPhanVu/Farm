@@ -10,7 +10,7 @@ body {
     padding: 0;
     width: 100%;
     height: 100%;
-    /* overflow: hidden; */
+    overflow: hidden;
 }
 
 #app {
@@ -19,15 +19,23 @@ body {
 
     display: grid;
 
-    grid-template-columns: 80px 1fr 240px;
-    grid-template-rows: 60px 1fr 80px;
-
+    grid-template-columns: 80px minmax(0, 1fr) 240px;
+    grid-template-rows: 60px minmax(0, 1fr) 120px;
+    
     grid-template-areas:
-        "topPanel topPanel topPanel"
-        "toolPanel canvas propertiesPanel"
-        "bottomPanel bottomPanel bottomPanel";
+    "topPanel topPanel topPanel"
+    "toolPanel canvas propertiesPanel"
+    "bottomPanel bottomPanel bottomPanel";
+    
+    /* grid-template-columns: 1fr; */
+    /* grid-template-areas:
+        "topPanel"
+        "canvas"
+        "bottomPanel"; */
 
     /* background-color: bisque; */
+
+    transition: 0.2s ease;
 }
 
 .simpleBtn {
@@ -114,22 +122,32 @@ body {
 #bottomPanel {
     grid-area: bottomPanel;
     background-color: rgb(100, 100, 120);
-
+    display: flex;
     padding: 12px;
+    overflow-x: auto;
+}
+
+#bottomPanel > .devButtons {
+    display: none;
 }
 
 .animalCard {
     margin: 0 8px;
     min-width: 80px;
-    min-height: 100px;
+    min-height: 80px;
+    font-size: 12px;
 }
 
 .animalCard > img {
-    height: 64px;
-    width: 64px;
+    height: 48px;
+    width: 48px;
+    /* height: minmax(120px, 140px);
+    width: minmax(80px, 100px); */
     image-rendering: pixelated;
 }
 
+
+/* Properties */
 p.property-name {
     display: flex;
     margin: 8px 0px;
