@@ -1,6 +1,5 @@
 import { RandomFromMinToMax, PosOrNeg } from "../utils/random.js";
 import { GameObject } from "./GameObjects.js";
-import { colorTemplate } from "../config/colors.js";
 
 export class Animal extends GameObject {
     isChangingDirection = false;
@@ -12,13 +11,15 @@ export class Animal extends GameObject {
     interactableTargetList = [];
     targetedObject = null;
 
+    grabbed = false;
+
     selfElapsedTime = RandomFromMinToMax(0, 10); // randomize
     currentActionTime = RandomFromMinToMax(4, 8);
     /**
      * to keep the animal do current task unless be called upon
      * @type {double}
      */
-    actionCoolDownTime = 0;
+    actionCoolDownTime = 3;
 
     /**
      * Creates an instance of Animal.
@@ -151,19 +152,19 @@ export class Animal extends GameObject {
     debugVisualization(context) {
         super.debugVisualization(context);
 
-        // render seeing range
-        context.beginPath();
-        context.arc(
-            this.position.x,
-            this.position.y,
-            this.calculatedSeeRange,
-            0,
-            Math.PI * 2,
-        );
-        context.fillStyle = this.debugColor + "40";
-        context.fillStyle = "#ffffff10";
-        context.fill();
-        context.closePath();
+        // // render seeing range
+        // context.beginPath();
+        // context.arc(
+        //     this.position.x,
+        //     this.position.y,
+        //     this.config.seeRange,
+        //     0,
+        //     Math.PI * 2,
+        // );
+        // context.fillStyle = this.debugColor + "40";
+        // // context.fillStyle = "#ffffff10";
+        // context.fill();
+        // context.closePath();
 
         // render target chosen path
         if (this.targetedObject != null) {
@@ -251,7 +252,7 @@ export class Animal extends GameObject {
         }
 
         if (this.targetedObject) {
-            this.targetedObject.selected = true;
+            // this.targetedObject.selected = true;
             this.goTowards(this.targetedObject);
         }
     }
@@ -282,7 +283,7 @@ export class Animal extends GameObject {
     eatObject(object) {
         object.consumed = true;
         this.targetedObject = null;
-        console.log(this.name, "ate", object.name);
+        // console.log(this.name, "ate", object.name);
     }
 
     goTowards(object) {

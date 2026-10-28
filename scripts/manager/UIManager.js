@@ -29,12 +29,14 @@ export class UIManager {
     populateStoreBar(objectPool, assetLoader) {
         for (let objectName of Object.keys(objectPool)) {
             let animal = {
-                name: objectPool[objectName].trueName,
+                name: objectPool[objectName].species,
                 price: objectPool[objectName].buyValue,
                 idleImgSrc:
                     assetLoader._assetsList.animals[objectName].idle.spriteImage
                         .src,
             };
+
+            // console.log(objectPool[objectName]);
 
             let card = document.createElement("button");
             card.classList.add("animalCard");
@@ -57,7 +59,7 @@ export class UIManager {
         this.moneyDisplay.innerText = resources.money;
         this.eggDisplay.innerText = resources.eggs;
         this.stickDisplay.innerText = resources.sticks;
-        this.timeDisplay.innerText = resources.elapsedTime.toPrecision(2) + "s";
+        this.timeDisplay.innerText = resources.elapsedTime.toPrecision(3) + "s";
     }
 
     buildPropertiesPanel(selectedObject) {
@@ -98,6 +100,7 @@ export class UIManager {
             "animations",
             "spriteDimension",
             "consumed",
+            "interactableTargetList",
         ];
 
         for (let keyName of Object.keys(selectedObject)) {

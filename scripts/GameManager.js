@@ -34,9 +34,9 @@ export class GameManager {
     totalElapsedTime = 0;
     properyUpdateTimer = 0;
 
-    grainSpawnTimer = 6;
-    grassSpawnTimer = 6;
-    boneSpawnTimer = 6;
+    grainSpawnTimer = 0;
+    grassSpawnTimer = 0;
+    boneSpawnTimer = 0;
 
     // Spawn Intervals
     grainSpawnInterval = 8;
@@ -47,9 +47,10 @@ export class GameManager {
 
     hoveredObject = null;
     selectedObject = null;
+    grabbedObject = null;
     selectedObjectDOM = null;
 
-    mouse = { x: 0, y: 0 };
+    mousePosition = { x: 0, y: 0 };
 
     constructor(assetsLoader, UIManager) {
         this.assetsLoader = assetsLoader;
@@ -71,60 +72,15 @@ export class GameManager {
         this.render = this.render.bind(this);
         this.togglePlaying = this.togglePlaying.bind(this);
 
-        // EventListeners
-        // Have to bind functions so they know that they belong to GAMEMANAGER first
-        document.addEventListener("keydown", (ev) => {
-            if (ev.key == "space") {
-                console.log("spaced something");
-            }
-        });
-
-        // Hover Over Object
-        this.gameCanvas.addEventListener("mousemove", (event) => {
-            this.getMousePosition(event);
-            const objsList = this.getObjectsFromFrontToBack();
-            this.hoveredObject = null; // ensure null(new target)
-
-            for (let obj of objsList) {
-                // need to find a more optimal way to deal with
-                if (obj.containsPoints(this.mouse.x, this.mouse.y)) {
-                    this.hoveredObject = obj;
-                    break;
-                }
-            }
-
-            for (let obj of this.gameObjects) {
-                // determine the hovered state of hovered object.
-                obj.hovered = obj === this.hoveredObject;
-            }
-        });
-
-        // Select Objects
-        this.gameCanvas.addEventListener("click", (event) => {
-            this.getMousePosition(event);
-            const objsList = this.getObjectsFromFrontToBack();
-
-            this.selectedObject = null; //always one selected at a time
-
-            for (let obj of objsList) {
-                if (obj.containsPoints(this.mouse.x, this.mouse.y)) {
-                    this.selectedObject = obj;
-                    break;
-                }
-            }
-
-            for (let obj of this.gameObjects) {
-                obj.selected = obj === this.selectedObject;
-            }
-
-            this.spawnGrain(this.mouse.x, this.mouse.y);
-            this.ui.buildPropertiesPanel(this.selectedObject);
-        });
+        this.setUpEventListeners();
     }
 
     resizeCanvas() {
-        this.gameCanvas.width = this.ui.canvasPanel.clientWidth;
-        this.gameCanvas.height = this.ui.canvasPanel.clientHeight;
+        const parent = this.gameCanvas.parentElement;
+        console.log(parent);
+
+        this.gameCanvas.width = parent.clientWidth;
+        this.gameCanvas.height = parent.clientHeight;
         this.render();
     }
 
@@ -178,14 +134,14 @@ export class GameManager {
         // Spawn food every interval
         if (this.grainSpawnTimer >= this.grainSpawnInterval) {
             this.grainSpawnTimer -= this.grainSpawnInterval;
-            this.spawnManyGrains(3);
+            this.spawnManyGrains(1);
         }
         if (this.grassSpawnTimer >= this.grassSpawnInterval) {
             this.grassSpawnTimer -= this.grassSpawnInterval;
         }
         if (this.boneSpawnTimer >= this.boneSpawnInterval) {
             this.boneSpawnTimer -= this.boneSpawnInterval;
-            this.spawnManyBones(3);
+            this.spawnManyBones(1);
         }
     }
 
@@ -202,8 +158,8 @@ export class GameManager {
         this.painter.fillStyle = "white";
         let cursorSize = 12;
         this.painter.fillRect(
-            this.mouse.x - cursorSize / 2,
-            this.mouse.y - cursorSize / 2,
+            this.mousePosition.x - cursorSize / 2,
+            this.mousePosition.y - cursorSize / 2,
             cursorSize,
             cursorSize,
         );
@@ -223,17 +179,91 @@ export class GameManager {
         }
     }
 
+    setUpEventListeners() {
+        // EventListeners
+        // Have to bind functions so they know that they belong to GAMEMANAGER first
+        document.addEventListener("keydown", (ev) => {
+            console.log(ev.key);
+            if (ev.key == " ") {
+                console.log("spaced something");
+            }
+        });
+
+        this.gameCanvas.addEventListener("pointermove", (event) => {
+            this.getMousePosition(event);
+            this.hoveredObject = this.getObjectAtPosition(
+                this.mousePosition.x,
+                this.mousePosition.y,
+            );
+
+            for (let obj of this.gameObjects) {
+                // reset so that only one can be selected at once
+                obj.hovered = obj === this.hoveredObject;
+            }
+
+            if (this.grabbedObject != null) {
+                this.grabbedObject.position = this.mousePosition;
+            } else {
+                console.log("nothing grabbed for now");
+            }
+        });
+
+        this.gameCanvas.addEventListener("pointerdown", (event) => {
+            this.getMousePosition(event);
+            this.grabbedObject = this.getObjectAtPosition(
+                this.mousePosition.x,
+                this.mousePosition.y,
+            );
+
+            if (this.grabbedObject == null) {
+                return;
+            }
+
+            this.grabbedObject.velocity = { moveX: 0, moveY: 0 };
+            this.grabbedObject.state = "grabbed";
+        });
+
+        this.gameCanvas.addEventListener("pointerup", (event) => {
+            this.getMousePosition(event);
+            this.selectedObject = this.getObjectAtPosition(
+                this.mousePosition.x,
+                this.mousePosition.y,
+            );
+
+            if (this.selectedObject == null) {
+                return;
+            }
+
+            for (let obj of this.gameObjects) {
+                // reset so that only one can be selected at once
+                obj.selected = obj === this.selectedObject;
+            }
+            this.grabbedObject.position = this.mousePosition;
+            this.grabbedObject = null;
+        });
+    }
+
+    getObjectAtPosition(x, y) {
+        const objsList = this.getObjectsFromFrontToBack();
+
+        for (let obj of objsList) {
+            if (obj.containsPoints(x, y)) {
+                return obj;
+            }
+        }
+
+        return null;
+    }
+
     getMousePosition(event) {
         const rect = this.gameCanvas.getBoundingClientRect(); // Dist from this.gameCanvas to client's windows
 
         let mousePos = {
-            x: event.clientX - rect.left + 2,
-            y: event.clientY - rect.top + 6,
+            x: event.clientX - rect.left,
+            y: event.clientY - rect.top,
         };
 
-        this.mouse = mousePos;
-
-        return mousePos;
+        this.mousePosition = mousePos;
     }
 
     getObjectsFromFrontToBack() {
@@ -424,7 +454,7 @@ export class GameManager {
 
         // newestDawg.selected = true;
         this.ui.buildPropertiesPanel(newestDawg);
-        console.log(newestDawg);
+        // console.log(newestDawg);
         // this.gameState = "paused"
         for (let i = 0; i < 8; i++) {
             this.spawnAnimal("chicken");
